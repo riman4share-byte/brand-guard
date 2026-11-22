@@ -1339,15 +1339,15 @@ const actions={
  async loadDemoPreset(){
   const now=Date.now();
   state.settings={
-   brand:'دار ريمان للأزياء (RIMAN Fashion)',
-   handles:'rimanfashion',
-   domain:'rimanfashion.ae',
-   official:'https://www.instagram.com/rimanfashion\nhttps://www.tiktok.com/@rimanfashion\nhttps://rimanfashion.ae',
-   images:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600',
+   brand:'علامتي التجارية (My Brand)',
+   handles:'mybrand',
+   domain:'mybrand.ae',
+   official:'https://www.instagram.com/mybrand\nhttps://www.tiktok.com/@mybrand\nhttps://mybrand.ae',
+   images:'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600',
    tm:'UAE-TM-2026-88412',
    license:'DED-CN-4491827',
-   owner:'إدارة حماية العلامة التجارية — RIMAN',
-   email:'ip-protection@rimanfashion.ae',
+   owner:'إدارة حماية العلامة التجارية — Brand Legal Team',
+   email:'ip-protection@mybrand.ae',
    phone:'+971501234567',
    pin:'',
    remind:7,
@@ -1356,18 +1356,18 @@ const actions={
   await DB.put('settings',{key:'main',value:state.settings});
   const demoCases=[
    {
-    id:'demo-ig-1',type:'profile',platform:'instagram',username:'rimanfashion_uae_shop',
-    url:'https://www.instagram.com/rimanfashion_uae_shop',refId:'IG-99482711',
-    notes:tr('ينسخ صور المجموعة الجديدة ويطلب من العملاء تحويل بنكي مباشر لحساب شخصي.','Copies new collection photos and asks customers for direct bank transfers.'),
+    id:'demo-ig-1',type:'profile',platform:'instagram',username:'mybrand_uae_shop',
+    url:'https://www.instagram.com/mybrand_uae_shop',refId:'IG-99482711',
+    notes:tr('ينسخ صور المنتجات الرسمية ويطلب من العملاء تحويل بنكي مباشر لحساب شخصي.','Copies official product photos and asks customers for direct bank transfers.'),
     status:'reported',foundAt:now-9*DAY,reportedAt:now-8*DAY,updatedAt:now-DAY,
     shots:[],log:[{at:now-9*DAY,t:tr('تم رصد الحساب المنتحل','Impersonating account detected')},{at:now-8*DAY,t:tr('تم الإبلاغ عبر نموذج العلامة التجارية (#IG-99482711)','Reported via Trademark Form (#IG-99482711)')}]
    },
    {
-    id:'demo-dom-2',type:'domain',platform:'website',username:'rimanfashion-outlet.shop',
-    url:'https://rimanfashion-outlet.shop',refId:'CF-441092',
+    id:'demo-dom-2',type:'domain',platform:'website',username:'mybrand-outlet.shop',
+    url:'https://mybrand-outlet.shop',refId:'CF-441092',
     notes:tr('موقع تصيّد احتيالي يقلّد شعار وهوية المتجر الرسمي بخصومات وهمية 80%.','Phishing store cloning official logo and product catalog with fake 80% discounts.'),
     status:'escalated',foundAt:now-5*DAY,reportedAt:now-4*DAY,updatedAt:now-3600000,
-    rdap:{at:now-4*DAY,domain:'rimanfashion-outlet.shop',registrar:'Namecheap, Inc.',abuseEmail:'abuse@namecheap.com',created:'2026-11-10',nameservers:['ns1.cloudflare.com','ns2.cloudflare.com']},
+    rdap:{at:now-4*DAY,domain:'mybrand-outlet.shop',registrar:'Namecheap, Inc.',abuseEmail:'abuse@namecheap.com',created:'2026-11-10',nameservers:['ns1.cloudflare.com','ns2.cloudflare.com']},
     shots:[],log:[{at:now-5*DAY,t:tr('رصد النطاق عبر فحص DNS','Domain detected via DNS Lookalike Scanner')},{at:now-4*DAY,t:tr('تم مراسلة مسجّل النطاق وتصعيد البلاغ','Abuse notice sent to registrar & escalated')}]
    },
    {
@@ -1379,9 +1379,9 @@ const actions={
     shots:[],log:[{at:now-DAY,t:tr('بلاغ وارد من عميل (+971507771122)','Submitted via Customer Report (+971507771122)')}]
    },
    {
-    id:'demo-ad-4',type:'ad',platform:'facebook',username:'Riman Deals UAE',
+    id:'demo-ad-4',type:'ad',platform:'facebook',username:'MyBrand Deals UAE',
     url:'https://www.facebook.com/ads/library/?id=881920192',refId:'META-7731904',
-    notes:tr('إعلان ممول يستخدم فيديو عرض الأزياء الرسمي بدون ترخيص.','Sponsored ad using official runway video without authorization.'),
+    notes:tr('إعلان ممول يستخدم صور وفيديو العلامة الرسمية بدون ترخيص.','Sponsored ad using official brand video and photos without authorization.'),
     status:'removed',foundAt:now-12*DAY,reportedAt:now-11*DAY,updatedAt:now-3*DAY,
     shots:[],log:[{at:now-12*DAY,t:tr('تم رصد الإعلان في مكتبة إعلانات ميتا','Detected in Meta Ad Library')},{at:now-3*DAY,t:tr('تمت إزالة الإعلان وإغلاق الصفحة المعلنة','Ad removed and advertiser page suspended')}]
    }
