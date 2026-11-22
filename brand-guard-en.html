@@ -1,0 +1,1600 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101C2C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Brand Guard — حارس العلامة</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F5F7; --card:#FFFFFF; --ink:#101C2C; --ink2:#4A5868; --line:#DDE3E9;
+  --brand:#0F5C7A; --brand-ink:#FFFFFF; --warn:#B7791F; --bad:#C53030; --ok:#2F855A;
+  --radius:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:'IBM Plex Sans Arabic',Tahoma,system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.6}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #F2A541;outline-offset:2px}
+.app{max-width:680px;margin:0 auto;padding-bottom:150px;min-height:100vh}
+header.top{background:var(--ink);color:#fff;padding:16px 18px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:10px}
+header.top h1{margin:0;font-size:21px;font-weight:700}
+header.top p{margin:2px 0 0;color:#B9C6D3;font-size:13px}
+.top-brand{display:flex;align-items:center;gap:12px}
+.top-brand img.kt-logo{height:44px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 6px rgba(0,0,0,.45))}
+.top-acts{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.kt-footer{margin:28px auto 12px;padding:14px 16px;text-align:center;color:var(--ink2);font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.92}
+.kt-footer .kt-pill{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#F2A541;padding:6px 16px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.6px;box-shadow:0 4px 12px rgba(16,28,44,.15);border:1px solid #2D3F54}
+.kt-footer .kt-pill img{height:26px;width:auto;object-fit:contain}
+.kt-bg-mark{position:fixed;bottom:74px;inset-inline-start:14px;z-index:15;pointer-events:none;opacity:.14;width:90px;height:auto}
+.pill{border:1px solid #3B4B5E;background:#1A2B40;color:#fff;border-radius:999px;padding:4px 11px;min-height:34px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+.pill.staff{border-color:#F2A541;color:#F2A541}
+.pill.sync{border-color:#2F855A;color:#9AE6B4}
+.pad{padding:16px 16px 0}
+.notice{background:#FFF6E0;border:1px solid #F0D595;border-radius:var(--radius);padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.notice.danger{background:#FFF5F5;border-color:#FEB2B2}
+.notice span{font-size:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 14px;min-height:40px;cursor:pointer;font-size:14px;display:flex;gap:6px;align-items:center}
+.chip b{font-weight:700}
+.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.alert{border-color:var(--bad);color:var(--bad)}
+.chip.alert[aria-pressed=true]{background:var(--bad);color:#fff}
+input[type=text],input[type=url],input[type=email],input[type=search],input[type=password],select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:var(--radius);padding:12px 14px;min-height:48px}
+textarea{min-height:110px;resize:vertical}
+label{display:block;font-weight:500;margin:16px 0 6px;font-size:15px}
+.chk{display:flex;align-items:center;gap:8px;font-weight:500;margin:10px 0;font-size:14px;cursor:pointer}
+.chk input{width:20px;height:20px;flex:0 0 20px}
+.hint{color:var(--ink2);font-size:13px;margin:4px 0 0}
+.ltr{direction:ltr;unicode-bidi:isolate;text-align:left}
+.case{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-bottom:10px;width:100%;text-align:start;cursor:pointer}
+.case:hover{border-color:#B8C4D0}
+.pf{flex:0 0 44px;height:44px;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff;direction:ltr}
+.case .meta{flex:1;min-width:0}
+.case .u{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.case .d{font-size:13px;color:var(--ink2);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.stamp{--c:#555;border:2px solid var(--c);color:var(--c);padding:1px 9px;border-radius:4px;font-weight:700;font-size:13px;transform:rotate(-2.5deg);white-space:nowrap;display:inline-block;background:#fff}
+.late{display:inline-block;margin-inline-start:4px;background:var(--bad);color:#fff;border-radius:4px;font-size:12px;padding:0 7px;font-weight:700}
+.tag{display:inline-block;border-radius:4px;font-size:11px;padding:0 7px;font-weight:700;background:#EBF8FF;color:#2B6CB0;border:1px solid #BEE3F8}
+.tag.down{background:#F0FFF4;color:#276749;border-color:#C6F6D5}
+.tag.live{background:#FFF5F5;color:#9B2C2C;border-color:#FED7D7}
+.tag.ref{background:#FAF5FF;color:#553C9A;border-color:#E9D8FD}
+.empty{text-align:center;color:var(--ink2);padding:44px 20px}
+.empty b{display:block;color:var(--ink);font-size:18px;margin-bottom:6px}
+nav.bar{position:fixed;bottom:0;inset-inline:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:30;padding-bottom:env(safe-area-inset-bottom)}
+nav.bar .in{display:flex;width:100%;max-width:680px}
+nav.bar button{flex:1;border:0;background:none;padding:12px 4px;min-height:56px;font-size:14px;color:var(--ink2);cursor:pointer}
+nav.bar button[aria-current=page]{color:var(--brand);font-weight:700;box-shadow:inset 0 3px 0 var(--brand)}
+.fab{position:fixed;inset-inline-end:16px;bottom:78px;z-index:31;background:var(--brand);color:#fff;border:0;border-radius:999px;padding:0 22px;min-height:56px;font-weight:700;font-size:17px;box-shadow:0 6px 18px rgba(16,28,44,.28);cursor:pointer}
+.btn{border:1px solid var(--ink);background:#fff;border-radius:var(--radius);padding:0 18px;min-height:48px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;color:inherit;text-align:center}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:700}
+.btn.danger{border-color:var(--bad);color:var(--bad)}
+.btn.ok{border-color:var(--ok);color:var(--ok)}
+.btn.warn{background:#FFF5F5;border-color:var(--bad);color:var(--bad);font-weight:700}
+.btn.block{width:100%}
+.btn.sm{min-height:38px;padding:0 12px;font-size:13px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1}
+.sheet{position:fixed;inset:0;background:var(--paper);z-index:50;overflow-y:auto}
+.sheet .head{background:var(--ink);color:#fff;display:flex;align-items:center;gap:10px;padding:10px 12px;position:sticky;top:0;z-index:2}
+.sheet .head h2{margin:0;font-size:18px;flex:1}
+.sheet .head button{background:none;border:1px solid #3B4B5E;color:#fff;border-radius:8px;min-height:40px;padding:0 14px;cursor:pointer}
+.sheet .body{max-width:680px;margin:0 auto;padding:6px 16px 120px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;margin-top:14px}
+.panel h3{margin:0 0 8px;font-size:16px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pad>.panel:first-child{margin-top:0}
+.steps{display:flex;flex-wrap:wrap;gap:8px}
+.step{flex:1 1 30%;min-height:46px;border:1.5px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;font-size:14px;padding:4px 6px}
+.step[aria-pressed=true]{border-color:var(--c);color:var(--c);font-weight:700;box-shadow:inset 0 0 0 1px var(--c)}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.shot{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:#fff;padding:0;cursor:pointer}
+.shot img{width:100%;height:100%;object-fit:cover;display:block}
+.shot .x{position:absolute;top:4px;inset-inline-start:4px;background:#000c;color:#fff;border:0;border-radius:6px;width:28px;height:28px;cursor:pointer}
+.log{list-style:none;margin:0;padding:0;font-size:14px;color:var(--ink2)}
+.log li{padding:6px 0;border-bottom:1px dashed var(--line)}
+.log li:last-child{border:0}
+.var{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.var:last-child{border:0}
+.var .n{flex:1;font-weight:500;min-width:120px}
+.var.done .n{text-decoration:line-through;color:var(--ink2)}
+.var a,.var .mini{font-size:13px;border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 10px;color:var(--brand);text-decoration:none;min-height:34px;display:inline-flex;align-items:center;cursor:pointer}
+.var .mini.bad{border-color:var(--bad);color:var(--bad);font-weight:700}
+.var input[type=checkbox]{flex:0 0 22px;width:22px;height:22px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin:8px 0;background:var(--paper);padding:10px;border-radius:8px}
+.kv b{color:var(--ink2)}
+.esc-group{margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.esc-group:first-of-type{margin-top:6px;padding-top:0;border-top:0}
+.esc-group h4{margin:0 0 6px;font-size:13px;color:var(--ink2)}
+#lightbox{position:fixed;inset:0;background:#000d;z-index:80;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px}
+#lightbox img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#lightbox .lb-bar{display:flex;gap:10px}
+#toast{position:fixed;bottom:90px;inset-inline:0;margin:auto;width:max-content;max-width:90vw;background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;z-index:90;display:none;font-size:15px}
+#print{display:none}
+@media print{
+  body>*:not(#print){display:none!important}
+  #print{display:block!important;font-size:12px}
+  #print h1{font-size:20px} #print .pc{border:1px solid #999;padding:10px;margin:0 0 12px;page-break-inside:avoid}
+  #print img{max-width:48%;max-height:260px;margin:4px;border:1px solid #bbb}
+}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .18s ease-out}@keyframes up{from{transform:translateY(16px);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="top-brand">
+      <img class="kt-logo" id="ktTopLogo" alt="Kais Tauiti Logo">
+      <div><h1 id="appTitle">حارس العلامة</h1><p id="sub"></p></div>
+    </div>
+    <div class="top-acts" id="topActs"></div>
+  </header>
+  <main id="main"></main>
+  <footer class="kt-footer">
+    <div class="kt-pill"><img id="ktFootLogo" alt="KT"><span>POWERED BY KAIS</span></div>
+  </footer>
+</div>
+<img class="kt-bg-mark" id="ktBgLogo" alt="">
+<button class="fab" id="fabAdd" data-act="openAdd">+ إضافة حالة</button>
+<nav class="bar" id="navBar"><div class="in">
+  <button data-act="tab" data-v="list" id="t-list">الحالات</button>
+  <button data-act="tab" data-v="variants" id="t-variants">الفحص</button>
+  <button data-act="tab" data-v="settings" id="t-settings">الإعدادات</button>
+</div></nav>
+<div id="sheet" class="sheet" hidden></div>
+<div id="lightbox" data-act="closeLight">
+  <img alt="">
+  <div class="lb-bar">
+    <button class="btn sm primary" data-act="downloadLightImg" id="lbDownBtn">تحميل الصورة</button>
+    <button class="btn sm" data-act="closeLight" id="lbCloseBtn">إغلاق</button>
+  </div>
+</div>
+<div id="toast" role="status"></div>
+<div id="print"></div>
+<input type="file" id="importFile" accept="application/json" hidden>
+
+<script>
+'use strict';
+/* ---------- Kais Signature & Logo ---------- */
+const KAIS_LOGO="data:image/png;base64,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";
+const kaisImg=new Image();kaisImg.src=KAIS_LOGO;
+['ktTopLogo','ktFootLogo','ktBgLogo'].forEach(id=>{const el=document.getElementById(id);if(el)el.src=KAIS_LOGO});
+
+/* ---------- constants & i18n ---------- */
+const urlParams=new URLSearchParams(location.search);
+const isPublicReport=urlParams.get('report')==='1'||location.hash==='#report';
+window.__HARES_DEFAULT_LANG__='en';
+const defaultLang=urlParams.get('lang')||window.__HARES_DEFAULT_LANG__||'en';
+
+const STATUSES=[
+ {k:'found',ar:'تم الرصد',en:'Detected',c:'#B7791F'},
+ {k:'reported',ar:'تم الإبلاغ',en:'Reported',c:'#1D5FA8'},
+ {k:'review',ar:'قيد المراجعة',en:'In Review',c:'#6B46C1'},
+ {k:'removed',ar:'أُزيل',en:'Removed',c:'#2F855A'},
+ {k:'rejected',ar:'رُفض البلاغ',en:'Rejected',c:'#C53030'},
+ {k:'escalated',ar:'تم التصعيد',en:'Escalated',c:'#1A202C'}
+];
+const ST=Object.fromEntries(STATUSES.map(s=>[s.k,s]));
+
+const PLATFORMS={
+ instagram:{
+  ar:'Instagram',en:'Instagram',i:'IG',c:'#C13584',
+  help:'https://help.instagram.com/370054663132312',
+  tmForm:'https://help.instagram.com/contact/230197320740525',
+  impForm:'https://help.instagram.com/contact/636276399721841'
+ },
+ facebook:{
+  ar:'Facebook',en:'Facebook',i:'FB',c:'#1877F2',
+  help:'https://www.facebook.com/help/325058084212425',
+  tmForm:'https://www.facebook.com/help/contact/1057530520958514',
+  impForm:'https://www.facebook.com/help/370054663132312'
+ },
+ tiktok:{
+  ar:'TikTok',en:'TikTok',i:'TT',c:'#111111',
+  help:'https://support.tiktok.com/en/safety-hc/report-a-problem',
+  tmForm:'https://www.tiktok.com/legal/report/Trademark',
+  impForm:'https://www.tiktok.com/legal/report/feedback'
+ },
+ x:{
+  ar:'X (Twitter)',en:'X (Twitter)',i:'X',c:'#000000',
+  help:'https://help.x.com/en/rules-and-policies/x-report-violation',
+  tmForm:'https://help.x.com/en/forms/ipi/trademark',
+  impForm:'https://help.x.com/en/forms/authenticity/impersonation'
+ },
+ snapchat:{
+  ar:'Snapchat',en:'Snapchat',i:'SC',c:'#E6D800',dark:1,
+  help:'https://support.snapchat.com',
+  tmForm:'https://support.snapchat.com/en-US/i-need-help?start=5746233202802688',
+  impForm:'https://support.snapchat.com/en-US/a/report-impersonation'
+ },
+ youtube:{
+  ar:'YouTube',en:'YouTube',i:'YT',c:'#E00000',
+  help:'https://support.google.com/youtube/answer/2801947',
+  tmForm:'https://www.youtube.com/copyright_complaint_form',
+  impForm:'https://support.google.com/youtube/answer/2801947'
+ },
+ telegram:{
+  ar:'Telegram',en:'Telegram',i:'TG',c:'#229ED9',
+  help:'https://telegram.org/support',
+  tmForm:'mailto:dmca@telegram.org?subject=Trademark%20Infringement%20Report',
+  impForm:'mailto:abuse@telegram.org?subject=Brand%20Impersonation%20Report'
+ },
+ whatsapp:{
+  ar:'WhatsApp',en:'WhatsApp',i:'WA',c:'#128C7E',
+  help:'https://www.whatsapp.com/contact/',
+  tmForm:'mailto:ip@whatsapp.com?subject=Trademark%20Infringement%20Report',
+  impForm:'mailto:support@whatsapp.com?subject=Brand%20Impersonation%20Report'
+ },
+ website:{
+  ar:'موقع إلكتروني',en:'Website',i:'WWW',c:'#4A5868',
+  help:'https://safebrowsing.google.com/safebrowsing/report_phish/',
+  tmForm:'https://abuse.cloudflare.com',
+  impForm:'https://safebrowsing.google.com/safebrowsing/report_phish/'
+ },
+ other:{
+  ar:'منصة أخرى',en:'Other Platform',i:'?',c:'#6B7785',
+  help:'',tmForm:'',impForm:''
+ }
+};
+
+const ESCALATION_GROUPS=[
+ {
+  ar:'الإمارات العربية المتحدة (UAE Authorities)',
+  en:'United Arab Emirates (UAE Authorities)',
+  links:[
+   {ar:'شرطة دبي — الجرائم الإلكترونية (eCrime)',en:'Dubai Police — eCrime Portal',url:'https://www.ecrime.ae'},
+   {ar:'اقتصادية دبي / حماية المستهلك والعلامات',en:'Dubai Economy (DED) — IP & Consumer Protection',url:'https://consumerrights.ae'},
+   {ar:'هيئة تنظيم الاتصالات (TDRA — النطاقات وحجب المواقع)',en:'TDRA — Domain Dispute & Website Blocking',url:'https://tdra.gov.ae'}
+  ]
+ },
+ {
+  ar:'المملكة العربية السعودية (KSA Authorities)',
+  en:'Saudi Arabia (KSA Authorities)',
+  links:[
+   {ar:'الهيئة السعودية للملكية الفكرية (SAIP)',en:'Saudi Authority for Intellectual Property (SAIP)',url:'https://www.saip.gov.sa'},
+   {ar:'هيئة الاتصالات والفضاء والتقنية (CST — حجب المواقع)',en:'CST — Website Filtering & Blocking Report',url:'https://www.cst.gov.sa'},
+   {ar:'وزارة التجارة — بلاغ تجاري / متجر موثق',en:'Ministry of Commerce — Commercial Fraud Report',url:'https://mc.gov.sa'}
+  ]
+ },
+ {
+  ar:'جهات الحجب والاستضافة العالمية (Global Anti-Phishing & Hosting)',
+  en:'Global Anti-Phishing, Registrar & Hosting Authorities',
+  links:[
+   {ar:'Google Safe Browsing (تحذير المتصفحات من الموقع المنتحل)',en:'Google Safe Browsing (Report Phishing Site)',url:'https://safebrowsing.google.com/safebrowsing/report_phish/'},
+   {ar:'Cloudflare Abuse (كشف وإيقاف استضافة الموقع)',en:'Cloudflare Abuse (Host & CDN Takedown)',url:'https://abuse.cloudflare.com'},
+   {ar:'ICANN (شكوى رسمية ضد مسجّل النطاق)',en:'ICANN Registrar Compliance Complaint',url:'https://www.icann.org/compliance/complaint'}
+  ]
+ }
+];
+
+const DAY=86400000;
+const TYPES={
+ profile:{
+  ar:{t:'حساب',l1:'رابط الحساب',l2:'اسم المستخدم',ph2:'بدون @'},
+  en:{t:'Account',l1:'Account URL',l2:'Username',ph2:'without @'}
+ },
+ domain:{
+  ar:{t:'موقع / نطاق',l1:'رابط الموقع',l2:'اسم النطاق',ph2:'example.com'},
+  en:{t:'Website / Domain',l1:'Website URL',l2:'Domain Name',ph2:'example.com'}
+ },
+ phone:{
+  ar:{t:'رقم / قناة',l1:'رابط القناة أو المجموعة (اختياري)',l2:'رقم الهاتف أو WhatsApp',ph2:'+971...'},
+  en:{t:'Phone / Channel',l1:'Channel or Group URL (optional)',l2:'Phone or WhatsApp Number',ph2:'+971...'}
+ },
+ ad:{
+  ar:{t:'إعلان مدفوع',l1:'رابط الإعلان',l2:'اسم الصفحة المعلنة',ph2:''},
+  en:{t:'Paid Ad',l1:'Ad URL',l2:'Advertiser Page Name',ph2:''}
+ },
+ listing:{
+  ar:{t:'إعلان في متجر',l1:'رابط الإعلان',l2:'اسم البائع',ph2:''},
+  en:{t:'Store Listing',l1:'Listing URL',l2:'Seller Name',ph2:''}
+ }
+};
+
+/* ---------- state ---------- */
+const state={
+ lang:defaultLang==='en'?'en':'ar',
+ cases:[],
+ settings:{remind:7,brand:'',handles:'',domain:'',official:'',images:'',tm:'',license:'',owner:'',email:'',phone:'',pin:''},
+ checked:[],
+ dnsResults:{},
+ dnsScanning:false,
+ linkChecking:false,
+ rdapChecking:false,
+ stampEvidence:true,
+ role:localStorage.getItem('hares-role')||'owner',
+ customerMode:isPublicReport,
+ customerSubmitted:false,
+ custDraft:{type:'profile',url:'',platform:'instagram',username:'',notes:'',contact:'',shots:[]},
+ tab:'list',
+ filter:'all',
+ q:'',
+ sheet:null,
+ draft:null,
+ reportLang:defaultLang==='en'?'en':'ar',
+ reportPlatform:null,
+ syncing:false,
+ lastSync:0
+};
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>(crypto.randomUUID?crypto.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2));
+const isEn=()=>state.lang==='en';
+const tr=(ar,en)=>isEn()?en:ar;
+const typeOf=c=>c.type||'profile';
+const typeInfo=k=>TYPES[k||'profile'][state.lang];
+const pfName=k=>(PLATFORMS[k]||PLATFORMS.other)[state.lang];
+const stName=k=>(ST[k]||ST.found)[state.lang];
+const idLabel=c=>{const t=typeOf(c);if(t==='profile')return c.username?'@'+c.username:(c.url||'—');return c.username||c.url||'—'};
+
+function applyLangDir(){
+ document.documentElement.lang=state.lang;
+ document.documentElement.dir=isEn()?'ltr':'rtl';
+ document.title=tr('حارس العلامة — Brand Guard','Brand Guard — حارس العلامة');
+ const titleEl=$('appTitle');if(titleEl)titleEl.textContent=tr('حارس العلامة','Brand Guard');
+ const fabEl=$('fabAdd');if(fabEl)fabEl.textContent=tr('+ إضافة حالة','+ Add Case');
+ const tl=$('t-list');if(tl)tl.textContent=tr('الحالات','Cases');
+ const tv=$('t-variants');if(tv)tv.textContent=tr('الفحص','Scan');
+ const ts=$('t-settings');if(ts)ts.textContent=tr('الإعدادات','Settings');
+ const lbd=$('lbDownBtn');if(lbd)lbd.textContent=tr('تحميل الصورة','Download PNG');
+ const lbc=$('lbCloseBtn');if(lbc)lbc.textContent=tr('إغلاق','Close');
+}
+
+function toast(t){const e=$('toast');if(!e)return;e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
+function ago(ts){
+ if(!ts)return'';
+ const d=Math.floor((Date.now()-ts)/DAY);
+ if(isEn()){if(d<=0)return'Today';if(d===1)return'Yesterday';return d+' days ago'}
+ if(d<=0)return'اليوم';if(d===1)return'أمس';if(d===2)return'قبل يومين';if(d<=10)return'قبل '+d+' أيام';return'قبل '+d+' يوماً';
+}
+function fdate(ts){return ts?new Date(ts).toLocaleDateString(isEn()?'en-US':'ar-AE',{year:'numeric',month:'short',day:'numeric'}):''}
+function isLate(c){return ['reported','review'].includes(c.status)&&c.reportedAt&&(Date.now()-c.reportedAt)>=(+state.settings.remind||7)*DAY}
+function isOwner(){return state.role==='owner'}
+
+/* ---------- storage ---------- */
+const DB={
+ db:null,
+ open(){return new Promise((res,rej)=>{const r=indexedDB.open('hares-alalama',1);
+  r.onupgradeneeded=()=>{const d=r.result;if(!d.objectStoreNames.contains('cases'))d.createObjectStore('cases',{keyPath:'id'});if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'})};
+  r.onsuccess=()=>{this.db=r.result;res()};r.onerror=()=>rej(r.error)})},
+ run(store,mode,fn){return new Promise((res,rej)=>{const t=this.db.transaction(store,mode);const rq=fn(t.objectStore(store));
+  t.oncomplete=()=>res(rq&&rq.result);t.onerror=()=>rej(t.error)})},
+ all(s){return this.run(s,'readonly',o=>o.getAll())},
+ get(s,k){return this.run(s,'readonly',o=>o.get(k))},
+ put(s,v){return this.run(s,'readwrite',o=>o.put(v))},
+ del(s,k){return this.run(s,'readwrite',o=>o.delete(k))},
+ clear(s){return this.run(s,'readwrite',o=>o.clear())}
+};
+
+/* ---------- Cloud Sync (Supabase optional) ---------- */
+const Cloud={
+ getConfig(){
+  const uUrl=urlParams.get('sb_url'),uKey=urlParams.get('sb_key'),uWs=urlParams.get('ws');
+  if(uUrl&&uKey)return{url:uUrl.replace(/\/$/,''),key:uKey,workspace:uWs||'default'};
+  try{const raw=localStorage.getItem('hares-cloud');if(!raw)return null;const cfg=JSON.parse(raw);if(cfg&&cfg.url&&cfg.key)return{url:cfg.url.replace(/\/$/,''),key:cfg.key,workspace:cfg.workspace||'default'}}catch{}
+  return null;
+ },
+ saveConfig(url,key,workspace){
+  if(!url||!key){localStorage.removeItem('hares-cloud');return null}
+  const cfg={url:url.trim().replace(/\/$/,''),key:key.trim(),workspace:(workspace||'default').trim()||'default'};
+  localStorage.setItem('hares-cloud',JSON.stringify(cfg));return cfg;
+ },
+ headers(cfg,extra={}){
+  return Object.assign({'apikey':cfg.key,'Authorization':'Bearer '+cfg.key,'Content-Type':'application/json'},extra);
+ },
+ async pushCase(c){
+  const cfg=this.getConfig();if(!cfg)return false;
+  const r=await fetch(`${cfg.url}/rest/v1/hares_cases`,{
+   method:'POST',
+   headers:this.headers(cfg,{'Prefer':'resolution=merge-duplicates'}),
+   body:JSON.stringify({id:c.id,workspace:cfg.workspace,data:c,updated_at:c.updatedAt||Date.now()})
+  });
+  return r.ok;
+ },
+ async deleteRemoteCase(id){
+  const cfg=this.getConfig();if(!cfg)return false;
+  const r=await fetch(`${cfg.url}/rest/v1/hares_cases?id=eq.${encodeURIComponent(id)}&workspace=eq.${encodeURIComponent(cfg.workspace)}`,{
+   method:'DELETE',headers:this.headers(cfg)
+  });
+  return r.ok;
+ },
+ async syncAll(silent=false){
+  const cfg=this.getConfig();if(!cfg){if(!silent)toast(tr('أدخل بيانات Supabase أولاً','Enter Supabase credentials first'));return false}
+  state.syncing=true;renderTopActs();
+  try{
+   const rc=await fetch(`${cfg.url}/rest/v1/hares_cases?workspace=eq.${encodeURIComponent(cfg.workspace)}&select=id,data,updated_at`,{headers:this.headers(cfg)});
+   if(!rc.ok)throw new Error('HTTP '+rc.status);
+   const remoteCases=await rc.json();
+   const rMap=new Map(remoteCases.map(row=>[row.id,row]));
+   const lMap=new Map(state.cases.map(c=>[c.id,c]));
+   const toPush=[];
+   for(const [id,lc] of lMap){
+    const rem=rMap.get(id);
+    if(!rem||(lc.updatedAt||0)>(rem.updated_at||0))toPush.push({id,workspace:cfg.workspace,data:lc,updated_at:lc.updatedAt||Date.now()});
+   }
+   for(const [id,rem] of rMap){
+    const lc=lMap.get(id);
+    if(rem.data&&(!lc||(rem.updated_at||0)>(lc.updatedAt||0))){await DB.put('cases',rem.data)}
+   }
+   if(toPush.length){
+    await fetch(`${cfg.url}/rest/v1/hares_cases`,{
+     method:'POST',headers:this.headers(cfg,{'Prefer':'resolution=merge-duplicates'}),body:JSON.stringify(toPush)
+    });
+   }
+   const rs=await fetch(`${cfg.url}/rest/v1/hares_settings?workspace=eq.${encodeURIComponent(cfg.workspace)}&select=data,updated_at`,{headers:this.headers(cfg)});
+   if(rs.ok){
+    const sRows=await rs.json();
+    const remS=sRows[0];
+    const locUpdated=state.settings.updatedAt||0;
+    if(remS&&remS.data&&(remS.updated_at||0)>locUpdated){
+     state.settings=Object.assign({remind:7},remS.data);
+     await DB.put('settings',{key:'main',value:state.settings});
+    }else if(state.settings.brand){
+     await fetch(`${cfg.url}/rest/v1/hares_settings`,{
+      method:'POST',headers:this.headers(cfg,{'Prefer':'resolution=merge-duplicates'}),
+      body:JSON.stringify({workspace:cfg.workspace,data:state.settings,updated_at:locUpdated||Date.now()})
+     });
+    }
+   }
+   state.cases=await DB.all('cases');
+   state.lastSync=Date.now();
+   if(!silent)toast(tr('تمت المزامنة السحابية بنجاح','Cloud sync completed'));
+   return true;
+  }catch(err){
+   if(!silent)toast(tr('تعذّرت المزامنة: تحقق من الرابط والمفتاح وجداول Supabase','Sync failed: check Supabase URL, Key & tables'));
+   return false;
+  }finally{
+   state.syncing=false;renderTopActs();if(!state.customerMode)renderMain();
+  }
+ }
+};
+
+/* ---------- URL parsing ---------- */
+function parseUrl(raw){
+ raw=(raw||'').trim();if(!raw)return{platform:'other',username:''};
+ let u;try{u=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw)}catch{return{platform:'other',username:raw.replace(/^@/,'')}}
+ const h=u.hostname.replace(/^(www|m|web|mobile)\./,''),p=u.pathname.split('/').filter(Boolean);
+ const clean=s=>decodeURIComponent(s||'').replace(/^@/,'');
+ if(h.endsWith('instagram.com')){const bad=['p','reel','reels','explore','stories','tv'];return{platform:'instagram',username:bad.includes(p[0])?'':clean(p[0])}}
+ if(h.endsWith('tiktok.com'))return{platform:'tiktok',username:clean(p.find(x=>x.startsWith('@')))}
+ if(h.endsWith('facebook.com')||h.endsWith('fb.com')||h==='fb.me'){const id=u.searchParams.get('id');return{platform:'facebook',username:p[0]==='profile.php'?(id||''):clean(p[0])}}
+ if(h==='x.com'||h.endsWith('twitter.com'))return{platform:'x',username:clean(p[0])}
+ if(h.endsWith('snapchat.com'))return{platform:'snapchat',username:clean(p[0]==='add'?p[1]:p[0])}
+ if(h.endsWith('youtube.com')||h==='youtu.be')return{platform:'youtube',username:clean(p.find(x=>x.startsWith('@'))||p[1])}
+ if(h==='t.me'||h.endsWith('telegram.me'))return{platform:'telegram',username:clean(p[0])}
+ if(h==='wa.me'||h.endsWith('whatsapp.com'))return{platform:'whatsapp',username:clean(p[0])}
+ return{platform:'other',username:''}
+}
+
+/* ---------- report text ---------- */
+function buildReport(c,platform,lang){
+ const s=state.settings,t=typeOf(c),brand=s.brand||(lang==='en'?'[brand name]':'[اسم العلامة]');
+ const official=(s.official||'').split('\n').map(x=>x.trim()).filter(Boolean);
+ const pObj=PLATFORMS[platform]||PLATFORMS.other;
+ const pn=lang==='en'?pObj.en:pObj.ar;
+ const target=c.url||(c.username?(t==='profile'?'@':'')+c.username:''),L=[];
+ const idv=c.username?(t==='profile'?'@':'')+c.username:'';
+ if(lang==='en'){
+  const head={profile:`The following ${pn} account is impersonating our brand "${brand}" and using its name and product images to mislead customers:`,
+   domain:`The following website imitates our brand "${brand}" and uses its name and product images to mislead customers:`,
+   phone:`The following phone number or channel on ${pn} is posing as our brand "${brand}" to mislead and defraud customers:`,
+   ad:`The following advertisement on ${pn} uses our brand "${brand}" without authorization and misleads customers:`,
+   listing:`The following listing on ${pn} uses our brand "${brand}" without authorization and misleads customers:`}[t];
+  const idl={profile:'Username',domain:'Domain',phone:'Number',ad:'Advertiser page',listing:'Seller'}[t];
+  const ask={domain:'Please investigate and suspend this website for trademark infringement and fraudulent use of our brand. Screenshots and proof of ownership are attached.',
+   ad:'Please review and remove this advertisement and act against the advertiser for violating your advertising and trademark policies. Screenshots and proof of ownership are attached.',
+   listing:'Please review and remove this listing for violating your trademark and counterfeit policies. Screenshots and proof of ownership are attached.',
+   phone:'Please review and block this number or channel for impersonating our brand. Screenshots and proof of ownership are attached.',
+   profile:'Please review this account and remove it for violating your impersonation and trademark policies. Screenshots and proof of ownership are attached.'}[t];
+  L.push('Hello,','',head);if(target)L.push(target);if(idv&&idv!==target)L.push(`${idl}: ${idv}`);if(c.refId)L.push(`Previous Report Reference ID: ${c.refId}`);L.push('');
+  if(official.length)L.push('Our official account(s):',...official,'');
+  if(s.domain)L.push(`Official website: https://${s.domain.replace(/^https?:\/\//,'')}`);
+  L.push('We are the owner of this brand.');
+  if(s.tm)L.push(`Trademark registration no.: ${s.tm}`);
+  if(s.license)L.push(`Trade license no.: ${s.license}`);
+  L.push('',ask,'',`Reporter: ${s.owner||''}${s.email?' — '+s.email:''}`);
+ }else{
+  const head={profile:`الحساب التالي على ${pn} ينتحل هوية علامتنا التجارية «${brand}» ويستخدم اسمها وصور منتجاتها لخداع العملاء:`,
+   domain:`الموقع التالي يقلّد علامتنا التجارية «${brand}» ويستخدم اسمها وصور منتجاتها لخداع العملاء:`,
+   phone:`الرقم أو القناة التالية على ${pn} تنتحل علامتنا التجارية «${brand}» لخداع العملاء والاحتيال عليهم:`,
+   ad:`الإعلان التالي على ${pn} يستخدم علامتنا التجارية «${brand}» بدون تفويض ويضلّل العملاء:`,
+   listing:`الإعلان التالي على ${pn} يستخدم علامتنا التجارية «${brand}» بدون تفويض ويضلّل العملاء:`}[t];
+  const idl={profile:'اسم المستخدم',domain:'النطاق',phone:'الرقم',ad:'الصفحة المعلنة',listing:'البائع'}[t];
+  const ask={domain:'نرجو التحقيق في الموقع وتعليقه لمخالفته حقوق العلامة التجارية واستخدامها بشكل احتيالي. مرفق لقطات شاشة وإثبات الملكية.',
+   ad:'نرجو مراجعة الإعلان وإزالته واتخاذ إجراء بحق المعلن لمخالفته سياسات الإعلانات والعلامات التجارية. مرفق لقطات شاشة وإثبات الملكية.',
+   listing:'نرجو مراجعة الإعلان وإزالته لمخالفته سياسات العلامات التجارية والمنتجات المقلّدة. مرفق لقطات شاشة وإثبات الملكية.',
+   phone:'نرجو مراجعة هذا الرقم أو القناة وحظره لانتحاله علامتنا التجارية. مرفق لقطات شاشة وإثبات الملكية.',
+   profile:'نرجو مراجعة الحساب وإزالته لمخالفته سياسات انتحال الهوية وحقوق العلامة التجارية. مرفق لقطات شاشة وإثبات الملكية.'}[t];
+  L.push('السلام عليكم،','',head);if(target)L.push(target);if(idv&&idv!==target)L.push(`${idl}: ${idv}`);if(c.refId)L.push(`رقم البلاغ المرجعي: ${c.refId}`);L.push('');
+  if(official.length)L.push('حساباتنا الرسمية:',...official,'');
+  if(s.domain)L.push(`موقعنا الرسمي: https://${s.domain.replace(/^https?:\/\//,'')}`);
+  L.push('نحن أصحاب هذه العلامة التجارية.');
+  if(s.tm)L.push(`رقم تسجيل العلامة التجارية: ${s.tm}`);
+  if(s.license)L.push(`رقم الرخصة التجارية: ${s.license}`);
+  L.push('',ask,'',`مقدّم البلاغ: ${s.owner||''}${s.email?' — '+s.email:''}`);
+ }
+ return L.join('\n');
+}
+
+/* ---------- username & domain variations ---------- */
+function variants(handle){
+ const h=(handle||'').toLowerCase().replace(/^@/,'').trim();if(h.length<2)return[];
+ const set=new Set();
+ ['official','_official','.official','_uae','.uae','uae','_ae','ae','shop','_shop','store','_store','1','_1','2','_','real','_real'].forEach(s=>set.add(h+s));
+ ['official_','real_','_','the.','the_'].forEach(p=>set.add(p+h));
+ if(h.length>3){const m=Math.floor(h.length/2);[m-1,m,m+1].forEach(i=>{if(i>0&&i<h.length){set.add(h.slice(0,i)+'_'+h.slice(i));set.add(h.slice(0,i)+'.'+h.slice(i))}})}
+ set.add(h+h.slice(-1));
+ const v=h.search(/[aeiou]/);if(v>=0)set.add(h.slice(0,v+1)+h[v]+h.slice(v+1));
+ [['o','0'],['i','l'],['l','1'],['a','4'],['s','5'],['e','3']].forEach(([a,b])=>{if(h.includes(a))set.add(h.split(a).join(b))});
+ set.delete(h);return[...set].filter(x=>/^[a-z0-9._]{3,30}$/.test(x)).slice(0,45);
+}
+
+function domainVariants(rawDomain){
+ let d=(rawDomain||'').toLowerCase().trim().replace(/^https?:\/\//,'').replace(/^www\./,'').split('/')[0];
+ if(!d)return[];
+ const parts=d.split('.');
+ const name=parts[0].replace(/[^a-z0-9-]/g,'');
+ const origTld=parts.slice(1).join('.')||'com';
+ if(name.length<2)return[];
+ const set=new Set();
+ const tlds=['com','net','org','shop','store','ae','online','co'];
+ tlds.forEach(t=>{if(t!==origTld)set.add(`${name}.${t}`)});
+ ['-shop','-store','-official','-ae','-uae','shop','store','official'].forEach(s=>set.add(`${name}${s}.${origTld}`));
+ ['official-','real-','my-','get-'].forEach(p=>set.add(`${p}${name}.${origTld}`));
+ for(let i=0;i<name.length;i++){
+  if(name.length>3)set.add(name.slice(0,i)+name.slice(i+1)+'.'+origTld);
+  if(i<name.length-1&&name[i]!==name[i+1]){
+   set.add(name.slice(0,i)+name[i+1]+name[i]+name.slice(i+2)+'.'+origTld);
+  }
+ }
+ [['o','0'],['l','1'],['i','l'],['e','3'],['a','4'],['s','5']].forEach(([a,b])=>{
+  if(name.includes(a))set.add(name.split(a).join(b)+'.'+origTld);
+ });
+ set.delete(`${name}.${origTld}`);
+ return [...set].filter(x=>/^[a-z0-9-]{2,40}\.[a-z.]{2,12}$/.test(x)).slice(0,28);
+}
+
+/* ---------- DNS, Link & RDAP Whois Checking ---------- */
+async function checkDomainDns(domain){
+ try{
+  const r=await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=A`,{
+   headers:{'Accept':'application/dns-json'}
+  });
+  if(!r.ok)return{state:'unknown',ip:''};
+  const j=await r.json();
+  if(j.Status===0&&Array.isArray(j.Answer)&&j.Answer.length>0){
+   const a=j.Answer.find(x=>x.type===1)||j.Answer[0];
+   return{state:'registered',ip:a.data||tr('مسجّل','Registered')};
+  }
+  if(j.Status===3)return{state:'free',ip:''};
+  return{state:'free',ip:''};
+ }catch{
+  return{state:'unknown',ip:''};
+ }
+}
+
+async function scanAllDomains(){
+ const base=state.settings.domain||((state.settings.handles||'').split(/[,،\s]+/)[0]?(state.settings.handles.split(/[,،\s]+/)[0]+'.com'):'');
+ const list=domainVariants(base);
+ if(!list.length){toast(tr('أضف النطاق الرسمي في الإعدادات أولاً','Add your official domain in Settings first'));return}
+ state.dnsScanning=true;renderVariants();
+ for(const d of list){
+  state.dnsResults[d]=await checkDomainDns(d);
+ }
+ state.dnsScanning=false;renderVariants();
+ const active=Object.values(state.dnsResults).filter(x=>x.state==='registered').length;
+ toast(active?tr(`تم الفحص: وُجد ${active} نطاق مسجّل`,`Scan complete: ${active} registered domain(s) found`):tr('تم الفحص: لا توجد نطاقات مشابهة مسجّلة','Scan complete: no lookalike domains registered'));
+}
+
+async function probeCaseLink(c){
+ const raw=c.url||(typeOf(c)==='domain'&&c.username?'https://'+c.username:'');
+ if(!raw)return{at:Date.now(),state:'unknown',detail:tr('لا يوجد رابط لفحصه','No URL to check')};
+ let u;try{u=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw)}catch{return{at:Date.now(),state:'unknown',detail:tr('رابط غير صالح','Invalid URL')}}
+ const host=u.hostname.replace(/^www\./,'');
+ const dns=await checkDomainDns(host);
+ if(dns.state==='free'){
+  return{at:Date.now(),state:'down',detail:tr('النطاق متوقف / غير موجود (NXDOMAIN — ربما أُزيل)','Domain down / non-existent (NXDOMAIN — likely removed)')};
+ }
+ try{
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),6000);
+  await fetch(u.href,{mode:'no-cors',cache:'no-store',signal:ctrl.signal});
+  clearTimeout(timer);
+  return{at:Date.now(),state:'live',detail:tr(`النطاق والخادم يستجيب (${dns.ip||host})`,`Domain & server reachable (${dns.ip||host})`)};
+ }catch{
+  return{at:Date.now(),state:'down',detail:tr('الخادم لا يستجيب أو الرابط متوقف','Server unreachable or link down')};
+ }
+}
+
+function extractHost(c){
+ const raw=c.url||(c.username||'');
+ if(!raw)return'';
+ try{
+  const u=new URL(/^https?:\/\//i.test(raw)?raw:'https://'+raw);
+  return u.hostname.replace(/^www\./,'').toLowerCase();
+ }catch{
+  return raw.replace(/^https?:\/\//i,'').replace(/^www\./,'').split('/')[0].toLowerCase();
+ }
+}
+
+async function fetchDomainRdap(domain){
+ const clean=domain.replace(/^www\./,'').trim();
+ if(!clean||!clean.includes('.'))return null;
+ try{
+  const r=await fetch(`https://rdap.org/domain/${encodeURIComponent(clean)}`,{headers:{'Accept':'application/rdap+json, application/json'}});
+  if(!r.ok)return null;
+  const j=await r.json();
+  let registrar='',abuseEmail='',created='';
+  const walkEntities=ents=>{
+   if(!Array.isArray(ents))return;
+   for(const e of ents){
+    const roles=e.roles||[];
+    const vcard=Array.isArray(e.vcardArray)&&Array.isArray(e.vcardArray[1])?e.vcardArray[1]:[];
+    const fn=vcard.find(x=>x[0]==='fn');
+    const em=vcard.find(x=>x[0]==='email');
+    if(roles.includes('registrar')&&fn&&fn[3]&&!registrar)registrar=String(fn[3]);
+    if(roles.includes('abuse')&&em&&em[3]&&!abuseEmail)abuseEmail=String(em[3]);
+    if(!abuseEmail&&em&&em[3])abuseEmail=String(em[3]);
+    if(e.entities)walkEntities(e.entities);
+   }
+  };
+  walkEntities(j.entities);
+  if(Array.isArray(j.events)){
+   const regEv=j.events.find(ev=>ev.eventAction==='registration')||j.events[0];
+   if(regEv&&regEv.eventDate)created=regEv.eventDate.slice(0,10);
+  }
+  const nameservers=Array.isArray(j.nameservers)?j.nameservers.map(n=>n.ldhName).filter(Boolean).slice(0,4):[];
+  return{
+   at:Date.now(),
+   domain:clean,
+   registrar:registrar||'Unknown Registrar',
+   abuseEmail:abuseEmail||'',
+   created:created||'',
+   nameservers
+  };
+ }catch{
+  return null;
+ }
+}
+
+/* ---------- Overdue Alerts (Feature 3) ---------- */
+function buildLateSummary(){
+ const lateList=state.cases.filter(isLate);
+ if(!lateList.length)return'';
+ const brand=state.settings.brand||tr('العلامة التجارية','Brand Guard');
+ const lines=[tr(`تنبيه حارس العلامة (${brand}): يوجد ${lateList.length} بلاغ تأخر الرد عليه:`,`Brand Guard Alert (${brand}): ${lateList.length} overdue report(s) need follow-up:`),''];
+ lateList.forEach((c,i)=>{
+  const p=pfName(c.platform);
+  const days=Math.floor((Date.now()-c.reportedAt)/DAY);
+  lines.push(tr(`${i+1}. ${idLabel(c)} (${p}) — منذ ${days} يوم — الحالة: ${stName(c.status)}${c.refId?' — مرجع: '+c.refId:''}`,`${i+1}. ${idLabel(c)} (${p}) — ${days} days ago — Status: ${stName(c.status)}${c.refId?' — Ref: '+c.refId:''}`));
+  if(c.url)lines.push(`   ${c.url}`);
+ });
+ return lines.join('\n');
+}
+
+function checkAutoNotification(){
+ if(state.customerMode||typeof Notification==='undefined'||Notification.permission!=='granted')return;
+ const lateCount=state.cases.filter(isLate).length;
+ if(!lateCount)return;
+ const today=new Date().toISOString().slice(0,10);
+ if(localStorage.getItem('hares-notified-day')===today)return;
+ try{
+  new Notification(tr('حارس العلامة — بلاغات تحتاج متابعة','Brand Guard — Overdue Reports'),{
+   body:tr(`يوجد ${lateCount} بلاغ مضى عليه أكثر من ${+state.settings.remind||7} أيام بدون رد.`,`${lateCount} report(s) have been pending for more than ${+state.settings.remind||7} days.`),
+   dir:isEn()?'ltr':'rtl',lang:state.lang
+  });
+  localStorage.setItem('hares-notified-day',today);
+ }catch{}
+}
+
+/* ---------- Image Compression & Forensic Evidence Stamp ---------- */
+function compress(file,stampInfo=null){
+ return new Promise((res,rej)=>{
+  const r=new FileReader();r.onerror=rej;
+  r.onload=()=>{
+   const im=new Image();im.onerror=rej;
+   im.onload=()=>{
+    const m=1280,k=Math.min(1,m/Math.max(im.width,im.height));
+    const w=Math.max(360,Math.round(im.width*k)),h=Math.round(im.height*k);
+    const barH=stampInfo?36:0;
+    const cv=document.createElement('canvas');
+    cv.width=w;cv.height=h+barH;
+    const ctx=cv.getContext('2d');
+    ctx.fillStyle='#101C2C';
+    ctx.fillRect(0,0,w,h+barH);
+    ctx.drawImage(im,0,0,w,h);
+    if(stampInfo){
+     ctx.fillStyle='#101C2C';
+     ctx.fillRect(0,h,w,barH);
+     ctx.fillStyle='#F2A541';
+     ctx.fillRect(0,h,w,2);
+     ctx.fillStyle='#FFFFFF';
+     ctx.font='bold 12px Tahoma, system-ui, sans-serif';
+     ctx.textBaseline='middle';
+     const ts=new Date().toISOString().replace('T',' ').slice(0,19)+' UTC';
+     const txt=`EVIDENCE • ${ts} • Target: ${stampInfo.target||'N/A'} • Powered by Kais`;
+     if(kaisImg.complete&&kaisImg.naturalWidth){
+      const lh=barH-6,lw=Math.round(kaisImg.naturalWidth*(lh/kaisImg.naturalHeight));
+      ctx.drawImage(kaisImg,w-lw-8,h+3,lw,lh);
+     }
+     ctx.fillText(txt.slice(0,105),10,h+barH/2+1);
+    }
+    res(cv.toDataURL('image/jpeg',.82));
+   };
+   im.src=r.result;
+  };
+  r.readAsDataURL(file);
+ });
+}
+
+/* ---------- Customer Scam Alert Story Card Generator (1080x1920 Canvas) ---------- */
+function buildScamAlertCard(c){
+ const cv=document.createElement('canvas');
+ cv.width=1080;cv.height=1920;
+ const ctx=cv.getContext('2d');
+ const s=state.settings;
+ const brand=s.brand||tr('علامتنا التجارية','OUR OFFICIAL BRAND');
+
+ // Background gradient
+ const bg=ctx.createLinearGradient(0,0,0,1920);
+ bg.addColorStop(0,'#101C2C');
+ bg.addColorStop(1,'#182B44');
+ ctx.fillStyle=bg;
+ ctx.fillRect(0,0,1080,1920);
+
+ // Top hazard stripe
+ ctx.fillStyle='#C53030';
+ ctx.fillRect(0,0,1080,170);
+ ctx.fillStyle='#FFFFFF';
+ ctx.textAlign='center';
+ ctx.font='bold 52px Tahoma, sans-serif';
+ ctx.fillText('⚠️ تحذير هام للعملاء • SCAM ALERT',540,105);
+
+ // Brand title
+ ctx.fillStyle='#F2A541';
+ ctx.font='bold 64px Tahoma, sans-serif';
+ ctx.fillText(brand,540,290);
+ ctx.fillStyle='#B9C6D3';
+ ctx.font='34px Tahoma, sans-serif';
+ ctx.fillText(tr('تنبيه رسمي لحماية العملاء من انتحال الهوية','Official Brand Protection & Anti-Impersonation Notice'),540,355);
+
+ // Red Fake Impersonator Card
+ ctx.fillStyle='#2B1419';
+ ctx.strokeStyle='#E53E3E';
+ ctx.lineWidth=6;
+ ctx.beginPath();
+ ctx.roundRect(70,430,940,560,28);
+ ctx.fill();ctx.stroke();
+
+ ctx.fillStyle='#FEB2B2';
+ ctx.font='bold 40px Tahoma, sans-serif';
+ ctx.fillText(tr('❌ حساب / موقع منتحل (غير تابع لنا)','❌ FAKE / UNAUTHORIZED IMPERSONATOR'),540,515);
+
+ ctx.fillStyle='#FFFFFF';
+ ctx.font='bold 56px Tahoma, sans-serif';
+ const targetLabel=idLabel(c);
+ ctx.fillText(targetLabel.slice(0,32),540,625);
+
+ ctx.fillStyle='#CBD5E0';
+ ctx.font='34px Tahoma, sans-serif';
+ const pfText=`${typeInfo(typeOf(c)).t} • ${pfName(c.platform)}`;
+ ctx.fillText(pfText,540,695);
+
+ if(c.url){
+  ctx.fillStyle='#FBD38D';
+  ctx.font='28px Tahoma, sans-serif';
+  ctx.fillText(c.url.slice(0,55),540,760);
+ }
+
+ // Stamp inside Red Box
+ ctx.save();
+ ctx.translate(540,885);
+ ctx.rotate(-0.04);
+ ctx.strokeStyle='#FC8181';
+ ctx.lineWidth=5;
+ ctx.strokeRect(-320,-50,640,96);
+ ctx.fillStyle='#FC8181';
+ ctx.font='bold 38px Tahoma, sans-serif';
+ ctx.fillText('FAKE / حساب وهمي منتحل',0,13);
+ ctx.restore();
+
+ // Green Verified Official Channels Card
+ ctx.fillStyle='#0F2922';
+ ctx.strokeStyle='#38A169';
+ ctx.lineWidth=6;
+ ctx.beginPath();
+ ctx.roundRect(70,1060,940,580,28);
+ ctx.fill();ctx.stroke();
+
+ ctx.fillStyle='#9AE6B4';
+ ctx.font='bold 40px Tahoma, sans-serif';
+ ctx.fillText(tr('✅ قنواتنا الرسمية المعتمدة فقط','✅ OUR ONLY VERIFIED OFFICIAL CHANNELS'),540,1145);
+
+ ctx.fillStyle='#FFFFFF';
+ ctx.font='36px Tahoma, sans-serif';
+ const offLines=[];
+ const seenOff=new Set();
+ const pushOff=(icon,raw)=>{
+  const clean=raw.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'');
+  if(!clean||seenOff.has(clean.toLowerCase()))return;
+  seenOff.add(clean.toLowerCase());
+  offLines.push(icon?`${icon} ${clean}`:clean);
+ };
+ if(s.domain)pushOff('🌐',s.domain);
+ if(s.handles)pushOff('📱','@'+s.handles.split(/[,،\s]+/)[0].replace(/^@/,''));
+ (s.official||'').split('\n').map(x=>x.trim()).filter(Boolean).slice(0,4).forEach(u=>pushOff('',u));
+ if(!offLines.length)offLines.push(brand);
+ offLines.slice(0,5).forEach((line,idx)=>{
+  ctx.fillText(line.slice(0,46),540,1235+(idx*72));
+ });
+
+ // Bottom warning footer & Powered by Kais signature
+ ctx.fillStyle='#E2E8F0';
+ ctx.font='bold 31px Tahoma, sans-serif';
+ ctx.fillText(tr('لا تقم بتحويل أي مبالغ مالية أو مشاركة بياناتك مع الحسابات المنتحلة','Never send money or share personal data with unauthorized accounts'),540,1710);
+ if(kaisImg.complete&&kaisImg.naturalWidth){
+  const lw=140,lh=Math.round(kaisImg.naturalHeight*(lw/kaisImg.naturalWidth));
+  ctx.drawImage(kaisImg,540-lw/2,1738,lw,lh);
+ }
+ ctx.fillStyle='#F2A541';
+ ctx.font='bold 24px Tahoma, sans-serif';
+ ctx.fillText(`POWERED BY KAIS • Brand Guard (حارس العلامة) • ${new Date().toISOString().slice(0,10)}`,540,1875);
+
+ return cv.toDataURL('image/png');
+}
+
+/* ---------- render: header & main ---------- */
+function renderTopActs(){
+ const el=$('topActs');if(!el)return;
+ const langBtn=`<button class="pill" data-act="toggleLang" title="${tr('Switch to English','التبديل إلى العربية')}">${isEn()?'عربي':'EN'}</button>`;
+ if(state.customerMode){
+  el.innerHTML=langBtn+(!isPublicReport?`<button class="pill" data-act="exitCustomerMode">${tr('العودة للتطبيق','Back to App')}</button>`:'');
+  return;
+ }
+ const cfg=Cloud.getConfig();
+ const roleBtn=`<button class="pill ${isOwner()?'':'staff'}" data-act="toggleRole" title="${tr('تبديل الصلاحية','Switch Role')}">${isOwner()?tr('🔑 مالك','🔑 Owner'):tr('👤 موظف','👤 Staff')}</button>`;
+ const syncBtn=cfg?`<button class="pill sync" data-act="syncNow" title="${tr('مزامنة سحابية','Cloud Sync')}">${state.syncing?tr('جاري المزامنة...','Syncing...'):tr('☁️ مزامنة','☁️ Sync')}</button>`:'';
+ el.innerHTML=langBtn+syncBtn+roleBtn;
+}
+
+function renderMain(){
+ applyLangDir();
+ renderTopActs();
+ if(state.customerMode){
+  $('fabAdd').style.display='none';
+  $('navBar').style.display='none';
+  const bName=urlParams.get('brand')||state.settings.brand||tr('علامتنا التجارية','Our Brand');
+  $('sub').textContent=tr(`نموذج الإبلاغ عن انتحال «${bName}»`,`Impersonation Report Form — "${bName}"`);
+  renderCustomerForm(bName);
+  return;
+ }
+ $('navBar').style.display='';
+ ['list','variants','settings'].forEach(t=>{const b=$('t-'+t);if(t===state.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+ $('fabAdd').style.display=state.tab==='list'?'':'none';
+ $('sub').textContent=state.cases.length?tr(`${state.cases.length} حالة في السجل`,`${state.cases.length} case(s) recorded`):tr('سجل الانتحال وبلاغاته','Brand Impersonation & Takedown Tracker');
+ const m=$('main');
+ if(state.tab==='list'){
+  m.innerHTML=`<div class="pad"><div id="setupNote"></div><div id="lateNote"></div><div class="chips" id="chips" role="group" aria-label="${tr('تصفية الحالات','Filter cases')}"></div>
+   <div class="row" style="margin-bottom:12px"><input type="search" id="q" style="flex:3" placeholder="${tr('ابحث باسم الحساب أو رقم البلاغ أو الملاحظات','Search by username, URL, ref ID, or notes')}" value="${esc(state.q)}" aria-label="${tr('بحث','Search')}">
+   <button class="btn sm" style="flex:1;min-height:48px" data-act="checkAllLinks">${state.linkChecking?tr('جاري الفحص...','Checking...'):tr('فحص الروابط','Check Links')}</button></div>
+   <div id="caseList"></div></div>`;
+  $('q').addEventListener('input',e=>{state.q=e.target.value;renderList()});
+  renderList();
+ }else if(state.tab==='variants')renderVariants();
+ else renderSettings();
+}
+
+function renderCustomerForm(brandName){
+ const m=$('main');
+ if(state.customerSubmitted){
+  m.innerHTML=`<div class="pad"><div class="panel" style="text-align:center;padding:32px 18px">
+   <b style="font-size:20px;color:var(--ok);display:block;margin-bottom:8px">${tr('شكراً لك! تم استلام بلاغك بنجاح','Thank you! Your report has been received')}</b>
+   <p class="hint" style="font-size:15px">${tr(`سيقوم فريق حماية العلامة التجارية «${esc(brandName)}» بمراجعة الرابط واتخاذ الإجراء القانوني اللازم.`,`The "${esc(brandName)}" brand protection team will review this report and take appropriate action.`)}</p>
+   <div style="height:16px"></div>
+   <button class="btn primary" data-act="resetCustomerForm">${tr('إرسال بلاغ آخر','Submit Another Report')}</button>
+  </div></div>`;
+  return;
+ }
+ const d=state.custDraft;
+ m.innerHTML=`<div class="pad"><div class="panel">
+  <h3>${tr('الإبلاغ عن حساب أو موقع منتحل','Report an Impersonating Account or Website')}</h3>
+  <p class="hint">${tr(`ساعدنا في حماية العملاء من الحسابات والمواقع الوهمية التي تنتحل اسم أو صور «${esc(brandName)}».`,`Help us protect customers from fake accounts, websites, or scammers impersonating "${esc(brandName)}".`)}</p>
+  <label for="cf-type">${tr('نوع الانتحال','Impersonation Type')}</label>
+  <select id="cf-type">${Object.keys(TYPES).map(k=>`<option value="${k}" ${d.type===k?'selected':''}>${typeInfo(k).t}</option>`).join('')}</select>
+  <label for="cf-url">${tr('رابط الحساب أو الموقع أو الرقم المشبوه','Suspicious URL, Username, or Phone Number')}</label>
+  <input type="text" id="cf-url" class="ltr" placeholder="${tr('https://... أو @username أو +971...','https://... or @username or +971...')}" value="${esc(d.url)}">
+  <div class="row">
+   <div><label for="cf-pf">${tr('المنصة','Platform')}</label><select id="cf-pf">${Object.keys(PLATFORMS).map(k=>`<option value="${k}" ${d.platform===k?'selected':''}>${pfName(k)}</option>`).join('')}</select></div>
+   <div><label for="cf-user">${tr('الاسم / المعرّف (اختياري)','Username / Handle (optional)')}</label><input type="text" id="cf-user" class="ltr" placeholder="@username" value="${esc(d.username)}"></div>
+  </div>
+  <label for="cf-notes">${tr('تفاصيل إضافية (ماذا يفعل هذا الحساب؟)','Additional Details (What is this account doing?)')}</label>
+  <textarea id="cf-notes" placeholder="${tr('مثال: يرسل رسائل للعملاء ويطلب تحويل مبالغ مالية','Example: Using our product photos and asking customers for bank transfers')}">${esc(d.notes)}</textarea>
+  <label for="cf-contact">${tr('وسيلة تواصل معك (اختياري)','Your Contact Info (optional)')}</label>
+  <input type="text" id="cf-contact" placeholder="${tr('رقم هاتفك أو بريدك إن أردت المتابعة','Your phone or email if you want follow-up')}" value="${esc(d.contact)}">
+  <label>${tr('لقطة شاشة (اختياري)','Screenshot (optional)')}</label>
+  <div class="shots" id="cf-shots">${shotsHtml(d.shots,true,'delCustShot')}</div>
+  <div style="height:10px"></div>
+  <button class="btn block" data-act="pickCustShots">${tr('+ إرفاق لقطة شاشة','+ Attach Screenshot')}</button>
+  <input type="file" id="cf-file" accept="image/*" multiple hidden>
+  <div style="height:20px"></div>
+  <button class="btn primary block" data-act="submitCustomerReport">${tr('إرسال البلاغ','Submit Report')}</button>
+ </div></div>`;
+}
+
+function renderList(){
+ const lateCases=state.cases.filter(isLate),late=lateCases.length,cnt=k=>state.cases.filter(c=>c.status===k).length;
+ const note=$('setupNote');if(note)note.innerHTML=state.settings.brand?'':`<div class="notice"><span>${tr('أكمل بيانات العلامة أو حمّل العرض التجريبي للعملاء من الإعدادات.','Complete your brand details or load the Client Demo Preset in Settings.')}</span><div style="display:flex;gap:6px"><button class="btn sm" data-act="loadDemoPreset">${tr('عرض تجريبي','Load Demo')}</button><button class="btn sm primary" data-act="tab" data-v="settings">${tr('الإعدادات','Settings')}</button></div></div>`;
+ const lNote=$('lateNote');
+ if(lNote){
+  lNote.innerHTML=late?`<div class="notice danger"><span>${tr(`تنبيه: <b>${late}</b> بلاغ مضى عليه أكثر من ${+state.settings.remind||7} أيام بدون رد.`,`Alert: <b>${late}</b> report(s) pending for over ${+state.settings.remind||7} days without response.`)}</span>
+   <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm danger" data-act="sendLateWhatsApp">${tr('تنبيه واتساب','WhatsApp Alert')}</button><button class="btn sm" data-act="sendLateEmail">${tr('تنبيه بريد','Email Alert')}</button></div></div>`:'';
+ }
+ const chip=(k,t,n,cls='')=>`<button class="chip ${cls}" data-act="filter" data-v="${k}" aria-pressed="${state.filter===k}">${t} <b>${n}</b></button>`;
+ const custCnt=state.cases.filter(c=>c.source==='customer').length;
+ $('chips').innerHTML=chip('all',tr('الكل','All'),state.cases.length)+(late?chip('late',tr('تحتاج متابعة','Needs Follow-up'),late,'alert'):'')+(custCnt?chip('customer',tr('بلاغات العملاء','Customer Reports'),custCnt):'')+STATUSES.map(s=>chip(s.k,stName(s.k),cnt(s.k))).join('');
+ let list=state.cases.slice().sort((a,b)=>b.updatedAt-a.updatedAt);
+ if(state.filter==='late')list=list.filter(isLate);
+ else if(state.filter==='customer')list=list.filter(c=>c.source==='customer');
+ else if(state.filter!=='all')list=list.filter(c=>c.status===state.filter);
+ const q=state.q.trim().toLowerCase();if(q)list=list.filter(c=>(c.username+' '+c.url+' '+c.notes+' '+(c.refId||'')).toLowerCase().includes(q));
+ const el=$('caseList');
+ if(!list.length){el.innerHTML=state.cases.length?`<div class="empty"><b>${tr('لا نتائج','No matching cases')}</b>${tr('غيّر التصفية أو كلمة البحث.','Try changing the filter or search query.')}</div>`:`<div class="empty"><b>${tr('لا توجد حالات بعد','No cases recorded yet')}</b>${tr('اضغط «إضافة حالة» أو حمّل العرض التجريبي لاستعراض كافة الميزات.','Click "+ Add Case" or load the Demo Preset to explore all protection features.')}</div>`;return}
+ el.innerHTML=list.map(c=>{const p=PLATFORMS[c.platform]||PLATFORMS.other,s=ST[c.status]||ST.found;
+  const lc=c.linkCheck;
+  const lcBadge=lc?(lc.state==='down'?`<span class="tag down">${tr('الرابط متوقف','Link Down')}</span>`:(lc.state==='live'?`<span class="tag live">${tr('الرابط نشط','Link Active')}</span>`:'')):'';
+  const custBadge=c.source==='customer'?`<span class="tag">${tr('بلاغ عميل','Customer Report')}</span>`:'';
+  const refBadge=c.refId?`<span class="tag ref">#${esc(c.refId)}</span>`:'';
+  return `<button class="case" data-act="openCase" data-id="${c.id}">
+   <span class="pf" style="background:${p.c};${p.dark?'color:#222':''}">${p.i}</span>
+   <span class="meta"><div class="u"><bdi dir="ltr">${esc(idLabel(c))}</bdi></div>
+   <div class="d">${typeOf(c)==='profile'?pfName(c.platform):typeInfo(typeOf(c)).t+' · '+pfName(c.platform)} · ${ago(c.foundAt)}${c.shots?.length?` · ${c.shots.length} ${tr('صور','photos')}`:''}${refBadge}${custBadge}${lcBadge}${isLate(c)?`<span class="late">${tr('تأخر الرد','Overdue')}</span>`:''}</div></span>
+   <span class="stamp" style="--c:${s.c}">${stName(c.status)}</span></button>`}).join('');
+}
+
+/* ---------- render: variants & domain scanner ---------- */
+function renderVariants(){
+ const handles=(state.settings.handles||'').split(/[,،\s]+/).map(x=>x.trim()).filter(Boolean);
+ const brand=state.settings.brand||'';
+ const domain=state.settings.domain||(handles[0]?handles[0]+'.com':'');
+ const images=(state.settings.images||'').split('\n').map(x=>x.trim()).filter(Boolean);
+ let h=`<div class="pad">`;
+ if(!handles.length&&!brand&&!images.length&&!domain){h+=`<div class="empty"><b>${tr('أضف بيانات العلامة أولاً','Add your brand details first')}</b>${tr('اكتب اسم العلامة واسم حسابها ونطاقها وروابط صور منتجاتك في الإعدادات ثم ارجع هنا.','Enter your brand name, official handle, domain, and product image URLs in Settings, then return here.')}<div style="margin-top:14px;display:flex;gap:8px;justify-content:center"><button class="btn primary" data-act="tab" data-v="settings">${tr('فتح الإعدادات','Open Settings')}</button><button class="btn" data-act="loadDemoPreset">${tr('تحميل عرض تجريبي','Load Demo Preset')}</button></div></div></div>`;$('main').innerHTML=h;return}
+ const link=(href,t)=>`<a target="_blank" rel="noopener" href="${href}">${t}</a>`;
+ const terms=[...new Set([brand,...handles].filter(Boolean))];
+ if(terms.length){
+  const lib=(t,cc)=>`https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=${cc}&q=${encodeURIComponent(t)}&search_type=keyword_unordered&media_type=all`;
+  h+=`<div class="panel"><h3>${tr('الإعلانات المدفوعة (Meta Ad Library)','Paid Ads (Meta Ad Library)')}</h3><p class="hint">${tr('ابحث عن إعلانات تستخدم اسم علامتك. إن وجدت إعلاناً من صفحة غير رسمية، سجّله كحالة من نوع «إعلان مدفوع».','Search for ads using your brand name. If you find an unauthorized ad, record it as a "Paid Ad" case.')}</p>`+
+  terms.map(t=>`<div class="var"><span class="n ltr">${esc(t)}</span>${link(lib(t,'AE'),tr('الإمارات','UAE'))}${link(lib(t,'SA'),tr('السعودية','KSA'))}${link(lib(t,'ALL'),tr('كل الدول','All Countries'))}</div>`).join('')+`</div>`}
+ if(domain){
+  const dVars=domainVariants(domain);
+  h+=`<div class="panel"><h3><span>${tr('فحص النطاقات المشابهة','Lookalike Domain Scanner')} (<bdi dir="ltr">${esc(domain)}</bdi>)</span><button class="btn sm primary" data-act="scanDomains">${state.dnsScanning?tr('جاري الفحص...','Scanning...'):tr('فحص DNS الآن','Scan DNS Now')}</button></h3>
+  <p class="hint">${tr('بديل dnstwist داخل المتصفح: يولّد النطاقات المشابهة ويفحص سجلات DNS عبر Cloudflare لمعرفة النطاقات المسجّلة فعلياً.','Browser-based dnstwist: generates lookalike domains and queries Cloudflare DNS to detect registered domains.')}</p>`+
+  dVars.map(d=>{
+   const r=state.dnsResults[d];
+   const badge=r?(r.state==='registered'?`<span class="tag live">${tr('مسجّل','Registered')} (${esc(r.ip)})</span>`:(r.state==='free'?`<span class="tag down">${tr('غير مسجّل','Unregistered')}</span>`:`<span class="hint">${tr('تعذّر الفحص','Check failed')}</span>`)):'';
+   const addBtn=(r&&r.state==='registered')?`<button class="mini bad" data-act="addDomainCase" data-domain="${esc(d)}">${tr('+ تسجيل كحالة','+ Add Case')}</button>`:'';
+   return `<div class="var"><span class="n ltr">${esc(d)}</span>${badge}${addBtn}<a target="_blank" rel="noopener" href="https://${encodeURIComponent(d)}">${tr('فتح','Open')}</a></div>`;
+  }).join('')+`</div>`;
+ }
+ if(images.length){
+  h+=`<div class="panel"><h3>${tr('فحص صور المنتجات','Reverse Product Image Search')}</h3><p class="hint">${tr('يبحث عمّن ينشر نفس صورك. إن وجدت حساباً أو موقعاً ينسخها، سجّله كحالة.','Find websites or accounts copying your product photos.')}</p>`+
+  images.map(u=>{if(!/^https?:\/\//i.test(u))return `<div class="var"><span class="n ltr" style="min-width:0;overflow:hidden;text-overflow:ellipsis">${esc(u)}</span><span class="hint">${tr('الرابط يجب أن يبدأ بـ https','URL must start with https')}</span></div>`;
+   const e=encodeURIComponent(u);
+   return `<div class="var"><img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer" style="width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid var(--line);flex:0 0 44px"><span class="n ltr" style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(u.replace(/^https?:\/\//i,''))}</span>${link('https://lens.google.com/uploadbyurl?url='+e,'Google Lens')}${link('https://tineye.com/search?url='+e,'TinEye')}</div>`}).join('')+`</div>`}
+ if(brand){const q=encodeURIComponent('"'+brand+'"');
+  h+=`<div class="panel"><h3>${tr('بحث سريع عن الاسم','Quick Brand Search')}</h3><p class="hint" style="margin-bottom:10px">${tr('يفتح البحث في جوجل داخل كل منصة. افتحها مرة في الأسبوع.','Searches Google within each social platform. Run once a week.')}</p><div class="row">`+
+  ['instagram.com','tiktok.com','facebook.com','x.com'].map(d=>`<a class="btn sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=${q}+site:${d}">${d.split('.')[0]}</a>`).join('')+`</div></div>`}
+ handles.forEach(hd=>{const vs=variants(hd);
+  h+=`<div class="panel"><h3>${tr('تنويعات','Handle Variations for')} <bdi dir="ltr">@${esc(hd)}</bdi></h3><p class="hint">${tr('الأسماء التي يستخدمها المنتحلون عادة. افتح الرابط، وإن وجدت حساباً أضفه، ثم علّم الاسم كمفحوص.','Common impersonator handles. Open each link, add a case if fake, and check off when inspected.')}</p>`+
+  vs.map(v=>{const done=state.checked.includes(v);return `<div class="var ${done?'done':''}"><input type="checkbox" data-act="toggleVar" data-v="${esc(v)}" ${done?'checked':''} aria-label="${tr('تم فحص','Checked')} ${esc(v)}"><span class="n ltr">${esc(v)}</span>
+   <a target="_blank" rel="noopener" href="https://www.instagram.com/${encodeURIComponent(v)}/">Instagram</a><a target="_blank" rel="noopener" href="https://www.tiktok.com/@${encodeURIComponent(v)}">TikTok</a></div>`}).join('')+`</div>`});
+ h+=`</div>`;$('main').innerHTML=h;
+}
+
+/* ---------- render: settings ---------- */
+function renderSettings(){
+ const s=state.settings,ro=!isOwner()?'disabled':'';
+ const cfg=Cloud.getConfig()||{url:'',key:'',workspace:'default'};
+ const f=(id,l,v,type='text',hint='',cls='')=>`<label for="${id}">${l}</label><input type="${type}" id="${id}" class="${cls}" value="${esc(v||'')}" ${ro}>${hint?`<p class="hint">${hint}</p>`:''}`;
+ const notifState=(typeof Notification!=='undefined')?Notification.permission:'unsupported';
+ $('main').innerHTML=`<div class="pad">
+ ${!isOwner()?`<div class="notice"><span>${tr('أنت حالياً في <b>وضع الموظف</b>. تعديل الإعدادات وحذف الحالات متاح للمالك فقط.','You are currently in <b>Staff Mode</b>. Editing settings and deleting cases is restricted to the Owner.')}</span><button class="btn sm primary" data-act="toggleRole">${tr('التبديل إلى المالك','Switch to Owner')}</button></div>`:''}
+ <div class="panel" style="margin-top:0"><h3>${tr('بيانات العلامة','Brand Profile')}</h3><p class="hint">${tr('تُستخدم في نص البلاغ والفحص وبطاقات تحذير العملاء تلقائياً.','Used automatically in takedown reports, scans, and customer scam alert cards.')}</p>
+ ${f('s-brand',tr('اسم العلامة التجارية','Brand Name'),s.brand)}
+ ${f('s-handles',tr('اسم الحساب الرسمي','Official Handle(s)'),s.handles,'text',tr('اكتب الاسم بالإنجليزية بدون @. يمكن أكثر من اسم بفاصلة.','Enter handle without @. Separate multiple handles with a comma.'))}
+ ${f('s-domain',tr('النطاق الرسمي للموقع (لفحص النطاقات المشابهة)','Official Website Domain (for lookalike DNS scan)'),s.domain,'text',tr('مثال: mybrand.com','Example: mybrand.com'),'ltr')}
+ <label for="s-official">${tr('روابط الحسابات الرسمية (رابط في كل سطر)','Official Account URLs (one per line)')}</label><textarea id="s-official" class="ltr" ${ro}>${esc(s.official||'')}</textarea>
+ <label for="s-images">${tr('روابط صور منتجاتك (رابط في كل سطر)','Product Image URLs (one per line)')}</label><textarea id="s-images" class="ltr" placeholder="https://..." ${ro}>${esc(s.images||'')}</textarea><p class="hint">${tr('لفحص من ينسخ صورك عبر Google Lens وTinEye.','Used to check who copies your product photos via Google Lens & TinEye.')}</p>
+ ${f('s-tm',tr('رقم تسجيل العلامة التجارية','Trademark Registration No.'),s.tm)}
+ ${f('s-license',tr('رقم الرخصة التجارية','Trade License No.'),s.license)}
+ ${f('s-owner',tr('اسم مقدّم البلاغ (المالك أو المفوّض)','Reporter Name (Owner or Authorized Representative)'),s.owner)}
+ ${f('s-email',tr('البريد الإلكتروني للتواصل والتنبيهات','Contact & Alert Email'),s.email,'email')}
+ ${f('s-phone',tr('رقم واتساب لاستلام تنبيهات التأخير','WhatsApp Number for Overdue Alerts'),s.phone,'text',tr('مثال: +971500000000','Example: +971500000000'),'ltr')}
+ ${f('s-remind',tr('التذكير بالمتابعة بعد (أيام)','Follow-up Reminder Threshold (days)'),s.remind||7,'text')}
+ <div style="height:16px"></div>${isOwner()?`<button class="btn primary block" data-act="saveSettings">${tr('حفظ الإعدادات','Save Settings')}</button>`:''}</div>
+
+ <div class="panel"><h3>${tr('عرض تجريبي للعملاء (Client Demo Preset)','Client Demo Preset')}</h3>
+ <p class="hint" style="margin-bottom:10px">${tr('حمّل بيانات علامة وحالات انتحال نموذجية لاستعراض كافة ميزات النظام أمام العميل بضغطة واحدة.','Load realistic sample brand settings and cases to demonstrate the full protection workflow to a client in 1 click.')}</p>
+ <div class="row">
+  <button class="btn primary" data-act="loadDemoPreset">${tr('تحميل بيانات العرض التجريبي','Load Demo Client Data')}</button>
+  ${isOwner()?`<button class="btn danger" data-act="resetAllData">${tr('مسح جميع البيانات','Reset All Data')}</button>`:''}
+ </div></div>
+
+ <div class="panel"><h3>${tr('نموذج بلاغات العملاء','Public Customer Report Form')}</h3>
+ <p class="hint" style="margin-bottom:10px">${tr('رابط عام يتيح لعملائك إرسال رابط وصورة لأي حساب ينتحل علامتك دون الاطلاع على بياناتك الداخلية.','A shareable link where customers can submit suspicious links & screenshots without seeing your internal records.')}</p>
+ <div class="row">
+  <button class="btn primary" data-act="copyCustomerLink">${tr('نسخ رابط نموذج العملاء','Copy Customer Form Link')}</button>
+  <button class="btn" data-act="previewCustomerForm">${tr('معاينة النموذج','Preview Form')}</button>
+ </div></div>
+
+ <div class="panel"><h3>${tr('تنبيهات تأخر الرد','Overdue Follow-up Alerts')}</h3>
+ <p class="hint" style="margin-bottom:10px">${tr(`إرسال ملخص بالحالات التي مضى عليها أكثر من ${+s.remind||7} أيام بدون رد عبر واتساب أو البريد أو إشعارات المتصفح.`,`Send a summary of cases pending for more than ${+s.remind||7} days via WhatsApp, Email, or Browser Notifications.`)}</p>
+ <div class="row">
+  <button class="btn" data-act="sendLateWhatsApp">${tr('إرسال ملخص واتساب','Send WhatsApp Summary')}</button>
+  <button class="btn" data-act="sendLateEmail">${tr('إرسال ملخص بريد','Send Email Summary')}</button>
+ </div>
+ <div style="height:10px"></div>
+ <button class="btn block" data-act="enableNotifications">${notifState==='granted'?tr('✅ إشعارات المتصفح مفعّلة','✅ Browser Notifications Enabled'):tr('🔔 تفعيل إشعارات المتصفح','🔔 Enable Browser Notifications')}</button>
+ </div>
+
+ <div class="panel"><h3>${tr('أدوار المستخدمين (مالك / موظف)','User Roles (Owner / Staff)')}</h3>
+ <p class="hint">${tr('وضع الموظف يسمح بإضافة الحالات وتحديث حالتها وفحص الروابط، ويمنع حذف الحالات أو تغيير إعدادات العلامة.','Staff mode allows adding cases, updating status, and checking links, while preventing case deletion or settings changes.')}</p>
+ ${f('s-pin',tr('رمز حماية وضع المالك (اختياري — PIN)','Owner Mode PIN Lock (optional)'),s.pin,'password',tr('يُطلب عند التحويل من وضع الموظف إلى وضع المالك.','Required when switching back from Staff Mode to Owner Mode.'))}
+ <div style="height:10px"></div>
+ <div class="row">
+  ${isOwner()?`<button class="btn" data-act="saveSettings">${tr('حفظ الرمز','Save PIN')}</button>`:''}
+  <button class="btn primary" data-act="toggleRole">${isOwner()?tr('التبديل إلى وضع الموظف','Switch to Staff Mode'):tr('التبديل إلى وضع المالك','Switch to Owner Mode')}</button>
+ </div></div>
+
+ <div class="panel"><h3>${tr('المزامنة السحابية (Supabase — اختياري)','Cloud Sync (Supabase — Optional)')}</h3>
+ <p class="hint">${tr('يعمل التطبيق محلياً بالكامل بدون خادم. إن أردت مزامنة الحالات بين عدة أجهزة أو استقبال بلاغات العملاء عن بُعد، الصق رابط ومفتاح مشروع Supabase المجاني (راجع ملف supabase-schema.sql).','Works 100% locally out of the box. To sync across devices or collect customer reports remotely, paste your free Supabase Project URL & Anon Key (see supabase-schema.sql).')}</p>
+ ${f('c-url',tr('رابط مشروع Supabase (Project URL)','Supabase Project URL'),cfg.url,'url','','ltr')}
+ ${f('c-key',tr('مفتاح Supabase العام (Anon Key)','Supabase Anon Public Key'),cfg.key,'password','','ltr')}
+ ${f('c-ws',tr('اسم مساحة العمل المشتركة (Workspace)','Shared Workspace Name'),cfg.workspace||'default','text',tr('الأجهزة التي تستخدم نفس الاسم تتشارك نفس السجل.','Devices using the same workspace name share the same cases.'),'ltr')}
+ <div style="height:12px"></div>
+ ${isOwner()?`<div class="row"><button class="btn primary" data-act="saveCloud">${tr('حفظ ومزامنة الآن','Save & Sync Now')}</button><button class="btn" data-act="clearCloud">${tr('إيقاف السحابة','Disconnect Cloud')}</button></div>`:''}
+ </div>
+
+ <div class="panel"><h3>${tr('ملف الشكوى','Official Complaint Dossier')}</h3><p class="hint" style="margin-bottom:10px">${tr('ملف مطبوع فيه كل الحسابات والأدلة، تقدّمه للجهات الرسمية. اختر «حفظ كـ PDF» من نافذة الطباعة.','Printable report containing all cases and screenshot evidence for authorities. Choose "Save as PDF" in the print dialog.')}</p>
+ <select id="p-filter" aria-label="${tr('الحالات المطلوبة','Filter cases')}"><option value="all">${tr('كل الحسابات','All Cases')}</option>${STATUSES.map(x=>`<option value="${x.k}">${stName(x.k)}</option>`).join('')}</select>
+ <div style="height:10px"></div><button class="btn block" data-act="printCases">${tr('إنشاء ملف الشكوى','Generate Printable Dossier')}</button></div>
+
+ <div class="panel"><h3>${tr('نسخة احتياطية','Backup & Export')}</h3><p class="hint" style="margin-bottom:10px">${tr('احفظ نسخة احتياطية من جميع الحالات والصور بانتظام.','Export a backup of all cases and evidence regularly.')}</p>
+ <div class="row"><button class="btn" data-act="exportJSON">${tr('تصدير نسخة (مع الصور)','Export JSON (with photos)')}</button><button class="btn" data-act="exportCSV">${tr('تصدير جدول Excel','Export CSV (Excel)')}</button></div>
+ ${isOwner()?`<div style="height:10px"></div><button class="btn block" data-act="importJSON">${tr('استرجاع نسخة','Restore from JSON Backup')}</button>`:''}</div></div>`;
+}
+
+/* ---------- sheets ---------- */
+function openSheet(type,id){state.sheet={type,id};renderSheet()}
+function closeSheet(){state.sheet=null;$('sheet').hidden=true;$('sheet').innerHTML='';document.body.style.overflow='';renderMain()}
+function renderSheet(){
+ const sh=$('sheet'),s=state.sheet;if(!s){sh.hidden=true;return}
+ sh.hidden=false;document.body.style.overflow='hidden';
+ sh.innerHTML=(s.type==='form'?formHtml():detailHtml())+`<div class="kt-footer" style="margin-top:0;padding-bottom:90px"><div class="kt-pill"><img src="${KAIS_LOGO}" alt="KT"><span>POWERED BY KAIS</span></div></div>`;
+ sh.scrollTop=0;
+}
+function formHtml(){
+ const d=state.draft,T=typeInfo(d.type||'profile');
+ return `<div class="head"><button data-act="closeSheet">${tr('رجوع','Back')}</button><h2>${d.id?tr('تعديل الحالة','Edit Case'):tr('إضافة حالة انتحال','Add Impersonation Case')}</h2></div><div class="body">
+ <label for="f-type">${tr('نوع الحالة','Case Type')}</label><select id="f-type">${Object.keys(TYPES).map(k=>`<option value="${k}" ${(d.type||'profile')===k?'selected':''}>${typeInfo(k).t}</option>`).join('')}</select>
+ <label for="f-url" id="l-url">${T.l1}</label><input type="url" id="f-url" class="ltr" inputmode="url" placeholder="https://..." value="${esc(d.url)}">
+ <p class="hint" id="f-det"></p>
+ <div class="row"><div><label for="f-pf">${tr('المنصة','Platform')}</label><select id="f-pf">${Object.keys(PLATFORMS).map(k=>`<option value="${k}" ${d.platform===k?'selected':''}>${pfName(k)}</option>`).join('')}</select></div>
+ <div><label for="f-user" id="l-user">${T.l2}</label><input type="text" id="f-user" class="ltr" placeholder="${esc(T.ph2)}" value="${esc(d.username)}"></div></div>
+ <label for="f-ref">${tr('رقم البلاغ المرجعي من المنصة (اختياري)','Platform Ticket / Reference ID (optional)')}</label>
+ <input type="text" id="f-ref" class="ltr" placeholder="${tr('مثال: 1492837465','Example: 1492837465')}" value="${esc(d.refId||'')}">
+ <label for="f-notes">${tr('ملاحظات','Notes')}</label><textarea id="f-notes" placeholder="${tr('مثال: يستخدم صور منتجاتنا ويطلب تحويلاً مالياً','Example: Uses our product photos and requests wire transfers')}">${esc(d.notes)}</textarea>
+ <label>${tr('لقطات الشاشة والأدلة','Screenshots & Evidence')}</label>
+ <label class="chk"><input type="checkbox" id="f-stamp" ${state.stampEvidence?'checked':''}><span>${tr('ختم التاريخ والرابط على الصور تلقائياً كدليل قانوني موثّق','Stamp UTC timestamp & target URL on screenshots as forensic evidence')}</span></label>
+ <div class="shots" id="f-shots"></div>
+ <div style="height:10px"></div><button class="btn block" data-act="pickShots">${tr('+ إضافة صور','+ Add Screenshots')}</button>
+ <input type="file" id="f-file" accept="image/*" multiple hidden>
+ <div style="height:22px"></div><button class="btn primary block" data-act="saveCase">${tr('حفظ الحالة','Save Case')}</button></div>`;
+}
+function shotsHtml(arr,del,delAct='delShot'){return (arr||[]).map((src,i)=>`<div class="shot" data-act="${del?'noop':'openShot'}" data-src="${i}"><img src="${src}" alt="Screenshot ${i+1}">${del?`<button class="x" data-act="${delAct}" data-i="${i}" aria-label="${tr('حذف الصورة','Delete image')}">×</button>`:''}</div>`).join('')}
+
+function detailHtml(){
+ const c=state.cases.find(x=>x.id===state.sheet.id);if(!c){return `<div class="head"><button data-act="closeSheet">${tr('رجوع','Back')}</button></div>`}
+ const pf=state.reportPlatform||c.platform,lang=state.reportLang,st=ST[c.status]||ST.found;
+ const pObj=PLATFORMS[pf]||PLATFORMS.other;
+ const lc=c.linkCheck,rd=c.rdap;
+ const isDomainOrWeb=typeOf(c)==='domain'||c.platform==='website'||(c.url&&!/instagram\.com|tiktok\.com|facebook\.com|x\.com|twitter\.com|snapchat\.com|youtube\.com|t\.me|wa\.me/i.test(c.url));
+ return `<div class="head"><button data-act="closeSheet">${tr('رجوع','Back')}</button><h2><bdi dir="ltr">${esc(idLabel(c))}</bdi></h2><button data-act="editCase">${tr('تعديل','Edit')}</button></div><div class="body">
+ <div class="panel"><div style="display:flex;gap:10px;align-items:center;justify-content:space-between"><span><b>${typeOf(c)==='profile'?pfName(c.platform):typeInfo(typeOf(c)).t+' · '+pfName(c.platform)}</b>${c.source==='customer'?` <span class="tag">${tr('بلاغ عميل','Customer Report')}</span>`:''}${c.refId?` <span class="tag ref">#${esc(c.refId)}</span>`:''}<div class="hint">${tr('رُصد','Detected')} ${fdate(c.foundAt)} (${ago(c.foundAt)})${c.reporterContact?` · ${tr('بلّغ عنه:','Reporter:')} `+esc(c.reporterContact):''}</div></span><span class="stamp" style="--c:${st.c}">${stName(c.status)}</span></div>
+ ${c.url?`<p style="margin:10px 0 0"><a class="ltr" style="display:block;word-break:break-all" href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.url)}</a></p>`:''}
+ ${c.notes?`<p style="margin:10px 0 0">${esc(c.notes)}</p>`:''}
+ ${isLate(c)?`<p style="margin:10px 0 0;color:var(--bad);font-weight:700">${tr(`مضى أكثر من ${+state.settings.remind||7} أيام على البلاغ بدون رد. تابع أو صعّد للجهات الرسمية أدناه.`,`More than ${+state.settings.remind||7} days since reported without response. Follow up or escalate below.`)}</p>`:''}
+ <div style="margin-top:12px;padding-top:10px;border-top:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+  <span class="hint">${lc?`${tr('آخر فحص للرابط','Last link check')} (${fdate(lc.at)}): <b>${esc(lc.detail)}</b>`:tr('لم يُفحص توفّر الرابط بعد.','Link availability not checked yet.')}</span>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+   <button class="btn sm" data-act="checkSingleLink">${state.linkChecking?tr('جاري الفحص...','Checking...'):tr('فحص حالة الرابط','Check Link Status')}</button>
+   ${lc&&lc.state==='down'&&c.status!=='removed'?`<button class="btn sm ok" data-act="setStatus" data-v="removed">${tr('تحديد كـ «أُزيل»','Mark as "Removed"')}</button>`:''}
+  </div>
+ </div>
+ <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)">
+  <button class="btn sm warn block" data-act="generateAlertCard">${tr('⚠️ إنشاء بطاقة تحذير للعملاء (Instagram Story / WhatsApp)','⚠️ Generate Customer Scam Alert Card (1080×1920 Story)')}</button>
+ </div></div>
+
+ ${isDomainOrWeb?`<div class="panel"><h3><span>${tr('بيانات مسجّل النطاق والاستضافة (Whois / RDAP)','Domain Registrar & Abuse Inspector (RDAP)')}</span><button class="btn sm primary" data-act="checkCaseRdap">${state.rdapChecking?tr('جاري الفحص...','Querying...'):tr('فحص Whois / RDAP','Lookup Whois / RDAP')}</button></h3>
+ <p class="hint">${tr('يكشف الشركة المسجّلة للنطاق المنتحل وبريد الإبلاغ عن الانتهاكات (Abuse Email) لإيقاف الموقع من المصدر.','Identifies the domain registrar, creation date, nameservers, and direct Abuse Email to suspend the domain at the source.')}</p>
+ ${rd?`<div class="kv">
+  <b>${tr('النطاق:','Domain:')}</b><span class="ltr">${esc(rd.domain)}</span>
+  <b>${tr('مسجّل النطاق:','Registrar:')}</b><span class="ltr">${esc(rd.registrar)}</span>
+  <b>${tr('تاريخ التسجيل:','Registered:')}</b><span class="ltr">${esc(rd.created||'—')}</span>
+  <b>${tr('بريد الانتهاكات:','Abuse Email:')}</b><span class="ltr">${esc(rd.abuseEmail||'—')}</span>
+  <b>${tr('خوادم الأسماء:','Nameservers:')}</b><span class="ltr">${esc((rd.nameservers||[]).join(', ')||'—')}</span>
+ </div>
+ ${rd.abuseEmail?`<button class="btn sm danger block" data-act="emailRegistrarAbuse">${tr('✉️ إرسال بلاغ إيقاف لمسجّل النطاق','✉️ Email Takedown Notice to Registrar Abuse')} (${esc(rd.abuseEmail)})</button>`:''}`:''}
+ </div>`:''}
+
+ <div class="panel"><h3>${tr('الحالة ورقم البلاغ المرجعي','Status & Platform Reference ID')}</h3>
+ <div class="steps">${STATUSES.map(s=>`<button class="step" style="--c:${s.c}" data-act="setStatus" data-v="${s.k}" aria-pressed="${c.status===s.k}">${stName(s.k)}</button>`).join('')}</div>
+ <div class="row" style="margin-top:12px;align-items:center">
+  <input type="text" id="d-ref" class="ltr" style="flex:2;min-height:40px;padding:8px 12px" placeholder="${tr('رقم البلاغ المرجعي من المنصة (مثال: #14928374)','Platform Ticket / Reference No. (e.g. #14928374)')}" value="${esc(c.refId||'')}">
+  <button class="btn sm" style="flex:1;min-height:40px" data-act="saveRefId">${tr('حفظ الرقم','Save Ref ID')}</button>
+ </div></div>
+
+ <div class="panel"><h3>${tr('نص البلاغ ونماذج الإبلاغ المباشرة','Takedown Report & Direct Official Forms')}</h3>
+ <div class="row"><select id="r-pf" aria-label="${tr('المنصة','Platform')}">${Object.keys(PLATFORMS).map(k=>`<option value="${k}" ${pf===k?'selected':''}>${pfName(k)}</option>`).join('')}</select>
+ <select id="r-lang" aria-label="${tr('اللغة','Report Language')}"><option value="ar" ${lang==='ar'?'selected':''}>عربي (Arabic)</option><option value="en" ${lang==='en'?'selected':''}>English</option></select></div>
+ <div style="height:10px"></div><textarea id="r-text" style="min-height:230px" dir="${lang==='en'?'ltr':'rtl'}" aria-label="${tr('نص البلاغ','Report text')}">${esc(buildReport(c,pf,lang))}</textarea>
+ <div style="height:10px"></div>
+ <div class="row">
+  <button class="btn primary" data-act="copyReport">${tr('١. انسخ نص البلاغ','1. Copy Report Text')}</button>
+  <button class="btn ok" data-act="markReported">${tr('٣. سجّل «تم الإبلاغ»','3. Mark as Reported')}</button>
+ </div>
+ <div style="height:8px"></div>
+ <div class="row">
+  ${pObj.tmForm?`<a class="btn sm" target="_blank" rel="noopener" href="${pObj.tmForm}">${tr('٢أ. نموذج انتهاك العلامة التجارية ↗','2a. Direct Trademark Form ↗')}</a>`:''}
+  ${pObj.impForm?`<a class="btn sm" target="_blank" rel="noopener" href="${pObj.impForm}">${tr('٢ب. نموذج انتحال الهوية ↗','2b. Direct Impersonation Form ↗')}</a>`:''}
+  ${!pObj.tmForm&&pObj.help?`<a class="btn sm" target="_blank" rel="noopener" href="${pObj.help}">${tr('مركز مساعدة المنصة ↗','Platform Help Center ↗')}</a>`:''}
+ </div>
+ <p class="hint">${tr('انسخ النص ثم افتح النموذج الرسمي المباشر للمنصة من حساب المالك، وأرفق الصور المختومة، ثم احفظ رقم البلاغ المرجعي.', 'Copy the text, open the direct official form above from the owner account, attach the stamped evidence screenshots, and save the reference ID.')}</p>
+ </div>
+
+ <div class="panel"><h3>${tr('الأدلة الموثّقة','Documented Evidence')} (${c.shots?.length||0})</h3>${c.shots?.length?`<div class="shots">${shotsHtml(c.shots,false)}</div>`:`<p class="hint">${tr('لا توجد صور. اضغط «تعديل» لإضافة لقطات شاشة مختومة بالتاريخ.', 'No screenshots yet. Click "Edit" to attach timestamped screenshots.')}</p>`}</div>
+
+ <div class="panel"><h3><span>${tr('مركز التصعيد للجهات الرسمية','Official Escalation Center (UAE • KSA • Global)')}</span><button class="btn sm" data-act="printSingleCase">${tr('طباعة ملف هذه الحالة (PDF)','Print Case Dossier (PDF)')}</button></h3>
+ <p class="hint">${tr('في حال رفض المنصة للبلاغ أو وجود احتيال مالي أو موقع منتحل، صعّد الشكوى مرفقة بملف الـ PDF للجهات المختصة:', 'If the platform rejects the report or financial fraud / domain squatting is involved, escalate with the PDF Dossier:')}</p>
+ ${ESCALATION_GROUPS.map(g=>`<div class="esc-group"><h4>${isEn()?g.en:g.ar}</h4><div class="row">${g.links.map(l=>`<a class="btn sm" target="_blank" rel="noopener" href="${l.url}">${isEn()?l.en:l.ar} ↗</a>`).join('')}</div></div>`).join('')}
+ </div>
+
+ <div class="panel"><h3>${tr('السجل الزمني','Activity Log')}</h3><ul class="log">${(c.log||[]).slice().reverse().map(l=>`<li>${fdate(l.at)}: ${esc(l.t)}</li>`).join('')}</ul></div>
+ ${isOwner()?`<div style="height:16px"></div><button class="btn danger block" data-act="deleteCase">${tr('حذف الحساب','Delete Case')}</button>`:''}</div>`;
+}
+
+/* ---------- actions ---------- */
+async function reload(){
+ state.cases=await DB.all('cases');
+ const s=await DB.get('settings','main');
+ if(s)state.settings=Object.assign({remind:7},s.value);
+ const ck=await DB.get('settings','checked');
+ state.checked=ck?ck.value:[];
+}
+function updDet(){
+ const v=$('f-url').value.trim(),t=state.draft.type||'profile',det=$('f-det');
+ if(!v){det.textContent=t==='profile'?tr('الصق الرابط وسيُملأ الباقي تلقائياً.','Paste the link and the platform & handle will auto-fill.'):'';return}
+ if(t==='domain'){let h='';try{h=new URL(/^https?:\/\//i.test(v)?v:'https://'+v).hostname.replace(/^www\./,'')}catch{}
+  state.draft.platform='website';$('f-pf').value='website';if(h)$('f-user').value=h;det.textContent=h?tr('النطاق: ','Domain: ')+h:'';return}
+ const r=parseUrl(v);
+ if(t==='profile'){state.draft.platform=r.platform;$('f-pf').value=r.platform;if(r.username)$('f-user').value=r.username;
+  det.textContent=tr('تم التعرف: ','Detected: ')+pfName(r.platform)+(r.username?' — @'+r.username:'');return}
+ if(r.platform!=='other'){state.draft.platform=r.platform;$('f-pf').value=r.platform;det.textContent=tr('المنصة: ','Platform: ')+pfName(r.platform)}else det.textContent='';
+}
+function fillShots(){const e=$('f-shots');if(e)e.innerHTML=shotsHtml(state.draft.shots,true,'delShot')}
+async function logAdd(c,t){c.log=c.log||[];c.log.push({at:Date.now(),t});c.updatedAt=Date.now()}
+async function saveCase(){
+ const d=state.draft;
+ d.url=$('f-url').value.trim();
+ d.type=$('f-type').value;
+ d.platform=$('f-pf').value;
+ d.username=$('f-user').value.trim().replace(/^@/,'');
+ d.refId=$('f-ref')?$('f-ref').value.trim().replace(/^#/,''):'';
+ d.notes=$('f-notes').value.trim();
+ if(!d.url&&!d.username){toast(tr('أدخل الرابط أو الاسم أو الرقم','Enter a URL, username, or number'));return}
+ const dup=state.cases.find(c=>c.id!==d.id&&typeOf(c)===d.type&&c.platform===d.platform&&d.username&&c.username.toLowerCase()===d.username.toLowerCase());
+ if(dup){toast(tr('هذا الحساب مسجّل من قبل','This case is already recorded'));openSheet('detail',dup.id);return}
+ let c;if(d.id){c=state.cases.find(x=>x.id===d.id);Object.assign(c,{type:d.type,url:d.url,platform:d.platform,username:d.username,refId:d.refId,notes:d.notes,shots:d.shots});logAdd(c,tr('تم تعديل البيانات','Case details updated'))}
+ else{c={id:uid(),type:d.type,url:d.url,platform:d.platform,username:d.username,refId:d.refId,notes:d.notes,shots:d.shots,status:'found',foundAt:Date.now(),reportedAt:null,updatedAt:Date.now(),log:[{at:Date.now(),t:tr('تم تسجيل الحالة','Case recorded')}]};state.cases.push(c)}
+ await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});toast(tr('تم الحفظ','Saved'));state.draft=null;openSheet('detail',c.id);
+}
+function download(name,type,data){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+
+function openLightboxSrc(src){
+ const lb=$('lightbox');
+ lb.querySelector('img').src=src;
+ lb.style.display='flex';
+}
+
+function renderPrintDossier(list){
+ const s=state.settings;
+ $('print').style.direction=isEn()?'ltr':'rtl';
+ $('print').innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #101C2C;padding-bottom:10px;margin-bottom:12px"><div><h1 style="margin:0">${tr(`ملف شكوى رسمي: انتحال علامة «${esc(s.brand||'')}»`,`Official Brand Impersonation Dossier: "${esc(s.brand||'')}"`)}</h1><p style="margin:4px 0 0">${esc(s.owner||'')} ${s.email?'— '+esc(s.email):''}<br>${s.tm?tr('رقم تسجيل العلامة: ','Trademark Reg. No.: ')+esc(s.tm)+' ':''}${s.license?tr('— رقم الرخصة: ','— Trade License No.: ')+esc(s.license):''}<br>${tr('تاريخ الإصدار: ','Generated Date: ')}${fdate(Date.now())} — ${tr('عدد الحالات: ','Total Cases: ')}${list.length}</p></div><div style="text-align:center"><img src="${KAIS_LOGO}" alt="KT" style="height:56px;width:auto;border:0;margin:0"><div style="font-weight:700;font-size:10px;color:#101C2C">POWERED BY KAIS</div></div></div>`+
+ list.map((c,i)=>`<div class="pc"><b>${i+1}. ${typeInfo(typeOf(c)).t} — ${esc(pfName(c.platform))} ${esc(idLabel(c))}</b>${c.refId?` <span>(${tr('رقم البلاغ:','Ref ID:')} #${esc(c.refId)})</span>`:''}<br><span dir="ltr">${esc(c.url)}</span><br>${tr('الحالة: ','Status: ')}${stName(c.status)} — ${tr('رُصد: ','Detected: ')}${fdate(c.foundAt)}${c.reportedAt?tr(' — أُبلغ: ',' — Reported: ')+fdate(c.reportedAt):''}${c.rdap?`<br>Registrar: ${esc(c.rdap.registrar)} ${c.rdap.abuseEmail?'('+esc(c.rdap.abuseEmail)+')':''}`:''}<br>${esc(c.notes)}<br>${(c.shots||[]).map(x=>`<img src="${x}" alt="">`).join('')}</div>`).join('')+
+ `<div style="text-align:center;margin-top:16px;padding-top:8px;border-top:1px solid #ccc;font-size:11px;color:#4A5868"><b>POWERED BY KAIS</b> — Brand Guard (حارس العلامة)</div>`;
+ setTimeout(()=>window.print(),150);
+}
+
+const actions={
+ noop(){},
+ toggleLang(){
+  state.lang=isEn()?'ar':'en';
+  state.reportLang=state.lang;
+  localStorage.setItem('hares-lang',state.lang);
+  applyLangDir();
+  renderMain();
+  if(state.sheet)renderSheet();
+ },
+ tab(el){state.tab=el.dataset.v;renderMain();window.scrollTo(0,0)},
+ filter(el){state.filter=el.dataset.v;renderList()},
+ openAdd(){state.draft={id:null,type:'profile',url:'',platform:'other',username:'',refId:'',notes:'',shots:[]};openSheet('form');updDet();fillShots()},
+ addDomainCase(el){
+  const dom=el.dataset.domain;
+  const dup=state.cases.find(c=>typeOf(c)==='domain'&&c.username.toLowerCase()===dom.toLowerCase());
+  if(dup){toast(tr('هذا النطاق مسجّل كحالة من قبل','This domain is already recorded'));openSheet('detail',dup.id);return}
+  state.draft={id:null,type:'domain',url:'https://'+dom,platform:'website',username:dom,refId:'',notes:tr('نطاق مشابه مسجّل تم رصده عبر فحص DNS','Registered lookalike domain detected via DNS scan'),shots:[]};
+  openSheet('form');updDet();fillShots();
+ },
+ openCase(el){openSheet('detail',el.dataset.id)},
+ closeSheet(){state.draft=null;state.reportPlatform=null;closeSheet()},
+ editCase(){const c=state.cases.find(x=>x.id===state.sheet.id);state.draft={id:c.id,type:typeOf(c),url:c.url,platform:c.platform,username:c.username,refId:c.refId||'',notes:c.notes,shots:(c.shots||[]).slice()};openSheet('form');updDet();$('f-user').value=c.username;fillShots()},
+ saveCase,
+ pickShots(){$('f-file').click()},
+ delShot(el,e){e.stopPropagation();state.draft.shots.splice(+el.dataset.i,1);fillShots()},
+ pickCustShots(){$('cf-file').click()},
+ delCustShot(el,e){e.stopPropagation();state.custDraft.shots.splice(+el.dataset.i,1);const s=$('cf-shots');if(s)s.innerHTML=shotsHtml(state.custDraft.shots,true,'delCustShot')},
+ openShot(el){
+  const arr=state.customerMode?state.custDraft.shots:(state.sheet?.type==='form'?state.draft.shots:state.cases.find(x=>x.id===state.sheet.id).shots);
+  openLightboxSrc(arr[+el.dataset.src]);
+ },
+ closeLight(el,e){
+  if(e&&el.id==='lightbox'&&e.target.closest('.lb-bar'))return;
+  $('lightbox').style.display='none';
+ },
+ downloadLightImg(el,e){
+  if(e)e.stopPropagation();
+  const src=$('lightbox').querySelector('img').src;
+  if(!src)return;
+  const a=document.createElement('a');
+  a.href=src;
+  a.download='brand-guard-evidence-'+Date.now()+'.png';
+  document.body.appendChild(a);a.click();a.remove();
+ },
+ generateAlertCard(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  const dataUrl=buildScamAlertCard(c);
+  openLightboxSrc(dataUrl);
+  toast(tr('تم إنشاء بطاقة التحذير — جاهزة للتحميل والنشر في الستوري','Scam Alert Story Card ready to download & post'));
+ },
+ async saveRefId(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  const val=($('d-ref')?.value||'').trim().replace(/^#/,'');
+  c.refId=val;
+  logAdd(c,val?tr('تم حفظ رقم البلاغ المرجعي: #','Saved reference ID: #')+val:tr('تم مسح رقم البلاغ المرجعي','Cleared reference ID'));
+  await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});
+  renderSheet();
+  toast(tr('تم حفظ رقم البلاغ المرجعي','Reference ID saved'));
+ },
+ async checkCaseRdap(){
+  if(state.rdapChecking)return;
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  const host=extractHost(c);
+  if(!host){toast(tr('لا يوجد نطاق لفحصه','No valid domain to inspect'));return}
+  state.rdapChecking=true;renderSheet();
+  const info=await fetchDomainRdap(host);
+  state.rdapChecking=false;
+  if(!info){toast(tr('تعذّر جلب بيانات RDAP لهذا النطاق','Could not retrieve RDAP data for this domain'));renderSheet();return}
+  c.rdap=info;
+  logAdd(c,`RDAP Whois: ${info.registrar}${info.abuseEmail?' ('+info.abuseEmail+')':''}`);
+  await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});
+  renderSheet();
+  toast(tr('تم جلب بيانات مسجّل النطاق','Domain registrar details retrieved'));
+ },
+ emailRegistrarAbuse(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c||!c.rdap?.abuseEmail)return;
+  const subj=`Trademark Infringement & Phishing Abuse Report: ${c.rdap.domain}`;
+  const body=buildReport(c,'website','en');
+  location.href=`mailto:${encodeURIComponent(c.rdap.abuseEmail)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(body)}`;
+ },
+ async setStatus(el){
+  const c=state.cases.find(x=>x.id===state.sheet.id),k=el.dataset.v;if(c.status===k)return;
+  c.status=k;if(['reported','review'].includes(k)&&!c.reportedAt)c.reportedAt=Date.now();
+  logAdd(c,tr('تغيّرت الحالة إلى: ','Status changed to: ')+stName(k));await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});renderSheet();
+ },
+ async markReported(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);c.status='reported';c.reportedAt=Date.now();
+  const refVal=($('d-ref')?.value||'').trim().replace(/^#/,'');
+  if(refVal)c.refId=refVal;
+  logAdd(c,tr('تم الإبلاغ على ','Reported on ')+pfName(state.reportPlatform||c.platform)+(c.refId?' (#'+c.refId+')':''));
+  await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});toast(tr('تم تسجيل البلاغ','Marked as reported'));renderSheet();
+ },
+ async copyReport(){const t=$('r-text');try{await navigator.clipboard.writeText(t.value);toast(tr('تم نسخ البلاغ','Report copied'))}catch{t.select();document.execCommand('copy');toast(tr('تم نسخ البلاغ','Report copied'))}},
+ async deleteCase(){
+  if(!isOwner()){toast(tr('الحذف متاح للمالك فقط','Deletion is restricted to Owner'));return}
+  if(!confirm(tr('حذف هذا الحساب وكل أدلته نهائياً؟','Permanently delete this case and all its evidence?')))return;
+  const id=state.sheet.id;
+  await DB.del('cases',id);Cloud.deleteRemoteCase(id).catch(()=>{});
+  state.cases=state.cases.filter(c=>c.id!==id);toast(tr('تم الحذف','Deleted'));closeSheet();
+ },
+ async saveSettings(){
+  if(!isOwner()){toast(tr('تعديل الإعدادات متاح للمالك فقط','Settings can only be edited by Owner'));return}
+  const g=id=>$(id)?$(id).value.trim():'';
+  state.settings={
+   brand:g('s-brand'),handles:g('s-handles'),domain:g('s-domain'),official:g('s-official'),
+   images:g('s-images'),tm:g('s-tm'),license:g('s-license'),owner:g('s-owner'),
+   email:g('s-email'),phone:g('s-phone'),pin:g('s-pin'),
+   remind:Math.max(1,parseInt(g('s-remind'))||7),updatedAt:Date.now()
+  };
+  await DB.put('settings',{key:'main',value:state.settings});
+  if(Cloud.getConfig())Cloud.syncAll(true).catch(()=>{});
+  toast(tr('تم حفظ الإعدادات','Settings saved'));
+ },
+ async loadDemoPreset(){
+  const now=Date.now();
+  state.settings={
+   brand:'دار ريمان للأزياء (RIMAN Fashion)',
+   handles:'rimanfashion',
+   domain:'rimanfashion.ae',
+   official:'https://www.instagram.com/rimanfashion\nhttps://www.tiktok.com/@rimanfashion\nhttps://rimanfashion.ae',
+   images:'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600',
+   tm:'UAE-TM-2026-88412',
+   license:'DED-CN-4491827',
+   owner:'إدارة حماية العلامة التجارية — RIMAN',
+   email:'ip-protection@rimanfashion.ae',
+   phone:'+971501234567',
+   pin:'',
+   remind:7,
+   updatedAt:now
+  };
+  await DB.put('settings',{key:'main',value:state.settings});
+  const demoCases=[
+   {
+    id:'demo-ig-1',type:'profile',platform:'instagram',username:'rimanfashion_uae_shop',
+    url:'https://www.instagram.com/rimanfashion_uae_shop',refId:'IG-99482711',
+    notes:tr('ينسخ صور المجموعة الجديدة ويطلب من العملاء تحويل بنكي مباشر لحساب شخصي.','Copies new collection photos and asks customers for direct bank transfers.'),
+    status:'reported',foundAt:now-9*DAY,reportedAt:now-8*DAY,updatedAt:now-DAY,
+    shots:[],log:[{at:now-9*DAY,t:tr('تم رصد الحساب المنتحل','Impersonating account detected')},{at:now-8*DAY,t:tr('تم الإبلاغ عبر نموذج العلامة التجارية (#IG-99482711)','Reported via Trademark Form (#IG-99482711)')}]
+   },
+   {
+    id:'demo-dom-2',type:'domain',platform:'website',username:'rimanfashion-outlet.shop',
+    url:'https://rimanfashion-outlet.shop',refId:'CF-441092',
+    notes:tr('موقع تصيّد احتيالي يقلّد شعار وهوية المتجر الرسمي بخصومات وهمية 80%.','Phishing store cloning official logo and product catalog with fake 80% discounts.'),
+    status:'escalated',foundAt:now-5*DAY,reportedAt:now-4*DAY,updatedAt:now-3600000,
+    rdap:{at:now-4*DAY,domain:'rimanfashion-outlet.shop',registrar:'Namecheap, Inc.',abuseEmail:'abuse@namecheap.com',created:'2026-11-10',nameservers:['ns1.cloudflare.com','ns2.cloudflare.com']},
+    shots:[],log:[{at:now-5*DAY,t:tr('رصد النطاق عبر فحص DNS','Domain detected via DNS Lookalike Scanner')},{at:now-4*DAY,t:tr('تم مراسلة مسجّل النطاق وتصعيد البلاغ','Abuse notice sent to registrar & escalated')}]
+   },
+   {
+    id:'demo-wa-3',type:'phone',platform:'whatsapp',username:'+971580009911',
+    url:'https://wa.me/971580009911',refId:'',
+    notes:tr('يتواصل مع العملاء باسم خدمة عملاء العلامة ويرسل روابط دفع مزيفة.','Contacts customers posing as official support and sends fake payment links.'),
+    source:'customer',reporterContact:'+971507771122',
+    status:'found',foundAt:now-DAY,reportedAt:null,updatedAt:now-1800000,
+    shots:[],log:[{at:now-DAY,t:tr('بلاغ وارد من عميل (+971507771122)','Submitted via Customer Report (+971507771122)')}]
+   },
+   {
+    id:'demo-ad-4',type:'ad',platform:'facebook',username:'Riman Deals UAE',
+    url:'https://www.facebook.com/ads/library/?id=881920192',refId:'META-7731904',
+    notes:tr('إعلان ممول يستخدم فيديو عرض الأزياء الرسمي بدون ترخيص.','Sponsored ad using official runway video without authorization.'),
+    status:'removed',foundAt:now-12*DAY,reportedAt:now-11*DAY,updatedAt:now-3*DAY,
+    shots:[],log:[{at:now-12*DAY,t:tr('تم رصد الإعلان في مكتبة إعلانات ميتا','Detected in Meta Ad Library')},{at:now-3*DAY,t:tr('تمت إزالة الإعلان وإغلاق الصفحة المعلنة','Ad removed and advertiser page suspended')}]
+   }
+  ];
+  for(const dc of demoCases){
+   await DB.put('cases',dc);
+  }
+  await reload();
+  state.tab='list';state.filter='all';
+  renderMain();
+  toast(tr('تم تحميل بيانات العرض التجريبي للعميل (٤ حالات نموذجية)','Client Demo Preset loaded (4 sample cases)'));
+ },
+ async resetAllData(){
+  if(!isOwner())return;
+  if(!confirm(tr('هل أنت متأكد من مسح جميع الحالات والإعدادات من هذا المتصفح؟','Are you sure you want to clear all cases and settings from this browser?')))return;
+  await DB.clear('cases');
+  await DB.clear('settings');
+  state.cases=[];
+  state.settings={remind:7,brand:'',handles:'',domain:'',official:'',images:'',tm:'',license:'',owner:'',email:'',phone:'',pin:''};
+  state.checked=[];
+  state.dnsResults={};
+  renderMain();
+  toast(tr('تم مسح جميع البيانات','All data cleared'));
+ },
+ async saveCloud(){
+  if(!isOwner())return;
+  const url=$('c-url').value.trim(),key=$('c-key').value.trim(),ws=$('c-ws').value.trim()||'default';
+  if(!url||!key){toast(tr('أدخل رابط Supabase والمفتاح','Enter Supabase URL and Key'));return}
+  Cloud.saveConfig(url,key,ws);
+  await Cloud.syncAll(false);
+ },
+ clearCloud(){
+  if(!isOwner())return;
+  Cloud.saveConfig('','','');renderMain();toast(tr('تم إيقاف المزامنة السحابية','Cloud sync disconnected'));
+ },
+ syncNow(){Cloud.syncAll(false)},
+ toggleRole(){
+  if(isOwner()){
+   state.role='staff';localStorage.setItem('hares-role','staff');
+   toast(tr('تم التفعيل: وضع الموظف','Switched to Staff Mode'));renderMain();if(state.sheet)renderSheet();
+  }else{
+   const pin=(state.settings.pin||'').trim();
+   if(pin){
+    const entered=prompt(tr('أدخل رمز المالك (PIN):','Enter Owner PIN:'));
+    if(entered===null)return;
+    if(entered.trim()!==pin){toast(tr('رمز المالك غير صحيح','Incorrect Owner PIN'));return}
+   }
+   state.role='owner';localStorage.setItem('hares-role','owner');
+   toast(tr('تم التفعيل: وضع المالك','Switched to Owner Mode'));renderMain();if(state.sheet)renderSheet();
+  }
+ },
+ scanDomains(){if(!state.dnsScanning)scanAllDomains()},
+ async checkSingleLink(){
+  if(state.linkChecking)return;
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  state.linkChecking=true;renderSheet();
+  const res=await probeCaseLink(c);
+  c.linkCheck=res;
+  logAdd(c,tr('فحص الرابط: ','Link check: ')+res.detail);
+  await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});
+  state.linkChecking=false;renderSheet();
+  toast(res.detail);
+ },
+ async checkAllLinks(){
+  if(state.linkChecking)return;
+  const activeCases=state.cases.filter(c=>c.status!=='removed'&&(c.url||typeOf(c)==='domain'));
+  if(!activeCases.length){toast(tr('لا توجد حالات نشطة تحتوي على روابط لفحصها','No active cases with URLs to check'));return}
+  state.linkChecking=true;renderMain();
+  let downCnt=0;
+  for(const c of activeCases){
+   const res=await probeCaseLink(c);
+   c.linkCheck=res;
+   if(res.state==='down')downCnt++;
+   logAdd(c,tr('فحص الرابط: ','Link check: ')+res.detail);
+   await DB.put('cases',c);
+  }
+  state.linkChecking=false;renderMain();
+  toast(downCnt?tr(`اكتمل الفحص: ${downCnt} رابط يبدو متوقفاً أو أُزيل`,`Check complete: ${downCnt} link(s) appear down or removed`):tr('اكتمل الفحص: جميع الروابط المفحوصة ما زالت نشطة','Check complete: all checked links are still active'));
+ },
+ sendLateWhatsApp(){
+  const text=buildLateSummary();
+  if(!text){toast(tr('لا توجد بلاغات متأخرة حالياً','No overdue reports at the moment'));return}
+  const phone=(state.settings.phone||'').replace(/[^0-9]/g,'');
+  const url=`https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+  window.open(url,'_blank','noopener');
+ },
+ sendLateEmail(){
+  const text=buildLateSummary();
+  if(!text){toast(tr('لا توجد بلاغات متأخرة حالياً','No overdue reports at the moment'));return}
+  const email=state.settings.email||'';
+  const subj=tr(`تنبيه حارس العلامة: بلاغات تحتاج متابعة (${state.settings.brand||''})`,`Brand Guard Alert: Overdue reports need follow-up (${state.settings.brand||''})`);
+  location.href=`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(text)}`;
+ },
+ async enableNotifications(){
+  if(typeof Notification==='undefined'){toast(tr('المتصفح لا يدعم الإشعارات','Browser does not support notifications'));return}
+  const p=await Notification.requestPermission();
+  if(p==='granted'){toast(tr('تم تفعيل إشعارات المتصفح','Browser notifications enabled'));checkAutoNotification();renderSettings()}
+  else toast(tr('لم يتم منح إذن الإشعارات','Notification permission not granted'));
+ },
+ async copyCustomerLink(){
+  const u=new URL(location.href.split('?')[0].split('#')[0]);
+  u.searchParams.set('report','1');
+  if(isEn())u.searchParams.set('lang','en');
+  if(state.settings.brand)u.searchParams.set('brand',state.settings.brand);
+  const cfg=Cloud.getConfig();
+  if(cfg){u.searchParams.set('sb_url',cfg.url);u.searchParams.set('sb_key',cfg.key);u.searchParams.set('ws',cfg.workspace)}
+  try{await navigator.clipboard.writeText(u.href);toast(tr('تم نسخ رابط نموذج العملاء','Customer form link copied'))}
+  catch{prompt(tr('انسخ رابط نموذج العملاء:','Copy customer form link:'),u.href)}
+ },
+ previewCustomerForm(){
+  state.customerMode=true;state.customerSubmitted=false;renderMain();window.scrollTo(0,0);
+ },
+ exitCustomerMode(){
+  state.customerMode=false;renderMain();
+ },
+ resetCustomerForm(){
+  state.customerSubmitted=false;
+  state.custDraft={type:'profile',url:'',platform:'instagram',username:'',notes:'',contact:'',shots:[]};
+  renderMain();
+ },
+ async submitCustomerReport(){
+  const d=state.custDraft;
+  d.type=$('cf-type').value;
+  d.url=$('cf-url').value.trim();
+  d.platform=$('cf-pf').value;
+  d.username=$('cf-user').value.trim().replace(/^@/,'');
+  d.notes=$('cf-notes').value.trim();
+  d.contact=$('cf-contact').value.trim();
+  if(!d.url&&!d.username){toast(tr('أدخل الرابط أو اسم الحساب المشبوه','Enter the suspicious link or username'));return}
+  const parsed=parseUrl(d.url);
+  if(parsed.platform!=='other')d.platform=parsed.platform;
+  if(!d.username&&parsed.username)d.username=parsed.username;
+  const c={
+   id:uid(),type:d.type,url:d.url,platform:d.platform,username:d.username,refId:'',
+   notes:d.notes,reporterContact:d.contact,shots:d.shots.slice(),
+   source:'customer',status:'found',foundAt:Date.now(),reportedAt:null,updatedAt:Date.now(),
+   log:[{at:Date.now(),t:tr('بلاغ وارد من عميل','Submitted via Customer Report')+(d.contact?' ('+d.contact+')':'')}]
+  };
+  state.cases.push(c);
+  await DB.put('cases',c);
+  await Cloud.pushCase(c).catch(()=>{});
+  state.customerSubmitted=true;
+  toast(tr('تم إرسال البلاغ','Report submitted'));
+  renderMain();
+ },
+ async toggleVar(el){const v=el.dataset.v,i=state.checked.indexOf(v);if(i>=0)state.checked.splice(i,1);else state.checked.push(v);await DB.put('settings',{key:'checked',value:state.checked});el.closest('.var').classList.toggle('done',el.checked)},
+ exportJSON(){download('hares-backup-'+new Date().toISOString().slice(0,10)+'.json','application/json',JSON.stringify({v:3,settings:state.settings,checked:state.checked,cases:state.cases}))},
+ exportCSV(){const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"',rows=[isEn()?['Type','Platform','Username / Number','URL','Ref ID','Status','Source','Detected Date','Reported Date','Registrar','Notes','Screenshots']:['النوع','المنصة','الاسم / الرقم','الرابط','رقم البلاغ','الحالة','المصدر','تاريخ الرصد','تاريخ البلاغ','مسجّل النطاق','ملاحظات','عدد الصور']];
+  state.cases.forEach(c=>rows.push([typeInfo(typeOf(c)).t,pfName(c.platform),c.username,c.url,c.refId||'',stName(c.status),c.source==='customer'?tr('بلاغ عميل','Customer'):tr('داخلي','Internal'),fdate(c.foundAt),fdate(c.reportedAt),c.rdap?.registrar||'',c.notes,c.shots?.length||0]));
+  download('hares-cases.csv','text/csv;charset=utf-8','\ufeff'+rows.map(r=>r.map(q).join(',')).join('\n'))},
+ importJSON(){if(!isOwner()){toast(tr('الاسترجاع متاح للمالك فقط','Restore is restricted to Owner'));return}$('importFile').click()},
+ printCases(){
+  const f=$('p-filter').value,list=state.cases.filter(c=>f==='all'||c.status===f);
+  if(!list.length){toast(tr('لا توجد حسابات لهذه الحالة','No cases match this filter'));return}
+  renderPrintDossier(list);
+ },
+ printSingleCase(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  renderPrintDossier([c]);
+ }
+};
+
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;
+ if(el.tagName==='INPUT'&&el.type==='checkbox'){actions[el.dataset.act]?.(el,e);return}
+ actions[el.dataset.act]?.(el,e)});
+document.addEventListener('input',e=>{
+ if(e.target.id==='f-url')updDet();
+ else if(e.target.id==='cf-url'){
+  const r=parseUrl(e.target.value);
+  if(r.platform!=='other'){$('cf-pf').value=r.platform;state.custDraft.platform=r.platform}
+  if(r.username&&!$('cf-user').value){$('cf-user').value=r.username;state.custDraft.username=r.username}
+ }
+});
+document.addEventListener('change',async e=>{
+ const t=e.target;
+ if(t.id==='f-pf')state.draft.platform=t.value;
+ else if(t.id==='f-stamp')state.stampEvidence=t.checked;
+ else if(t.id==='f-type'){const d=state.draft,ty=t.value;d.type=ty;
+  if(ty==='domain')d.platform='website';else if(ty==='phone')d.platform='whatsapp';else if(['website','whatsapp'].includes(d.platform))d.platform='other';
+  const T=typeInfo(ty);$('l-url').textContent=T.l1;$('l-user').textContent=T.l2;$('f-user').placeholder=T.ph2;$('f-pf').value=d.platform;updDet()}
+ else if(t.id==='r-pf'||t.id==='r-lang'){state.reportPlatform=$('r-pf').value;state.reportLang=$('r-lang').value;const c=state.cases.find(x=>x.id===state.sheet.id);const rt=$('r-text');rt.dir=state.reportLang==='en'?'ltr':'rtl';rt.value=buildReport(c,state.reportPlatform,state.reportLang)}
+ else if(t.id==='f-file'){
+  const doStamp=$('f-stamp')?$('f-stamp').checked:state.stampEvidence;
+  const target=($('f-user')?.value||$('f-url')?.value||'').trim();
+  const stampInfo=doStamp?{target,brand:state.settings.brand||'Brand Guard'}:null;
+  for(const f of t.files){try{state.draft.shots.push(await compress(f,stampInfo))}catch{toast(tr('تعذّر قراءة الصورة','Failed to read image'))}}
+  t.value='';fillShots();
+ }
+ else if(t.id==='cf-file'){
+  const target=($('cf-user')?.value||$('cf-url')?.value||'').trim();
+  const stampInfo={target,brand:urlParams.get('brand')||state.settings.brand||'Brand Guard'};
+  for(const f of t.files){try{state.custDraft.shots.push(await compress(f,stampInfo))}catch{toast(tr('تعذّر قراءة الصورة','Failed to read image'))}}
+  t.value='';const s=$('cf-shots');if(s)s.innerHTML=shotsHtml(state.custDraft.shots,true,'delCustShot');
+ }
+ else if(t.id==='importFile'&&t.files[0]){try{const j=JSON.parse(await t.files[0].text());if(!Array.isArray(j.cases))throw 0;if(!confirm(tr('سيُدمج هذا الملف مع بياناتك الحالية. متابعة؟','Merge this backup file with your current records?')))return;
+   for(const c of j.cases){if(!state.cases.find(x=>x.id===c.id))await DB.put('cases',c)}
+   if(j.settings&&!state.settings.brand){await DB.put('settings',{key:'main',value:j.settings})}
+   await reload();renderMain();toast(tr('تم الاسترجاع','Backup restored'))}catch{toast(tr('ملف غير صالح','Invalid backup file'))}t.value=''}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if($('lightbox').style.display==='flex')actions.closeLight();else if(state.sheet)actions.closeSheet()}});
+
+/* ---------- PWA Service Worker ---------- */
+if('serviceWorker' in navigator && /^https?:$/i.test(location.protocol)){
+ window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+
+/* ---------- start ---------- */
+applyLangDir();
+DB.open().then(reload).then(()=>{
+ renderMain();
+ checkAutoNotification();
+ if(Cloud.getConfig())Cloud.syncAll(true).catch(()=>{});
+}).catch(()=>{$('main').innerHTML=`<div class="empty"><b>${tr('تعذّر فتح التخزين','Storage Unavailable')}</b>${tr('افتح الملف من متصفح عادي وليس من وضع التصفح الخفي.','Please open the app in a standard browser window (not private/incognito mode).')}</div>`});
+</script>
+</body>
+</html>
