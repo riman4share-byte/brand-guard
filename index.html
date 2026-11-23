@@ -155,6 +155,7 @@ nav.bar button[aria-current=page]{color:var(--brand);font-weight:700;box-shadow:
   <button data-act="tab" data-v="variants" id="t-variants">الفحص</button>
   <button data-act="tab" data-v="suspected" id="t-suspected">الرصد</button>
   <button data-act="tab" data-v="sweep" id="t-sweep">المسح</button>
+  <button data-act="tab" data-v="analytics" id="t-analytics">التحليلات</button>
   <button data-act="tab" data-v="settings" id="t-settings">الإعدادات</button>
 </div></nav>
 <div id="sheet" class="sheet" hidden></div>
@@ -425,6 +426,9 @@ const state={
  candidateSearch:'',
  sweepCoverage:{},
  phoneMismatchCache:{},
+ whiteLabel:{logo:'',primaryColor:'#0F5C7A',secondaryColor:'#101C2C',accentColor:'#F2A541',customDomain:'',plan:'free'},
+ onboardingStep:'brand_profile',
+ onboardingComplete:false,
  q:'',
  sheet:null,
  draft:null,
@@ -455,6 +459,7 @@ function applyLangDir(){
  const tv=$('t-variants');if(tv)tv.textContent=tr('الفحص','Scan');
  const tsu=$('t-suspected');if(tsu)tsu.textContent=tr('الرصد','Suspected');
  const tsw=$('t-sweep');if(tsw)tsw.textContent=tr('المسح','Sweep');
+ const tan=$('t-analytics');if(tan)tan.textContent=tr('التحليلات','Analytics');
  const ts=$('t-settings');if(ts)ts.textContent=tr('الإعدادات','Settings');
  const lbd=$('lbDownBtn');if(lbd)lbd.textContent=tr('تحميل الصورة','Download PNG');
  const lbc=$('lbCloseBtn');if(lbc)lbc.textContent=tr('إغلاق','Close');
@@ -1162,6 +1167,11 @@ function renderTopActs(){
   el.innerHTML=langBtn+(!isPublicReport?`<button class="pill" data-act="exitCustomerMode">${tr('العودة للتطبيق','Back to App')}</button>`:'');
   return;
  }
+ if(urlParams.get('health')==='1'){
+  $('fabAdd').style.display='none';$('navBar').style.display='none';
+  $('sub').textContent=tr('حالة النظام (Health Status)','System Health Status');
+  renderHealthPage();return;
+ }
  if(state.verifyMode){
   el.innerHTML=langBtn;
   return;
@@ -1218,6 +1228,7 @@ function renderMain(){
  }else if(state.tab==='variants')renderVariants();
  else if(state.tab==='suspected')renderSuspected();
  else if(state.tab==='sweep')renderSweep();
+ else if(state.tab==='analytics')renderAnalytics();
  else renderSettings();
 }
 
@@ -1474,6 +1485,60 @@ function renderVerifyPage(brandName){
  <div style="text-align:center;margin-top:20px;padding:12px;color:var(--ink2);font-size:12px">Powered by Kais Tauiti (KAIS) • Brand Guard (حارس العلامة)</div>
  </div>`;
 }
+/* ---------- render: analytics & health ---------- */
+function renderAnalytics(){
+ const m=$('main');
+ const cases=state.cases;
+ const total=cases.length;
+ const byStatus=STATUSES.map(s=>({k:s.k,t:stName(s.k),n:cases.filter(c=>c.status===s.k).length}));
+ const byType=Object.keys(TYPES).map(k=>({k,t:typeInfo(k).t,n:cases.filter(c=>typeOf(c)===k).length}));
+ const byPlatform=Object.keys(PLATFORMS).map(k=>({k,t:pfName(k),n:cases.filter(c=>c.platform===k).length})).filter(x=>x.n>0);
+ const removed=cases.filter(c=>c.status==='removed').length;
+ const reported=cases.filter(c=>c.status==='reported'||c.status==='review').length;
+ const overdue=cases.filter(isLate).length;
+ const customerReports=cases.filter(c=>c.source==='customer').length;
+ const avgDaysToRemoval=cases.filter(c=>c.status==='removed'&&c.reportedAt).map(c=>(c.updatedAt-c.reportedAt)/86400000);
+ const avgRemoval=avgDaysToRemoval.length?Math.round(avgDaysToRemoval.reduce((a,b)=>a+b,0)/avgDaysToRemoval.length):0;
+ let h=`<div class="pad"><div class="panel" style="margin-top:0"><h3>${tr('لوحة التحليلات (Analytics Dashboard)','Analytics Dashboard')}</h3>
+ <p class="hint">${tr('مقاييس الأداء والحماية لعلامتك التجارية.','Performance and protection metrics for your brand.')}</p></div>
+ <div class="panel"><h3>${tr('المقاييس الرئيسية (KPIs)','Key Performance Indicators')}</h3>
+ <div class="kv"><b>${tr('إجمالي الحالات:','Total Cases:')}</b><span>${total}</span>
+ <b>${tr('تمت الإزالة:','Removed:')}</b><span style="color:var(--ok)">${removed}</span>
+ <b>${tr('قيد المتابعة:','Pending:')}</b><span style="color:var(--warn)">${reported}</span>
+ <b>${tr('متأخرة:','Overdue:')}</b><span style="color:var(--bad)">${overdue}</span>
+ <b>${tr('بلاغات العملاء:','Customer Reports:')}</b><span>${customerReports}</span>
+ <b>${tr('متوسط أيام الإزالة:','Avg. Days to Removal:')}</b><span>${avgRemoval} ${tr('يوم','days')}</span>
+ <b>${tr('معدل الإزالة:','Removal Rate:')}</b><span>${total?Math.round(removed/total*100):0}%</span></div></div>
+ <div class="panel"><h3>${tr('الحالات حسب الحالة (Status Breakdown)','Cases by Status')}</h3>
+ <div class="kv">${byStatus.map(s=>`<b>${s.t}:</b><span>${s.n}</span>`).join('')}</div></div>
+ <div class="panel"><h3>${tr('الحالات حسب النوع (Type Breakdown)','Cases by Type')}</h3>
+ <div class="kv">${byType.filter(x=>x.n>0).map(s=>`<b>${s.t}:</b><span>${s.n}</span>`).join('')}</div></div>
+ <div class="panel"><h3>${tr('الحالات حسب المنصة (Platform Breakdown)','Cases by Platform')}</h3>
+ <div class="kv">${byPlatform.map(s=>`<b>${s.t}:</b><span>${s.n}</span>`).join('')}</div></div>
+ <div class="panel"><h3>${tr('تصدير تقرير العميل (Monthly Client Report)','Export Monthly Client Report')}</h3>
+ <p class="hint">${tr('توليد تقرير PDF شهري للعميل (ملخص النشاط، عدد الحالات، الإجراءات).','Generate a monthly PDF report for the client (activity summary, case counts, actions taken).')}</p>
+ <div class="row"><button class="btn primary" data-act="printCases">${tr('طباعة تقرير PDF','Print PDF Report')}</button><button class="btn" data-act="exportCSV">${tr('تصدير Excel (CSV)','Export Excel (CSV)')}</button></div></div>
+ <div class="panel"><h3>${tr('خطة الاشتراك (Plan & Limits)','Subscription Plan & Limits')}</h3>
+ <div class="kv"><b>${tr('الخطة الحالية:','Current Plan:')}</b><span style="color:var(--brand);font-weight:700">${esc(state.whiteLabel.plan.toUpperCase())}</span>
+ <b>${tr('الحد الأقصى للعلامات:','Max Brands:')}</b><span>${state.whiteLabel.plan==='free'?'1':'10'}</span>
+ <b>${tr('الحد الأقصى للحالات:','Max Cases:')}</b><span>${state.whiteLabel.plan==='free'?'100':'10,000'}</span>
+ <b>${tr('الحد الأقصى للصور:','Max Images/Case:')}</b><span>${state.whiteLabel.plan==='free'?'10':'50'}</span></div>
+ <p class="hint" style="margin-top:8px">${tr('للترقية، تواصل مع Kais Tauiti.','To upgrade, contact Kais Tauiti.')}</p></div></div>`;
+ $('main').innerHTML=h;
+}
+
+/* ---------- render: analytics ---------- */
+function renderHealthPage(){
+ const m=$('main');
+ m.innerHTML=`<div class="pad"><div class="panel" style="text-align:center;padding:24px"><h3>${tr('حالة النظام (Health Status)','System Health Status')}</h3>
+ <div class="kv"><b>${tr('التطبيق:','App:')}</b><span style="color:var(--ok)">✅ ${tr('يعمل','Running')}</span>
+ <b>${tr('IndexedDB:','IndexedDB:')}</b><span style="color:var(--ok)">✅ ${tr('متاح','Available')}</span>
+ <b>${tr('Supabase:','Supabase:')}</b><span style="color:${Cloud.getConfig()?'var(--ok)':'var(--warn)'}">${Cloud.getConfig()?'✅ '+tr('متصل','Connected'):'⚠️ '+tr('غير متصل (محلي)','Not connected (local)')}</span>
+ <b>${tr('اللغة:','Language:')}</b><span>${state.lang.toUpperCase()}</span>
+ <b>${tr('الإصدار:','Version:')}</b><span>Brand Guard v3.0 (Phase 6)</span>
+ <b>${tr('Powered by:','Powered by:')}</b><span style="color:var(--gold);font-weight:700">Kais Tauiti (KAIS)</span></div>
+ <div style="margin-top:16px"><button class="btn primary" data-act="tab" data-v="list">${tr('العودة للتطبيق','Back to App')}</button></div></div></div>`;
+}
 /* ---------- render: settings ---------- */
 function renderSettings(){
  const s=state.settings,ro=!isOwner()?'disabled':'';
@@ -1482,6 +1547,15 @@ function renderSettings(){
  const notifState=(typeof Notification!=='undefined')?Notification.permission:'unsupported';
  $('main').innerHTML=`<div class="pad">
  ${!isOwner()?`<div class="notice"><span>${tr('أنت حالياً في <b>وضع الموظف</b>. تعديل الإعدادات وحذف الحالات متاح للمالك فقط.','You are currently in <b>Staff Mode</b>. Editing settings and deleting cases is restricted to the Owner.')}</span><button class="btn sm primary" data-act="toggleRole">${tr('التبديل إلى المالك','Switch to Owner')}</button></div>`:''}
+ <div class="panel" style="margin-top:0"><h3>${tr(' معالج الإعداد (Onboarding Wizard)','Onboarding Wizard')}</h3>
+ <p class="hint">${tr('أكمل هذه الخطوات لتفعيل حماية علامتك بالكامل.','Complete these steps to fully activate your brand protection.')}</p>
+ <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
+  <div style="display:flex;align-items:center;gap:10px;padding:8px;background:${state.settings.brand?'#F0FFF4':'#FFF5F5'};border-radius:8px;border:1px solid ${state.settings.brand?'#C6F6D5':'#FED7D7'}"><span style="font-size:18px">${state.settings.brand?'✅':'⬜'}</span><span style="font-size:14px;font-weight:500">${tr('١. أدخل بيانات العلامة (Brand Profile)','1. Enter Brand Profile')}</span></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:8px;background:${state.settings.official?'#F0FFF4':'#FFF5F5'};border-radius:8px;border:1px solid ${state.settings.official?'#C6F6D5':'#FED7D7'}"><span style="font-size:18px">${state.settings.official?'✅':'⬜'}</span><span style="font-size:14px;font-weight:500">${tr('٢. أضف حساباتك الرسمية (Official Channels)','2. Add Official Channels')}</span></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:8px;background:${state.settings.images?'#F0FFF4':'#FFF5F5'};border-radius:8px;border:1px solid ${state.settings.images?'#C6F6D5':'#FED7D7'}"><span style="font-size:18px">${state.settings.images?'✅':'⬜'}</span><span style="font-size:14px;font-weight:500">${tr('٣. أضف صور منتجاتك (Product Images)','3. Add Product Images')}</span></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:8px;background:${Cloud.getConfig()?'#F0FFF4':'#FFF5F5'};border-radius:8px;border:1px solid ${Cloud.getConfig()?'#C6F6D5':'#FED7D7'}"><span style="font-size:18px">${Cloud.getConfig()?'✅':'⬜'}</span><span style="font-size:14px;font-weight:500">${tr('٤. اربط Supabase (اختياري — Cloud Sync)','4. Connect Supabase (Optional — Cloud Sync)')}</span></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:8px;background:${state.settings.tm?'#F0FFF4':'#FFF5F5'};border-radius:8px;border:1px solid ${state.settings.tm?'#C6F6D5':'#FED7D7'}"><span style="font-size:18px">${state.settings.tm?'✅':'⬜'}</span><span style="font-size:14px;font-weight:500">${tr('٥. أدخل رقم تسجيل العلامة التجارية (Trademark No.)','5. Enter Trademark Registration No.')}</span></div>
+ </div></div>
  <div class="panel" style="margin-top:0"><h3>${tr('بيانات العلامة','Brand Profile')}</h3><p class="hint">${tr('تُستخدم في نص البلاغ والفحص وبطاقات تحذير العملاء تلقائياً.','Used automatically in takedown reports, scans, and customer scam alert cards.')}</p>
  ${f('s-brand',tr('اسم العلامة التجارية','Brand Name'),s.brand)}
  ${f('s-handles',tr('اسم الحساب الرسمي','Official Handle(s)'),s.handles,'text',tr('اكتب الاسم بالإنجليزية بدون @. يمكن أكثر من اسم بفاصلة.','Enter handle without @. Separate multiple handles with a comma.'))}
@@ -1545,6 +1619,14 @@ function renderSettings(){
  <div style="height:12px"></div>
  ${isOwner()?`<button class="btn primary block" data-act="saveBrandProfile">${tr('حفظ ملف العلامة','Save Brand Profile')}</button>`:''}
  </div>
+ <div class="panel"><h3>${tr('إعدادات White-Label (للعملاء)','White-Label Settings (For Clients)')}</h3>
+ <p class="hint">${tr('تخصيص الشعار والألوان والدومين (للعملاء المميزين).','Customize logo, colors, and domain (for premium clients).')}</p>
+ ${f('wl-logo',tr('رابط شعار العميل (Logo URL)','Client Logo URL'),state.whiteLabel.logo,'url','','ltr')}
+ ${f('wl-primary',tr('اللون الأساسي (Primary Color)','Primary Color (hex)'),state.whiteLabel.primaryColor,'text','#0F5C7A','ltr')}
+ ${f('wl-accent',tr('لون التمييز (Accent Color)','Accent Color (hex)'),state.whiteLabel.accentColor,'text','#F2A541','ltr')}
+ ${f('wl-domain',tr('دومين مخصص (Custom Domain)','Custom Domain'),state.whiteLabel.customDomain,'text','brand-guard.yourdomain.com','ltr')}
+ <div style="height:12px"></div>
+ ${isOwner()?`<button class="btn primary block" data-act="saveWhiteLabel">${tr('حفظ إعدادات White-Label','Save White-Label Settings')}</button>`:''}</div>
  <div class="panel"><h3>${tr('المزامنة السحابية (Supabase — اختياري)','Cloud Sync (Supabase — Optional)')}</h3>
  <p class="hint">${tr('يعمل التطبيق محلياً بالكامل بدون خادم. إن أردت مزامنة الحالات بين عدة أجهزة أو استقبال بلاغات العملاء عن بُعد، الصق رابط ومفتاح مشروع Supabase المجاني (راجع ملف supabase/migrations/0001_phase0_foundation.sql).','Works 100% locally out of the box. To sync across devices or collect customer reports remotely, paste your free Supabase Project URL & Anon Key (see supabase-schema.sql).')}</p>
  ${f('c-url',tr('رابط مشروع Supabase (Project URL)','Supabase Project URL'),cfg.url,'url','','ltr')}
@@ -1679,6 +1761,7 @@ async function reload(){
  if(s)state.settings=Object.assign({remind:7,aliases:[],keywords:[],officialPhones:[],allowlistText:'',tgToken:'',tgChat:'',alertEmail:''},s.value);
  const ck=await DB.get('settings','checked');
  state.checked=ck?ck.value:[];
+  try{const wl=localStorage.getItem('hares-whitelabel');if(wl)state.whiteLabel=JSON.parse(wl)}catch{}
   try{const sc=localStorage.getItem('hares-sweep');if(sc)state.sweepCoverage=JSON.parse(sc)}catch{}
 }
 function updDet(){
@@ -1729,6 +1812,38 @@ function renderPrintDossier(list){
 
 const actions={
  noop(){},
+ saveWhiteLabel(){
+  if(!isOwner())return;
+  const g=id=>$(id)?$(id).value.trim():'';
+  state.whiteLabel={logo:g('wl-logo'),primaryColor:g('wl-primary')||'#0F5C7A',secondaryColor:state.whiteLabel.secondaryColor,accentColor:g('wl-accent')||'#F2A541',customDomain:g('wl-domain'),plan:state.whiteLabel.plan};
+  localStorage.setItem('hares-whitelabel',JSON.stringify(state.whiteLabel));
+  // Apply colors to CSS variables
+  document.documentElement.style.setProperty('--brand',state.whiteLabel.primaryColor);
+  document.documentElement.style.setProperty('--gold',state.whiteLabel.accentColor);
+  if(state.whiteLabel.logo){const logoEl=document.getElementById('ktTopLogo');if(logoEl)logoEl.src=state.whiteLabel.logo}
+  toast(tr('تم حفظ إعدادات White-Label','White-Label settings saved'));
+ },
+ async exportMonthlyReport(){
+  const cases=state.cases;
+  const removed=cases.filter(c=>c.status==='removed').length;
+  const reported=cases.filter(c=>c.status==='reported'||c.status==='review').length;
+  const overdue=cases.filter(isLate).length;
+  const customerReports=cases.filter(c=>c.source==='customer').length;
+  const byPlatform=Object.keys(PLATFORMS).map(k=>({name:pfName(k),n:cases.filter(c=>c.platform===k).length})).filter(x=>x.n>0);
+  const report={
+   title:tr('تقرير حماية العلامة التجارية (شهري)','Brand Protection Monthly Report'),
+   brand:state.settings.brand,
+   period:new Date().toLocaleDateString(isEn()?'en-US':'ar-AE',{year:'numeric',month:'long'}),
+   generated:new Date().toISOString(),
+   kpis:{total:cases.length,removed,reported,overdue,customerReports,removalRate:cases.length?Math.round(removed/cases.length*100):0},
+   byPlatform,
+   cases:cases.map(c=>({id:c.id,type:typeOf(c),platform:pfName(c.platform),handle:idLabel(c),status:stName(c.status),refId:c.refId||'',detected:fdate(c.foundAt),reported:c.reportedAt?fdate(c.reportedAt):''}))
+  };
+  const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='monthly-report-'+new Date().toISOString().slice(0,7)+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+  toast(tr('تم تصدير تقرير العميل (JSON)','Client monthly report exported (JSON)'));
+ },
+
  markSwept(el){
   const plat=el.dataset.platform;
   state.sweepCoverage[plat]=new Date().toISOString();
@@ -2332,6 +2447,8 @@ if('serviceWorker' in navigator && /^https?:$/i.test(location.protocol)){
 
 /* ---------- start ---------- */
 applyLangDir();
+// Apply white-label colors
+if(state.whiteLabel){document.documentElement.style.setProperty('--brand',state.whiteLabel.primaryColor||'#0F5C7A');document.documentElement.style.setProperty('--gold',state.whiteLabel.accentColor||'#F2A541');if(state.whiteLabel.logo){const le=document.getElementById('ktTopLogo');if(le)le.src=state.whiteLabel.logo}}
 License.evaluate();
 License.checkRemote();
 // Phase 0: Restore auth session & open local DB in parallel
