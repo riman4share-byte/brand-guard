@@ -67,4 +67,4 @@ Last Updated: 2026-11-23
 - Fixed a settings rendering bug where Brand Profile / alert-channel fields were emitted as literal `f(...)` template text instead of inputs. Fix applied to `index.html`, `hares-alalama.html`, and `brand-guard-en.html`.
 - Manual explicitly clarifies that the current Evidence Pack button labeled ZIP downloads a JSON manifest with placeholder/truncated hash entries, not a true ZIP with computed SHA-256 evidence hashes.
 - Manual explicitly clarifies that current cloud sync still targets legacy `hares_cases`/`hares_settings`, and that Supabase migrations, Edge Functions, capture worker, cloud SLA timers, and live RLS are not production-verified.
-- No commit/push performed for this repair; GitHub Pages still serves the previous published manual until an explicit publish request.
+- Published after explicit approval: commits `e5820a0` (settings render fix) and `626aaaa` (manual repair/package) pushed to `main`. GitHub Pages verified serving the repaired manual: 30 sections, 0 duplicate section IDs, new screenshots reachable.
