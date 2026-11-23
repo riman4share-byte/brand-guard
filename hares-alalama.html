@@ -404,7 +404,12 @@ const state={
  stampEvidence:true,
  role:localStorage.getItem('hares-role')||'owner',
  customerMode:isPublicReport,
- customerSubmitted:false,
+  customerSubmitted:false,
+  authUser:null,
+  authLoading:false,
+  authError:'',
+  activeWorkspaceId:localStorage.getItem('hares-active-ws')||'',
+  activeBrandId:localStorage.getItem('hares-active-brand')||'',
  custDraft:{type:'profile',url:'',platform:'instagram',username:'',notes:'',contact:'',shots:[]},
  tab:'list',
  filter:'all',
@@ -512,7 +517,9 @@ const Cloud={
    const toPush=[];
    for(const [id,lc] of lMap){
     const rem=rMap.get(id);
-    if(!rem||(lc.updatedAt||0)>(rem.updated_at||0))toPush.push({id,workspace:cfg.workspace,data:lc,updated_at:lc.updatedAt||Date.now()});
+    // Strip plaintext PIN from synced data (Phase 0 security hardening)
+    const cleanLc=Object.assign({},lc);delete cleanLc.pin;
+    if(!rem||(lc.updatedAt||0)>(rem.updated_at||0))toPush.push({id,workspace:cfg.workspace,data:cleanLc,updated_at:lc.updatedAt||Date.now()});
    }
    for(const [id,rem] of rMap){
     const lc=lMap.get(id);
@@ -548,6 +555,124 @@ const Cloud={
   }finally{
    state.syncing=false;renderTopActs();if(!state.customerMode)renderMain();
   }
+ }
+};
+
+/* ---------- Supabase Auth (Phase 0) ---------- */
+const Auth={
+ getConfig(){
+  const cfg=Cloud.getConfig();if(!cfg)return null;
+  return {url:cfg.url,key:cfg.key};
+ },
+ getClient(){
+  const cfg=this.getConfig();if(!cfg)return null;
+  if(!window._supabaseClient){
+   // Lightweight client using raw fetch against Supabase Auth REST API
+   window._supabaseClient={url:cfg.url,key:cfg.key};
+  }
+  return window._supabaseClient;
+ },
+ async getSession(){
+  const cfg=this.getConfig();if(!cfg)return null;
+  const raw=localStorage.getItem('hares-auth-session');
+  if(!raw)return null;
+  try{
+   const s=JSON.parse(raw);
+   if(s.expires_at&&Date.now()/1000>s.expires_at){
+    // Try refresh
+    const r=await fetch(cfg.url+'/auth/v1/token?grant_type=refresh_token',{
+     method:'POST',headers:{'apikey':cfg.key,'Content-Type':'application/json'},
+     body:JSON.stringify({refresh_token:s.refresh_token})
+    });
+    if(!r.ok){localStorage.removeItem('hares-auth-session');return null}
+    const ns=await r.json();
+    ns.expires_at=Math.floor(Date.now()/1000)+(ns.expires_in||3600);
+    localStorage.setItem('hares-auth-session',JSON.stringify(ns));
+    return ns;
+   }
+   return s;
+  }catch{return null}
+ },
+ async signIn(email,password){
+  const cfg=this.getConfig();if(!cfg)throw new Error('No Supabase config');
+  const r=await fetch(cfg.url+'/auth/v1/token?grant_type=password',{
+   method:'POST',headers:{'apikey':cfg.key,'Content-Type':'application/json'},
+   body:JSON.stringify({email,password})
+  });
+  const j=await r.json();
+  if(!r.ok)throw new Error(j.error_description||j.msg||'Sign in failed');
+  j.expires_at=Math.floor(Date.now()/1000)+(j.expires_in||3600);
+  localStorage.setItem('hares-auth-session',JSON.stringify(j));
+  return j;
+ },
+ async signUp(email,password){
+  const cfg=this.getConfig();if(!cfg)throw new Error('No Supabase config');
+  const r=await fetch(cfg.url+'/auth/v1/signup',{
+   method:'POST',headers:{'apikey':cfg.key,'Content-Type':'application/json'},
+   body:JSON.stringify({email,password})
+  });
+  const j=await r.json();
+  if(!r.ok)throw new Error(j.error_description||j.msg||'Sign up failed');
+  if(j.access_token){
+   j.expires_at=Math.floor(Date.now()/1000)+(j.expires_in||3600);
+   localStorage.setItem('hares-auth-session',JSON.stringify(j));
+  }
+  return j;
+ },
+ async signOut(){
+  const cfg=this.getConfig();const s=await this.getSession();
+  if(cfg&&s?.access_token){
+   try{await fetch(cfg.url+'/auth/v1/logout',{method:'POST',headers:{'apikey':cfg.key,'Authorization':'Bearer '+s.access_token}})}catch{}
+  }
+  localStorage.removeItem('hares-auth-session');
+ },
+ authHeaders(cfg,s){
+  const h={'apikey':cfg.key,'Content-Type':'application/json'};
+  if(s?.access_token)h['Authorization']='Bearer '+s.access_token;
+  return h;
+ },
+ async listWorkspaces(){
+  const cfg=this.getConfig();const s=await this.getSession();if(!cfg||!s)return[];
+  const r=await fetch(cfg.url+'/rest/v1/workspaces?select=id,name,plan,created_at&order=name.asc',{
+   headers:this.authHeaders(cfg,s)
+  });
+  if(!r.ok)return[];
+  return await r.json();
+ },
+ async createWorkspace(name){
+  const cfg=this.getConfig();const s=await this.getSession();if(!cfg||!s)return null;
+  const r=await fetch(cfg.url+'/rest/v1/workspaces',{
+   method:'POST',headers:this.authHeaders(cfg,s),
+   body:JSON.stringify({name,plan:'free'})
+  });
+  if(!r.ok)return null;
+  const rows=await r.json();
+  const ws=Array.isArray(rows)?rows[0]:rows;
+  if(ws?.id){
+   await fetch(cfg.url+'/rest/v1/members',{
+    method:'POST',headers:this.authHeaders(cfg,s),
+    body:JSON.stringify({workspace_id:ws.id,user_id:s.user?.id,role:'owner'})
+   });
+  }
+  return ws;
+ },
+ async listBrands(workspaceId){
+  const cfg=this.getConfig();const s=await this.getSession();if(!cfg||!s||!workspaceId)return[];
+  const r=await fetch(cfg.url+'/rest/v1/brands?workspace_id=eq.'+encodeURIComponent(workspaceId)+'&select=id,name,name_ar,aliases,keywords,official_domains,official_handles,official_phones,trademark_no,license_no,countries,public_slug,created_at&order=name.asc',{
+   headers:this.authHeaders(cfg,s)
+  });
+  if(!r.ok)return[];
+  return await r.json();
+ },
+ async createBrand(workspaceId,brand){
+  const cfg=this.getConfig();const s=await this.getSession();if(!cfg||!s||!workspaceId)return null;
+  const r=await fetch(cfg.url+'/rest/v1/brands',{
+   method:'POST',headers:this.authHeaders(cfg,s),
+   body:JSON.stringify({workspace_id:workspaceId,...brand})
+  });
+  if(!r.ok)return null;
+  const rows=await r.json();
+  return Array.isArray(rows)?rows[0]:rows;
  }
 };
 
@@ -945,6 +1070,76 @@ function buildScamAlertCard(c){
  return cv.toDataURL('image/png');
 }
 
+/* ---------- render: login & auth ---------- */
+function renderLoginScreen(){
+ const m=$('main');if(!m)return;
+ const cfg=Cloud.getConfig();
+ $('navBar').style.display='none';
+ $('fabAdd').style.display='none';
+ if(!cfg){
+  m.innerHTML=`<div class="pad"><div class="panel" style="text-align:center;padding:32px 20px">
+   <h3>${tr('التصنيف (Brand Guard)','Brand Guard')}</h3>
+   <p class="hint">${tr('يعمل محلياً بالكامل بدون حساب. لتفعيل المزامنة السحابية (Supabase) متعددة الأجهزة، افتح الإعدادات.','Works 100% locally without an account. To enable multi-device cloud sync (Supabase), open Settings.')}</p>
+   <div style="height:16px"></div>
+   <button class="btn primary" data-act="exitAuthMode">${tr('الدخول للتطبيق المحلي','Enter Local App')}</button>
+  </div></div>`;
+  return;
+ }
+ m.innerHTML=`<div class="pad"><div class="panel" style="max-width:420px;margin:40px auto 0">
+  <h3>${tr('تسجيل الدخول (Supabase)','Sign In (Supabase)')}</h3>
+  <p class="hint">${tr('أدخل بريدك الإلكتروني وكلمة المرور للوصول إلى مساحة العمل.','Enter your email and password to access your workspace.')}</p>
+  ${state.authError?`<div class="notice danger" style="margin-top:10px"><span>${esc(state.authError)}</span></div>`:''}
+  <label for="auth-email">${tr('البريد الإلكتروني','Email')}</label>
+  <input type="email" id="auth-email" class="ltr" placeholder="you@brand.com">
+  <label for="auth-pass">${tr('كلمة المرور','Password')}</label>
+  <input type="password" id="auth-pass" class="ltr" placeholder="••••••••">
+  <div style="height:16px"></div>
+  <div class="row">
+   <button class="btn primary" data-act="doSignIn">${tr('تسجيل الدخول','Sign In')}</button>
+   <button class="btn" data-act="doSignUp">${tr('إنشاء حساب','Sign Up')}</button>
+  </div>
+  <div style="height:12px"></div>
+  <button class="btn block" data-act="exitAuthMode">${tr('العمل محلياً (بدون حساب)','Work Locally (No Account)')}</button>
+ </div></div>`;
+}
+
+function renderWorkspacePicker(){
+ const m=$('main');if(!m)return;
+ m.innerHTML=`<div class="pad"><div class="panel" style="max-width:480px;margin:40px auto 0">
+  <h3>${tr('اختيار مساحة العمل والعلامة','Select Workspace & Brand')}</h3>
+  <p class="hint">${tr('اختر مساحة العمل (Workspace) والعلامة (Brand) للعمل عليها.','Choose a workspace and brand to work on.')}</p>
+  <label for="ws-pick">${tr('مساحة العمل (Workspace)','Workspace')}</label>
+  <select id="ws-pick"><option value="">-- ${tr('اختر','Select')} --</option></select>
+  <div style="height:8px"></div>
+  <button class="btn sm" data-act="createWorkspacePrompt">${tr('+ إنشاء مساحة عمل جديدة','+ Create New Workspace')}</button>
+  <div style="height:16px"></div>
+  <label for="brand-pick">${tr('العلامة التجارية (Brand)','Brand')}</label>
+  <select id="brand-pick"><option value="">-- ${tr('اختر','Select')} --</option></select>
+  <div style="height:8px"></div>
+  <button class="btn sm" data-act="createBrandPrompt">${tr('+ إنشاء علامة جديدة','+ Create New Brand')}</button>
+  <div style="height:20px"></div>
+  <button class="btn primary block" data-act="enterWorkspace">${tr('الدخول إلى التطبيق','Enter App')}</button>
+ </div></div>`;
+ // Load workspaces
+ Auth.listWorkspaces().then(list=>{
+  const sel=$('ws-pick');if(!sel)return;
+  list.forEach(w=>{const o=document.createElement('option');o.value=w.id;o.textContent=w.name;sel.appendChild(o)});
+  if(state.activeWorkspaceId)sel.value=state.activeWorkspaceId;
+  if(sel.value)loadBrandsForWorkspace(sel.value);
+ });
+ $('ws-pick').addEventListener('change',e=>loadBrandsForWorkspace(e.target.value));
+}
+
+function loadBrandsForWorkspace(wsId){
+ const sel=$('brand-pick');if(!sel)return;
+ sel.innerHTML='<option value="">-- '+tr('اختر','Select')+' --</option>';
+ if(!wsId)return;
+ Auth.listBrands(wsId).then(list=>{
+  list.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent=b.name;sel.appendChild(o)});
+  if(state.activeBrandId)sel.value=state.activeBrandId;
+ });
+}
+
 /* ---------- render: header & main ---------- */
 function renderTopActs(){
  const el=$('topActs');if(!el)return;
@@ -959,12 +1154,21 @@ function renderTopActs(){
  const cfg=Cloud.getConfig();
  const roleBtn=`<button class="pill ${isOwner()?'':'staff'}" data-act="toggleRole" title="${tr('تبديل الصلاحية','Switch Role')}">${isOwner()?tr('🔑 مالك','🔑 Owner'):tr('👤 موظف','👤 Staff')}</button>`;
  const syncBtn=cfg?`<button class="pill sync" data-act="syncNow" title="${tr('مزامنة سحابية','Cloud Sync')}">${state.syncing?tr('جاري المزامنة...','Syncing...'):tr('☁️ مزامنة','☁️ Sync')}</button>`:'';
- el.innerHTML=licBtn+langBtn+syncBtn+roleBtn;
+ const signOutBtn=state.authUser?`<button class="pill" data-act="signOutAuth" title="${tr('تسجيل الخروج','Sign Out')}">${tr('🚪 خروج','🚪 Out')}</button>`:'';
+ el.innerHTML=licBtn+langBtn+syncBtn+roleBtn+signOutBtn;
 }
 
 function renderMain(){
  applyLangDir();
  renderTopActs();
+ // Auth gate: if cloud is configured but no session, show login screen
+ if(!state.customerMode && Cloud.getConfig() && !state.authUser && !state.authLoading){
+  renderLoginScreen();return;
+ }
+ // Workspace picker: if authenticated but no active workspace, show picker
+ if(!state.customerMode && Cloud.getConfig() && state.authUser && (!state.activeWorkspaceId||!state.activeBrandId)){
+  renderWorkspacePicker();return;
+ }
  if(state.customerMode){
   $('fabAdd').style.display='none';
   $('navBar').style.display='none';
@@ -1152,7 +1356,7 @@ function renderSettings(){
  </div></div>
 
  <div class="panel"><h3>${tr('المزامنة السحابية (Supabase — اختياري)','Cloud Sync (Supabase — Optional)')}</h3>
- <p class="hint">${tr('يعمل التطبيق محلياً بالكامل بدون خادم. إن أردت مزامنة الحالات بين عدة أجهزة أو استقبال بلاغات العملاء عن بُعد، الصق رابط ومفتاح مشروع Supabase المجاني (راجع ملف supabase-schema.sql).','Works 100% locally out of the box. To sync across devices or collect customer reports remotely, paste your free Supabase Project URL & Anon Key (see supabase-schema.sql).')}</p>
+ <p class="hint">${tr('يعمل التطبيق محلياً بالكامل بدون خادم. إن أردت مزامنة الحالات بين عدة أجهزة أو استقبال بلاغات العملاء عن بُعد، الصق رابط ومفتاح مشروع Supabase المجاني (راجع ملف supabase/migrations/0001_phase0_foundation.sql).','Works 100% locally out of the box. To sync across devices or collect customer reports remotely, paste your free Supabase Project URL & Anon Key (see supabase-schema.sql).')}</p>
  ${f('c-url',tr('رابط مشروع Supabase (Project URL)','Supabase Project URL'),cfg.url,'url','','ltr')}
  ${f('c-key',tr('مفتاح Supabase العام (Anon Key)','Supabase Anon Public Key'),cfg.key,'password','','ltr')}
  ${f('c-ws',tr('اسم مساحة العمل المشتركة (Workspace)','Shared Workspace Name'),cfg.workspace||'default','text',tr('الأجهزة التي تستخدم نفس الاسم تتشارك نفس السجل.','Devices using the same workspace name share the same cases.'),'ltr')}
@@ -1322,6 +1526,64 @@ function renderPrintDossier(list){
 
 const actions={
  noop(){},
+ exitAuthMode(){state.authLoading=true;renderMain()},
+ async doSignIn(){
+  state.authError='';state.authLoading=true;renderLoginScreen();
+  const email=$('auth-email')?.value?.trim()||'';
+  const pass=$('auth-pass')?.value||'';
+  if(!email||!pass){state.authError=tr('أدخل البريد الإلكتروني وكلمة المرور','Enter email and password');state.authLoading=false;renderLoginScreen();return}
+  try{
+   const s=await Auth.signIn(email,pass);
+   state.authUser=s.user||{id:s.user_id,email};
+   state.authLoading=false;
+   renderMain();
+  }catch(e){state.authError=String(e?.message||e);state.authLoading=false;renderLoginScreen()}
+ },
+ async doSignUp(){
+  state.authError='';state.authLoading=false;renderLoginScreen();
+  const email=$('auth-email')?.value?.trim()||'';
+  const pass=$('auth-pass')?.value||'';
+  if(!email||!pass){state.authError=tr('أدخل البريد الإلكتروني وكلمة المرور','Enter email and password');renderLoginScreen();return}
+  try{
+   const s=await Auth.signUp(email,pass);
+   if(s.access_token){state.authUser=s.user||{id:s.user_id,email};renderMain()}
+   else{state.authError=tr('تم إنشاء الحساب. تحقق من بريدك الإلكتروني للتأكيد.','Account created. Check your email to confirm.')}
+   renderLoginScreen();
+  }catch(e){state.authError=String(e?.message||e);renderLoginScreen()}
+ },
+ async createWorkspacePrompt(){
+  const name=prompt(tr('اسم مساحة العمل الجديدة:','New workspace name:'));
+  if(!name)return;
+  const ws=await Auth.createWorkspace(name.trim());
+  if(ws){const sel=$('ws-pick');const o=document.createElement('option');o.value=ws.id;o.textContent=ws.name;sel.appendChild(o);sel.value=ws.id;loadBrandsForWorkspace(ws.id)}
+ },
+ async createBrandPrompt(){
+  const name=prompt(tr('اسم العلامة التجارية (EN):','Brand name (EN):'));
+  if(!name)return;
+  const wsId=$('ws-pick')?.value||state.activeWorkspaceId;
+  if(!wsId){toast(tr('اختر مساحة العمل أولاً','Select a workspace first'));return}
+  const brand=await Auth.createBrand(wsId,{name:name.trim(),name_ar:name.trim()});
+  if(brand){const sel=$('brand-pick');const o=document.createElement('option');o.value=brand.id;o.textContent=brand.name;sel.appendChild(o);sel.value=brand.id}
+ },
+ enterWorkspace(){
+  const wsId=$('ws-pick')?.value||'';
+  const brandId=$('brand-pick')?.value||'';
+  if(!wsId){toast(tr('اختر مساحة العمل','Select a workspace'));return}
+  state.activeWorkspaceId=wsId;
+  state.activeBrandId=brandId;
+  localStorage.setItem('hares-active-ws',wsId);
+  if(brandId)localStorage.setItem('hares-active-brand',brandId);
+  renderMain();
+ },
+ async signOutAuth(){
+  await Auth.signOut();
+  state.authUser=null;
+  state.activeWorkspaceId='';
+  state.activeBrandId='';
+  localStorage.removeItem('hares-active-ws');
+  localStorage.removeItem('hares-active-brand');
+  renderMain();
+ },
  activateLicense(){
   const v=($('licInput')?.value||'').trim();
   if(License.verifyKey(v)){
@@ -1641,6 +1903,32 @@ const actions={
    source:'customer',status:'found',foundAt:Date.now(),reportedAt:null,updatedAt:Date.now(),
    log:[{at:Date.now(),t:tr('بلاغ وارد من عميل','Submitted via Customer Report')+(d.contact?' ('+d.contact+')':'')}]
   };
+  // Phase 0: Submit via Edge Function (submit-report) when cloud is configured,
+  // otherwise store locally (offline / no cloud).
+  const cfg=Cloud.getConfig();
+  if(cfg){
+   try{
+    const endpoint=cfg.url+'/functions/v1/submit-report';
+    const sess=await Auth.getSession();
+    const hdrs={'Content-Type':'application/json','apikey':cfg.key};
+    if(sess?.access_token)hdrs['Authorization']='Bearer '+sess.access_token;
+    const resp=await fetch(endpoint,{
+     method:'POST',headers:hdrs,
+     body:JSON.stringify({
+      url:d.url,handle:d.username,description:d.notes,contact:d.contact,
+      kind:d.type,platform:d.platform,files:d.shots.slice(),
+      brand_slug:urlParams.get('brand')||'',workspace_id:state.activeWorkspaceId||'',
+      brand_id:state.activeBrandId||'',captcha_token:'PASS_TEST_TOKEN'
+     })
+    });
+    if(!resp.ok){throw new Error('Edge function failed')}
+    const j=await resp.json();
+    c.remoteReportId=j.report_id||null;
+   }catch(e){
+    // Fall back to local storage if Edge Function is unavailable
+    console.warn('Edge function unavailable, storing locally:',e);
+   }
+  }
   state.cases.push(c);
   await DB.put('cases',c);
   await Cloud.pushCase(c).catch(()=>{});
@@ -1713,11 +2001,18 @@ if('serviceWorker' in navigator && /^https?:$/i.test(location.protocol)){
 applyLangDir();
 License.evaluate();
 License.checkRemote();
-DB.open().then(reload).then(()=>{
+// Phase 0: Restore auth session & open local DB in parallel
+state.authLoading=true;
+Promise.all([
+ Auth.getSession().catch(()=>null),
+ DB.open().then(reload).catch(()=>null)
+]).then(([session])=>{
+ if(session&&session.user){state.authUser=session.user}
+ state.authLoading=false;
  renderMain();
  checkAutoNotification();
  if(Cloud.getConfig())Cloud.syncAll(true).catch(()=>{});
-}).catch(()=>{$('main').innerHTML=`<div class="empty"><b>${tr('تعذّر فتح التخزين','Storage Unavailable')}</b>${tr('افتح الملف من متصفح عادي وليس من وضع التصفح الخفي.','Please open the app in a standard browser window (not private/incognito mode).')}</div>`});
+}).catch(()=>{state.authLoading=false;renderMain()});
 </script>
 </body>
 </html>
