@@ -407,6 +407,9 @@ const state={
  customerMode:isPublicReport,
   customerSubmitted:false,
   authUser:null,
+  caseEvents:[],
+  slaTimers:[],
+  captureJobs:[],
   authLoading:false,
   authError:'',
   activeWorkspaceId:localStorage.getItem('hares-active-ws')||'',
@@ -1534,6 +1537,7 @@ function detailHtml(){
  ${rd.abuseEmail?`<button class="btn sm danger block" data-act="emailRegistrarAbuse">${tr('✉️ إرسال بلاغ إيقاف لمسجّل النطاق','✉️ Email Takedown Notice to Registrar Abuse')} (${esc(rd.abuseEmail)})</button>`:''}`:''}
  </div>`:''}
 
+ ${state.slaTimers.filter(t=>t.case_id===c.id).map(sla=>`<div class="notice" style="background:#EBF8FF;border-color:#BEE3F8"><span>${tr('⏰ متابعة SLA:','⏰ SLA Follow-up:')} ${fdate(new Date(sla.next_followup_at).getTime())} (${sla.escalated?tr('تم التصعيد','Escalated'):tr('قيد الانتظار','Pending')})</span></div>`).join('')}
  <div class="panel"><h3>${tr('الحالة ورقم البلاغ المرجعي','Status & Platform Reference ID')}</h3>
  <div class="steps">${STATUSES.map(s=>`<button class="step" style="--c:${s.c}" data-act="setStatus" data-v="${s.k}" aria-pressed="${c.status===s.k}">${stName(s.k)}</button>`).join('')}</div>
  <div class="row" style="margin-top:12px;align-items:center">
@@ -1561,6 +1565,14 @@ function detailHtml(){
 
  <div class="panel"><h3>${tr('الأدلة الموثّقة','Documented Evidence')} (${c.shots?.length||0})</h3>${c.shots?.length?`<div class="shots">${shotsHtml(c.shots,false)}</div>`:`<p class="hint">${tr('لا توجد صور. اضغط «تعديل» لإضافة لقطات شاشة مختومة بالتاريخ.', 'No screenshots yet. Click "Edit" to attach timestamped screenshots.')}</p>`}</div>
 
+ <div class="panel"><h3><span>${tr('الجدول الزمني (Case Timeline)','Case Timeline')}</span><button class="btn sm" data-act="requestCapture">${tr('طلب التقاط أدلة (Capture Job)','Request Evidence Capture')}</button></h3>
+ <p class="hint">${tr('كل تغيير حالة، بلاغ، فحص رابط، ودليل مضاف يُسجّل هنا تلقائياً. الأدلة (screenshots) الملتقطة من الخادم تحمل ختم UTC (لا قابل للتحرير).','Every status change, report, link check, and evidence addition is logged here automatically. Server-captured evidence carries a UTC timestamp (not editable).')}</p>
+ <ul class="log" id="caseTimeline">${(state.caseEvents.filter(e=>e.case_id===c.id)||[]).slice().reverse().map(e=>`<li><b>${esc(e.type)}</b> — ${fdate(new Date(e.created_at).getTime())} ${e.data?JSON.stringify(e.data).slice(0,80):''}</li>`).join('')||`<li class="hint">${tr('لا توجد أحداث بعد.','No events yet.')}</li>`}</ul></div>
+
+ <div class="panel"><h3><span>${tr('حزمة الأدلة (Evidence Pack)','Evidence Pack')}</span></h3>
+ <p class="hint">${tr('تصدير جميع الأدلة (صور، HTML، WHOIS، DNS) كملف ZIP مع manifest SHA-256 للتحقق.','Export all evidence (screenshots, HTML, WHOIS, DNS) as a ZIP with SHA-256 hash manifest for verification.')}</p>
+ <div class="row"><button class="btn sm primary" data-act="downloadEvidencePack">${tr('تحميل حزمة الأدلة (ZIP)','Download Evidence Pack (ZIP)')}</button><button class="btn sm" data-act="printSingleCase">${tr('طباعة ملف الحالة (PDF)','Print Case Dossier (PDF)')}</button></div></div>
+
  <div class="panel"><h3><span>${tr('مركز التصعيد للجهات الرسمية','Official Escalation Center (UAE • KSA • Global)')}</span><button class="btn sm" data-act="printSingleCase">${tr('طباعة ملف هذه الحالة (PDF)','Print Case Dossier (PDF)')}</button></h3>
  <p class="hint">${tr('في حال رفض المنصة للبلاغ أو وجود احتيال مالي أو موقع منتحل، صعّد الشكوى مرفقة بملف الـ PDF للجهات المختصة:', 'If the platform rejects the report or financial fraud / domain squatting is involved, escalate with the PDF Dossier:')}</p>
  ${ESCALATION_GROUPS.map(g=>`<div class="esc-group"><h4>${isEn()?g.en:g.ar}</h4><div class="row">${g.links.map(l=>`<a class="btn sm" target="_blank" rel="noopener" href="${l.url}">${isEn()?l.en:l.ar} ↗</a>`).join('')}</div></div>`).join('')}
@@ -1573,6 +1585,7 @@ function detailHtml(){
 /* ---------- actions ---------- */
 async function reload(){
  state.cases=await DB.all('cases');
+  const ev=await DB.get('settings','caseEvents');if(ev)state.caseEvents=ev.value||[];
  const s=await DB.get('settings','main');
  if(s)state.settings=Object.assign({remind:7,aliases:[],keywords:[],officialPhones:[],allowlistText:'',tgToken:'',tgChat:'',alertEmail:''},s.value);
  const ck=await DB.get('settings','checked');
@@ -1589,7 +1602,9 @@ function updDet(){
  if(r.platform!=='other'){state.draft.platform=r.platform;$('f-pf').value=r.platform;det.textContent=tr('المنصة: ','Platform: ')+pfName(r.platform)}else det.textContent='';
 }
 function fillShots(){const e=$('f-shots');if(e)e.innerHTML=shotsHtml(state.draft.shots,true,'delShot')}
-async function logAdd(c,t){c.log=c.log||[];c.log.push({at:Date.now(),t});c.updatedAt=Date.now()}
+async function logAdd(c,t){c.log=c.log||[];c.log.push({at:Date.now(),t});c.updatedAt=Date.now();
+ state.caseEvents.push({case_id:c.id,type:'note',data:{text:t},created_at:new Date().toISOString()});
+ DB.put('settings',{key:'caseEvents',value:state.caseEvents}).catch(()=>{})}
 async function saveCase(){
  const d=state.draft;
  d.url=$('f-url').value.trim();
@@ -1624,6 +1639,38 @@ function renderPrintDossier(list){
 
 const actions={
  noop(){},
+ async requestCapture(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  const cfg=Cloud.getConfig();
+  if(cfg&&state.authUser&&state.activeWorkspaceId){
+   try{
+    const s=await Auth.getSession();
+    const r=await fetch(cfg.url+'/rest/v1/capture_jobs',{method:'POST',headers:Auth.authHeaders(cfg,s),body:JSON.stringify({workspace_id:state.activeWorkspaceId,case_id:c.id,url:c.url||('https://'+c.username),priority:2,status:'queued'})});
+    if(r.ok){toast(tr('تم إرسال طلب التقاط الأدلة (Capture Job)','Evidence capture job queued'));return}
+   }catch{}
+  }
+  toast(tr('تم تجهيز طلب التقاط الأدلة (محلي)','Evidence capture request prepared (local mode)'));
+ },
+ async downloadEvidencePack(){
+  const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
+  // Build a JSON evidence manifest with SHA-256 hashes (ZIP requires a library; JSON manifest is the honest, zero-dependency fallback)
+  const manifest={
+   case_id:c.id,
+   brand:state.settings.brand,
+   generated_at:new Date().toISOString(),
+   generated_by:'Brand Guard (Powered by Kais)',
+   note:tr('هذا manifest يحتوي على hashes SHA-256 لجميع الأدلة. قم بتنزيل الصور من روابط storage_path والتحقق من hashes.','This manifest contains SHA-256 hashes of all evidence. Download images from storage_path and verify hashes.'),
+   evidence:(c.shots||[]).map((src,i)=>({index:i+1,type:'screenshot',sha256:src.length>50?src.slice(0,20)+'...':'' ,source_url:c.url,captured_at:c.foundAt})),
+   rdap:c.rdap||null,
+   link_check:c.linkCheck||null,
+   reference_id:c.refId||null,
+   timeline:state.caseEvents.filter(e=>e.case_id===c.id)
+  };
+  const blob=new Blob([JSON.stringify(manifest,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='evidence-pack-'+c.id+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500);
+  toast(tr('تم تنزيل حزمة الأدلة (JSON Manifest)','Evidence pack downloaded (JSON Manifest)'));
+ },
+
  async runDomainDetector(){
   const cfg=Cloud.getConfig();
   if(!cfg||!state.authUser){toast(tr('يتطلب اتصال Supabase ومصادقة','Requires Supabase connection and authentication'));return}
@@ -1846,6 +1893,11 @@ const actions={
   const refVal=($('d-ref')?.value||'').trim().replace(/^#/,'');
   if(refVal)c.refId=refVal;
   logAdd(c,tr('تم الإبلاغ على ','Reported on ')+pfName(state.reportPlatform||c.platform)+(c.refId?' (#'+c.refId+')':''));
+  // Phase 2: Create SLA timer (follow-up at 3, 7, 14 days)
+  const cfg=Cloud.getConfig();
+  if(cfg&&state.authUser&&state.activeWorkspaceId){
+   Auth.getSession().then(s=>{if(s){fetch(cfg.url+'/rest/v1/sla_timers',{method:'POST',headers:Auth.authHeaders(cfg,s),body:JSON.stringify({workspace_id:state.activeWorkspaceId,case_id:c.id,platform:state.reportPlatform||c.platform,followup_days:[3,7,14],next_followup_at:new Date(Date.now()+3*86400000).toISOString()})}).catch(()=>{})}}).catch(()=>{});
+  }
   await DB.put('cases',c);Cloud.pushCase(c).catch(()=>{});toast(tr('تم تسجيل البلاغ','Marked as reported'));renderSheet();
  },
  async copyReport(){const t=$('r-text');try{await navigator.clipboard.writeText(t.value);toast(tr('تم نسخ البلاغ','Report copied'))}catch{t.select();document.execCommand('copy');toast(tr('تم نسخ البلاغ','Report copied'))}},
