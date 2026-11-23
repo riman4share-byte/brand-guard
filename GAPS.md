@@ -54,3 +54,17 @@ Last Updated: 2026-11-23
 | 10 | Pricing / positioning: managed service vs software license | P6 | **Unverified** | Decides P6 white-label & billing priority. |
 | 11 | Marketplace brand-registry programs (Amazon, Noon, etc.) | P3 / P5 | **Unverified** | Document eligibility per client brand. |
 | 12 | Real-phone testing of Lens, TinEye, Ad Library links & RDAP/DoH CORS | P0 | **Unverified** | Must verify on mobile browser during P0 acceptance. |
+
+---
+
+## 4. Documentation & Delivery Repair (2026-11-23)
+
+- `client-manual.html` restored from clean structural baseline `c3ecdc1` and repaired with `scripts/repair-client-manual.mjs` using unique-anchor assertions.
+- Manual now has exactly 30 sections (`ar-1`–`ar-15`, `en-1`–`en-15`), split English Settings 9/10, matching TOCs, and no duplicate section IDs.
+- Fresh local Chromium screenshots captured with `scripts/capture-manual-screenshots.mjs`, including current six-tab navigation, Suspected, Sweep/Verify, Analytics, White-Label, and evidence timeline screens.
+- `CLIENT-MANUAL.md` synchronized with the interactive manual and truthful local-first/cloud-optional scope.
+- Verification added: `tests/manual-integrity.test.mjs`, `tests/manual-render.test.mjs`, and `tests/settings-render.test.mjs`.
+- Fixed a settings rendering bug where Brand Profile / alert-channel fields were emitted as literal `f(...)` template text instead of inputs. Fix applied to `index.html`, `hares-alalama.html`, and `brand-guard-en.html`.
+- Manual explicitly clarifies that the current Evidence Pack button labeled ZIP downloads a JSON manifest with placeholder/truncated hash entries, not a true ZIP with computed SHA-256 evidence hashes.
+- Manual explicitly clarifies that current cloud sync still targets legacy `hares_cases`/`hares_settings`, and that Supabase migrations, Edge Functions, capture worker, cloud SLA timers, and live RLS are not production-verified.
+- No commit/push performed for this repair; GitHub Pages still serves the previous published manual until an explicit publish request.

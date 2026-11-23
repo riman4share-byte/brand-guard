@@ -76,181 +76,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
 <body>
 
 <div class="top-nav">
-  <div class="title"><!-- Section 12 EN -->
-    <section class="sec" id="en-12">
-      <div class="sec-head">
-        <span class="sec-num">Section 12</span>
-        <h2>"Suspected" Tab (Inbox) — Candidates &amp; Domain Detector</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>The 4th tab shows <b>Suspected (Candidates)</b> — suspicious accounts and domains detected automatically or via customer reports, awaiting your confirmation (Confirm) or dismissal (Dismiss):</p>
-          <ul class="opt-list">
-            <li class="opt">
-              <h4><span class="pill-ui brand">Suspected</span> Badge Count</h4>
-              <p>Shows the number of new candidates on the "Suspected" tab badge.</p>
-            </li>
-            <li class="opt">
-              <h4>Search &amp; Filter</h4>
-              <p>• <b>Search box:</b> Search candidates (URL, handle, platform).
-              <br>• <b>Status filter:</b> All / New / Confirmed / Dismissed / Allowlisted.</p>
-            </li>
-            <li class="opt">
-              <h4>Candidate Card</h4>
-              <p>Shows: handle/domain, platform, <b>Score</b> (color-coded: red ≥70, amber 40-69, green &lt;40), signal chips, and buttons:
-              <br>• <b>Confirm → Create Case:</b> Converts candidate to a formal Case.
-              <br>• <b>Dismiss:</b> Prompts for reason (fan page / reseller / unrelated / duplicate).
-              <br>• <b>Allowlist:</b> Adds to allowlist (will NEVER generate alerts again).</p>
-            </li>
-            <li class="opt warn">
-              <h4><span class="pill-ui brand">Run Domain Detector</span></h4>
-              <p>Runs the <b>detect-domains</b> Edge Function on Supabase to scan 3,000+ lookalike domains automatically (TLD swaps, suffixes, homoglyphs, keyword combos). Results appear as candidates in this screen.
-              <br>• <b>Detector Runs log:</b> Shows last 10 runs with status, stats (domains checked, registered, new candidates), and errors.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/08-scan-tab-ar.png" alt="Suspected Tab">
-          <div class="cap">Suspected (Inbox) Tab — Candidates with scores and Confirm/Dismiss/Allowlist buttons</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 13 EN -->
-    <section class="sec" id="en-13">
-      <div class="sec-head">
-        <span class="sec-num">Section 13</span>
-        <h2>"Sweep" Tab — Platform Coverage &amp; Phone Checker</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>The 5th tab tracks <b>Proactive Sweep Coverage</b> — log your last sweep date per platform to ensure no platform is neglected:</p>
-          <ul class="opt-list">
-            <li class="opt">
-              <h4>9 Platforms with Stale Tracking</h4>
-              <p>Instagram, TikTok, Facebook, X, Snapchat, YouTube, Telegram, WhatsApp, Website — each shows:
-              <br>• <b>Last swept:</b> Date of last sweep.
-              <br>• <b>⚠️ Stale (N days):</b> Red warning if 7+ days without sweep.
-              <br>• <b>✓ Mark Swept Today:</b> Button to record sweep date.
-              <br>• <b>Open Platform ↗:</b> Direct link to platform search page.</p>
-            </li>
-            <li class="opt">
-              <h4>Provider Budget Display</h4>
-              <p>Shows SERP provider usage (0/1000 queries) with "Within limit" status.</p>
-            </li>
-            <li class="opt">
-              <h4>Phone Mismatch Checker</h4>
-              <p>Enter a suspicious number to check if it matches your official numbers. If no match → "⚠️ Suspicious".</p>
-            </li>
-            <li class="opt ok">
-              <h4>Public Verify Page</h4>
-              <p>• <b>Copy Verify Link:</b> Copies a public link (<code>?verify=1</code>) to the Official Channels Verification page.
-              <br>• <b>Preview:</b> Opens the Verify page in a new tab.
-              <br>The page shows: Official website, social accounts, phone numbers, safety warnings, and a report link.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/08-scan-tab-ar.png" alt="Sweep Tab">
-          <div class="cap">Sweep Tab — 9 platforms with stale tracking and phone mismatch checker</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 14 EN -->
-    <section class="sec" id="en-14">
-      <div class="sec-head">
-        <span class="sec-num">Section 14</span>
-        <h2>"Analytics" Tab — KPIs &amp; Monthly Client Report</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>The 6th tab shows the <b>Analytics Dashboard</b> with performance and protection metrics:</p>
-          <ul class="opt-list">
-            <li class="opt">
-              <h4>Key Performance Indicators (KPIs)</h4>
-              <p>Total Cases, Removed, Pending, Overdue, Customer Reports, Avg. Days to Removal, Removal Rate (%).</p>
-            </li>
-            <li class="opt">
-              <h4>Status / Type / Platform Breakdown</h4>
-              <p>Case counts grouped by status (Detected, Reported, ...), type (Account, Domain, ...), and platform (Instagram, TikTok, ...).</p>
-            </li>
-            <li class="opt ok">
-              <h4>Export Monthly Client Report</h4>
-              <p>• <b>Print PDF Report:</b> Prints a comprehensive report (activity summary, case counts, actions).
-              <br>• <b>Export Excel (CSV):</b> Exports all cases to a spreadsheet.</p>
-            </li>
-            <li class="opt">
-              <h4>Subscription Plan &amp; Limits</h4>
-              <p>Shows current plan (Free/Starter/Pro/Enterprise) with limits (Max Brands, Max Cases, Max Images/Case). To upgrade, contact Kais Tauiti.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/01-dashboard-ar.png" alt="Analytics Dashboard">
-          <div class="cap">Analytics Dashboard — KPIs and status/type/platform breakdowns</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 15 EN -->
-    <section class="sec" id="en-15">
-      <div class="sec-head">
-        <span class="sec-num">Section 15</span>
-        <h2>Advanced Settings: White-Label, Onboarding, Health, Auth</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>Advanced settings (bottom of Settings tab) provide:</p>
-          <ul class="opt-list">
-            <li class="opt ok">
-              <h4>Onboarding Wizard (5 Steps)</h4>
-              <p>1. Enter Brand Profile ✅/⬜
-              <br>2. Add Official Channels ✅/⬜
-              <br>3. Add Product Images ✅/⬜
-              <br>4. Connect Supabase (Optional) ✅/⬜
-              <br>5. Enter Trademark Registration No. ✅/⬜</p>
-            </li>
-            <li class="opt">
-              <h4>White-Label Settings (For Clients)</h4>
-              <p>• <b>Client Logo URL:</b> Custom logo.
-              <br>• <b>Primary Color:</b> Brand color (hex).
-              <br>• <b>Accent Color:</b> Accent color (hex).
-              <br>• <b>Custom Domain:</b> e.g., brand-guard.yourdomain.com.
-              <br>• <b>Save White-Label:</b> Applies colors and logo instantly.</p>
-            </li>
-            <li class="opt">
-              <h4>Supabase Auth (Sign In / Sign Up)</h4>
-              <p>When Supabase is configured, a login screen appears (Email + Password) with:
-              <br>• <b>Sign In</b> / <b>Sign Up</b>
-              <br>• <b>Workspace &amp; Brand Picker</b>
-              <br>• <b>Sign Out</b> button in top bar
-              <br>• Roles: Owner / Staff / Viewer — enforced server-side (RLS).</p>
-            </li>
-            <li class="opt">
-              <h4>Health Status Page (?health=1)</h4>
-              <p>System health page showing: App (✅ Running), IndexedDB (✅ Available), Supabase (✅ Connected / ⚠️ Not connected), Language, Version (v3.0 Phase 6), Powered by Kais Tauiti.</p>
-            </li>
-            <li class="opt">
-              <h4>Case Timeline + Evidence Pack</h4>
-              <p>• <b>Case Timeline:</b> Every status change, report, link check, and evidence addition is logged (append-only).
-              <br>• <b>Request Evidence Capture:</b> Queues a Playwright worker to capture screenshots (desktop + mobile) + HTML with UTC timestamp.
-              <br>• <b>Download Evidence Pack:</b> Exports JSON manifest with SHA-256 hashes for verification.</p>
-            </li>
-            <li class="opt">
-              <h4>SLA Timers</h4>
-              <p>• <b>SLA Follow-up:</b> When "Mark as Reported", creates a follow-up timer (3/7/14 days) with "⏰ SLA Follow-up" notice.
-              <br>• <b>Auto-reopen:</b> If a "Removed" account comes back live, the case reopens automatically.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/09-settings-top-ar.png" alt="Advanced Settings">
-          <div class="cap">Advanced Settings — Onboarding Wizard, White-Label, Supabase Auth, Health Status</div>
-        </div>
-      </div>
-    </section>
-<img src="data:image/png;base64,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" alt="Kais Logo" style="height:38px;width:auto"><span>دليل حارس العلامة الشامل | Brand Guard Manual — <b style="color:#F2A541">POWERED BY KAIS</b></span></div>
+  <div class="title"><img src="data:image/png;base64,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" alt="Kais Logo" style="height:38px;width:auto"><span>دليل حارس العلامة الشامل | Brand Guard Manual — <b style="color:#F2A541">POWERED BY KAIS</b></span></div>
   <div class="actions">
     <button class="btn active" id="btn-both" onclick="setView('both')">عربي + English</button>
     <button class="btn" id="btn-ar" onclick="setView('ar')">العربية فقط (Arabic)</button>
@@ -267,11 +93,11 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
     <div class="hero">
       <span class="badge">الدليل الشامل للمالك وفريق العمل (خطوة بخطوة بالصور)</span>
       <h1>حارس العلامة (Brand Guard) — غرفة عمليات حماية علامتك التجارية</h1>
-      <p>شرح مبسّط وعملي لكل زر وخيار داخل التطبيق: كيف ترصد الحسابات والمواقع المنتحلة، كيف تحذّر عملاءك في ١٠ ثوانٍ، كيف ترسل بلاغاً قانونياً رسمياً تقبله المنصات، وكيف تصعّد للشرطة والجهات الرسمية بملف PDF موثّق.</p>
+      <p>شرح مبسّط وعملي لكل زر وخيار داخل التطبيق: كيف ترصد الحسابات والمواقع المنتحلة، كيف تحذّر عملاءك في ١٠ ثوانٍ، كيف تجهّز نص بلاغ رسمي ونموذج المنصة المباشر للإرسال اليدوي، وكيف تصعّد للجهات الرسمية بملف PDF منظم.</p>
       <div class="hero-grid">
         <div class="hero-stat"><b>١. الرصد المبكر</b><span>اكتشاف الحسابات والمواقع والإعلانات المنتحلة قبل أن تخدع العملاء.</span></div>
         <div class="hero-stat"><b>٢. تحذير العملاء فوراً</b><span>توليد صورة تحذير رسمية للستوري (Instagram / WhatsApp) بضغطة زر.</span></div>
-        <div class="hero-stat"><b>٣. إغلاق قانوني سريع</b><span>كتابة نص البلاغ القانوني مع ختم الصور بالتاريخ وفتح نموذج المنصة المباشر.</span></div>
+        <div class="hero-stat"><b>٣. تجهيز بلاغ سريع</b><span>كتابة نص البلاغ مع ختم توثيق للصور وفتح نموذج المنصة المباشر؛ الإرسال يتم يدوياً.</span></div>
         <div class="hero-stat"><b>٤. تصعيد رسمي موثّق</b><span>كشف مستضيف الموقع المنتحل وتصعيد بملف PDF لشرطة دبي، TDRA، وSAIP.</span></div>
       </div>
     </div>
@@ -281,7 +107,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
       <div class="toc-grid">
         <a href="#ar-1"><b>١</b> الشاشة الرئيسية ولوحة التحكم بالحالات</a>
         <a href="#ar-2"><b>٢</b> التبديل الفوري بين العربية والإنجليزية</a>
-        <a href="#ar-3"><b>٣</b> إضافة حالة انتحال وختم الأدلة القانوني</a>
+        <a href="#ar-3"><b>٣</b> إضافة حالة انتحال وختم توثيق الأدلة</a>
         <a href="#ar-4"><b>٤</b> فحص حالة الرابط وكاشف بيانات النطاق (Whois)</a>
         <a href="#ar-5"><b>٥</b> مولّد بطاقة تحذير العملاء للستوري (Story Alert)</a>
         <a href="#ar-6"><b>٦</b> نص البلاغ القانوني والنماذج الرسمية المباشرة</a>
@@ -290,10 +116,10 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
         <a href="#ar-9"><b>٩</b> الإعدادات: ملف العلامة، العرض التجريبي، والتنبيهات</a>
         <a href="#ar-10"><b>١٠</b> صلاحيات (المالك / الموظف)، السحابة، وملف الشكوى PDF</a>
         <a href="#ar-11"><b>١١</b> نموذج استقبال بلاغات العملاء العام</a>
-        <a href="#ar-12"><b>١٢</b> تبويب «الرصد» (Suspected Inbox) — المرشحون وكاشف النطاقات</a>
-        <a href="#ar-13"><b>١٣</b> تبويب «المسح» (Sweep) — تغطية المنصات وفحص الأرقام</a>
-        <a href="#ar-14"><b>١٤</b> تبويب «التحليلات» (Analytics) — KPIs وتقرير العميل الشهري</a>
-        <a href="#ar-15"><b>١٥</b> الإعدادات المتقدمة: White-Label، Onboarding، Health Status، Auth</a>
+        <a href="#ar-12"><b>١٢</b> تبويب «الرصد» (Suspected Inbox)</a>
+        <a href="#ar-13"><b>١٣</b> تبويب «المسح» (Sweep) وصفحة التحقق العامة</a>
+        <a href="#ar-14"><b>١٤</b> تبويب «التحليلات» (Analytics)</a>
+        <a href="#ar-15"><b>١٥</b> الإعدادات المتقدمة: Onboarding، White-Label، المصادقة، الصحة، الأدلة وSLA</a>
       </div>
     </div>
 
@@ -374,7 +200,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
     <section class="sec" id="ar-3">
       <div class="sec-head">
         <span class="sec-num">القسم ٣</span>
-        <h2>إضافة حالة انتحال جديدة + ختم الأدلة القانوني (Add Case & Forensic Stamp)</h2>
+        <h2>إضافة حالة انتحال جديدة + ختم توثيق الأدلة (Add Case & Documented Evidence Stamp)</h2>
       </div>
       <div class="split">
         <div>
@@ -398,16 +224,16 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
               <p>إذا وصلك إيميل من انستغرام أو تيك توك برقم الشكوى (مثال: `IG-8841209`)، سجّله هنا ليظهر على بطاقة الحالة وفي خطابات المتابعة.</p>
             </li>
             <li class="opt ok">
-              <h4>٤. ختم التاريخ والرابط على الصور كدليل قانوني (Forensic Evidence Stamp)</h4>
-              <p>خيار مفعّل تلقائياً: عند رفع أي لقطة شاشة (Screenshot)، يقوم التطبيق بضغط الصورة لتوفير المساحة ويطبع أسفلها شريط توثيق قانوني يحتوي على:
+              <h4>٤. ختم التاريخ والرابط على الصور كشريط توثيق مساعد (Documented Evidence Stamp)</h4>
+              <p>خيار مفعّل تلقائياً: عند رفع أي لقطة شاشة (Screenshot)، يقوم التطبيق بضغط الصورة لتوفير المساحة ويطبع أسفلها شريط توثيق مساعد يحتوي على وقت الجهاز بصيغة UTC. هذا الشريط يساعد على التنظيم، لكنه ليس إثباتاً قانونياً مستقلاً أو ختم خادم:
               <br><code class="ltr">EVIDENCE LOG • التاريخ والوقت العالمي UTC • الرابط المنتحل • اسم العلامة</code>
-              <br>وهذا يجعل الصورة دليلاً قوياً عند تقديمها للشرطة أو مسجّل النطاق.</p>
+              <br>وهذا يساعد على ترتيب الصورة ضمن ملف الشكوى، مع بقاء التحقق القانوني النهائي للجهة المختصة.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
           <img src="manual-screenshots/03-add-case-ar.png" alt="شاشة إضافة حالة">
-          <div class="cap">شاشة إضافة حالة — التعرّف التلقائي على المنصة والاسم مع خيار ختم الأدلة القانوني</div>
+          <div class="cap">شاشة إضافة حالة — التعرّف التلقائي على المنصة والاسم مع خيار ختم توثيق الأدلة</div>
         </div>
       </div>
     </section>
@@ -699,42 +525,40 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
         </div>
       </div>
     </section>
-<!-- Section 12 AR -->
+
+    <!-- Section 12 AR -->
     <section class="sec" id="ar-12">
       <div class="sec-head">
         <span class="sec-num">القسم ١٢</span>
-        <h2>تبويب «الرصد» (Suspected Inbox) — المرشحون وكاشف النطاقات</h2>
+        <h2>تبويب «الرصد» (Suspected Inbox) — مراجعة المرشحين قبل تأكيد الحالة</h2>
       </div>
       <div class="split">
         <div>
-          <p>تبويب جديد (الـ ٤) يعرض <b>المرشحين (Candidates)</b> — حسابات ونطاقات مشبوهة تم رصدها تلقائياً أو عبر بلاغات العملاء، بانتظار تأكيدك (Confirm) أو رفضك (Dismiss):</p>
+          <p>تبويب <b>«الرصد»</b> مخصص لمراجعة الحسابات والنطاقات المشبوهة قبل اعتبارها حالات مؤكدة. في النسخة المحلية الحالية، تُعرض هنا السجلات المحلية التي تحمل مصدر <code>customer</code> أو <code>detect-domains</code> أو <code>detect-ct</code>، وليس جدول <code>candidates</code> السحابي بعد.</p>
           <ul class="opt-list">
             <li class="opt">
-              <h4><span class="pill-ui brand">الرصد (Suspected)</span> شارة عدد المرشحين</h4>
-              <p>يعرض عدد المرشحين الجدد (New) في شارة على تبويب «الرصد».</p>
+              <h4>البحث والتصفية</h4>
+              <p>ابحث بالرابط أو الاسم أو المنصة، وصفّ حسب: الكل، جديد، مؤكد، مرفوض، مسموح.</p>
             </li>
             <li class="opt">
-              <h4>بحث وفلترة (Search &amp; Filter)</h4>
-              <p>• <b>مربع البحث:</b> ابحث في المرشحين (رابط، اسم، منصة).
-              <br>• <b>فلتر الحالة:</b> الكل / جديد / مؤكد / مرفوض / مسموح.</p>
+              <h4>بطاقة المرشح والنتيجة</h4>
+              <p>تعرض المنصة والنوع والنتيجة اللونية: أحمر للنتيجة 70 فأكثر، برتقالي من 40 إلى 69، وأخضر لأقل من 40. النتيجة الحالية تقديرية وليست حكماً نهائياً.</p>
             </li>
-            <li class="opt">
-              <h4>بطاقة المرشح (Candidate Card)</h4>
-              <p>تعرض: اسم الحساب/النطاق، المنصة، <b>النتيجة (Score)</b> (ملونة: أحمر ≥70، برتقالي 40-69، أخضر &lt;40)، إشارات التقييم (Signals)، وأزرار:
-              <br>• <b>تأكيد → إنشاء حالة:</b> يحوّل المرشح إلى حالة (Case) رسمية.
-              <br>• <b>رفض:</b> يطلب سبب الرفض (fan page / reseller / unrelated / duplicate).
-              <br>• <b>مسموح (Allowlist):</b> يضيف المرشح إلى قائمة السماح (لن يُولّد تنبيهات أبداً).</p>
+            <li class="opt ok">
+              <h4>تأكيد / رفض / مسموح</h4>
+              <p>• <b>تأكيد:</b> يحدّث السجل المحلي إلى حالة مرصودة ويعلّم المرشح كمؤكد؛ لا ينشئ سجلاً سحابياً منفصلاً بعد.
+              <br>• <b>رفض:</b> يطلب سبب الرفض ويحفظه محلياً.
+              <br>• <b>مسموح:</b> يعلّم المرشح كمسموح في قائمة المراجعة المحلية. قائمة السماح الدائمة للعلامة تُدار من الإعدادات.</p>
             </li>
             <li class="opt warn">
-              <h4><span class="pill-ui brand">تشغيل كاشف النطاقات (Run Domain Detector)</span></h4>
-              <p>يُشغّل Edge Function <b>detect-domains</b> على Supabase لفحص ٣,٠٠٠+ نطاق مشابه تلقائياً (TLD swaps, suffixes, homoglyphs, keyword combos). النتائج تظهر كمرشحين (Candidates) في هذه الشاشة.
-              <br>• <b>سجل عمليات الفحص (Detector Runs):</b> يعرض آخر ١٠ عمليات فحص مع الحالة، الإحصائيات، والأخطاء.</p>
+              <h4>تشغيل كاشف النطاقات (Domain Detector)</h4>
+              <p>هذا الزر يستدعي Edge Function باسم <code>detect-domains</code> على Supabase. يتطلب اتصال Supabase ومصادقة ومساحة عمل/علامة نشطة ونشر الدالة. لم يتم التحقق الحي من هذا المسار بعد، وسجل عمليات الكاشف يظهر فقط عند الاتصال والمصادقة.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
-          <img src="manual-screenshots/08-scan-tab-ar.png" alt="تبويب الرصد">
-          <div class="cap">تبويب الرصد (Suspected Inbox) — مرشحون مع نتائج تقييم وأزرار تأكيد/رفض/سماح</div>
+          <img src="manual-screenshots/12-suspected-inbox-ar.png" alt="تبويب الرصد بالعربية">
+          <div class="cap">تبويب الرصد — مراجعة المرشحين المحليين وأزرار التأكيد والرفض والسماح</div>
         </div>
       </div>
     </section>
@@ -743,40 +567,35 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
     <section class="sec" id="ar-13">
       <div class="sec-head">
         <span class="sec-num">القسم ١٣</span>
-        <h2>تبويب «المسح» (Sweep) — تغطية المنصات وفحص الأرقام</h2>
+        <h2>تبويب «المسح» (Sweep) وصفحة التحقق العامة (Verify)</h2>
       </div>
       <div class="split">
         <div>
-          <p>تبويب (الـ ٥) لتتبع <b>تغطية المسح (Sweep Coverage)</b> — سجّل تاريخ آخر مسح لكل منصة لضمان عدم إهمال أي منصة:</p>
+          <p>تبويب <b>«المسح»</b> يساعدك على تغطية المنصات يدوياً بانتظام، لأن الكشف الآلي الكامل للحسابات والإعلانات غير مضمون.</p>
           <ul class="opt-list">
             <li class="opt">
-              <h4>٩ منصات مع تتبع Stale (قديم)</h4>
-              <p>Instagram, TikTok, Facebook, X, Snapchat, YouTube, Telegram, WhatsApp, Website — كل منصة تُظهر:
-              <br>• <b>آخر مسح:</b> تاريخ آخر مسح.
-              <br>• <b>⚠️ قديم (N يوم):</b> تحذير أحمر إذا تجاوز ٧ أيام بدون مسح.
-              <br>• <b>✓ تم المسح اليوم:</b> زر لتسجيل تاريخ المسح.
-              <br>• <b>فتح المنصة ↗:</b> رابط مباشر لصفحة البحث في المنصة.</p>
+              <h4>تغطية المنصات وتحذير التقادم</h4>
+              <p>يسجّل آخر مسح لكل منصة، ويظهر تحذير إذا مرّت 7 أيام أو أكثر بدون مسح. اضغط <b>«تم المسح اليوم»</b> بعد فحص المنصة، أو <b>«فتح المنصة»</b> للانتقال إليها.</p>
             </li>
             <li class="opt">
-              <h4>ميزانية مزود SERP (Provider Budget)</h4>
-              <p>عرض استخدام مزود البحث (SerpApi/Apify) — عدد الاستعلامات المستخدمة / الحد (1000) مع حالة «ضمن الحد».</p>
-            </li>
-            <li class="opt">
-              <h4>فحص تطابق الأرقام (Phone Mismatch Checker)</h4>
-              <p>أدخل رقماً مشبوهاً للتحقق مما إذا كان يطابق أرقامك الرسمية. إذا لم يطابق → «⚠️ مشبوه».</p>
+              <h4>ميزانية مزود البحث وفحص الأرقام</h4>
+              <p>• عرض ميزانية SERP الحالي توضيحي/ثابت وليس تكاملاً حياً مع مزود بحث.
+              <br>• فاحص تطابق الأرقام يقارن الرقم المدخل برقم الهاتف/واتساب المحدد في الإعدادات؛ التطبيع الكامل بصيغة E.164 ما زال جزئياً.</p>
             </li>
             <li class="opt ok">
-              <h4>صفحة التحقق العامة (Public Verify Page)</h4>
-              <p>• <b>نسخ رابط التحقق:</b> ينسخ رابطاً عاماً (<code>?verify=1</code>) لصفحة التحقق من القنوات الرسمية.
-              <br>• <b>معاينة:</b> يفتح صفحة التحقق في تبويب جديد.
-              <br>الصفحة تُظهر: الموقع الرسمي، حسابات السوشيال الرسمية، أرقام الهواتف/WhatsApp، تحذيرات أمان، ورابط الإبلاغ عن حسابات مشبوهة.</p>
+              <h4>صفحة التحقق العامة (<code>?verify=1</code>)</h4>
+              <p>تعرض الموقع الرسمي والحسابات والأرقام المعتمدة من الإعدادات مع تحذير للعملاء. استخدم <b>«نسخ رابط التحقق»</b> أو <b>«معاينة»</b> لمشاركتها في البايو أو الفواتير.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
-          <img src="manual-screenshots/08-scan-tab-ar.png" alt="تبويب المسح">
-          <div class="cap">تبويب المسح — تغطية ٩ منصات مع تتبع Stale وفحص الأرقام</div>
+          <img src="manual-screenshots/13-sweep-verify-ar.png" alt="تبويب المسح بالعربية">
+          <div class="cap">تبويب المسح — تغطية المنصات وتحذيرات التقادم</div>
         </div>
+      </div>
+      <div class="shot-box" style="margin-top:18px">
+        <img src="manual-screenshots/13b-verify-page-ar.png" alt="صفحة التحقق العامة">
+        <div class="cap">صفحة التحقق العامة التي يراها العملاء للتأكد من القنوات الرسمية</div>
       </div>
     </section>
 
@@ -784,34 +603,29 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
     <section class="sec" id="ar-14">
       <div class="sec-head">
         <span class="sec-num">القسم ١٤</span>
-        <h2>تبويب «التحليلات» (Analytics) — KPIs وتقرير العميل الشهري</h2>
+        <h2>تبويب «التحليلات» (Analytics) — مؤشرات الأداء وتقارير العميل</h2>
       </div>
       <div class="split">
         <div>
-          <p>تبويب (الـ ٦) يعرض <b>لوحة تحليلات (Analytics Dashboard)</b> مع مقاييس الأداء والحماية:</p>
+          <p>يعرض تبويب <b>«التحليلات»</b> ملخصاً محلياً لحالاتك المسجلة، دون الحاجة إلى خادم.</p>
           <ul class="opt-list">
             <li class="opt">
-              <h4>المقاييس الرئيسية (KPIs)</h4>
-              <p>• <b>إجمالي الحالات</b> • <b>تمت الإزالة</b> • <b>قيد المتابعة</b> • <b>متأخرة</b> • <b>بلاغات العملاء</b> • <b>متوسط أيام الإزالة</b> • <b>معدل الإزالة (%)</b></p>
+              <h4>المؤشرات الرئيسية</h4>
+              <p>إجمالي الحالات، تمت الإزالة، قيد المتابعة، المتأخرة، بلاغات العملاء، متوسط أيام الإزالة، ومعدل الإزالة.</p>
             </li>
             <li class="opt">
-              <h4>تفصيل حسب الحالة / النوع / المنصة</h4>
-              <p>عرض عدد الحالات مصنفة حسب: الحالة (تم الرصد، تم الإبلاغ، ...)، النوع (حساب، موقع، ...)، والمنصة (Instagram, TikTok, ...).</p>
+              <h4>التوزيعات</h4>
+              <p>الحالات حسب الحالة، النوع، والمنصة لمساعدتك على معرفة أين يتركز الانتحال.</p>
             </li>
             <li class="opt ok">
-              <h4>تصدير تقرير العميل (Monthly Client Report)</h4>
-              <p>• <b>طباعة تقرير PDF:</b> يطبع تقريراً شاملاً (ملخص النشاط، عدد الحالات، الإجراءات) لتقديم للعميل.
-              <br>• <b>تصدير Excel (CSV):</b> يصدر جدولاً بجميع الحالات.</p>
-            </li>
-            <li class="opt">
-              <h4>خطة الاشتراك (Plan &amp; Limits)</h4>
-              <p>عرض الخطة الحالية (Free/Starter/Pro/Enterprise) مع الحدود (Max Brands, Max Cases, Max Images/Case). للترقية، تواصل مع Kais Tauiti.</p>
+              <h4>تقرير العميل والحدود</h4>
+              <p>يمكن طباعة تقرير PDF أو تصدير CSV من هذه الشاشة. كما تعرض حدود الخطة الحالية بشكل توضيحي؛ الفوترة والإنفاذ الكامل للحدود ليسا مسار إنتاج مؤكد بعد.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
-          <img src="manual-screenshots/01-dashboard-ar.png" alt="لوحة التحليلات">
-          <div class="cap">لوحة التحليلات (Analytics Dashboard) — KPIs وتفصيل حسب الحالة/النوع/المنصة</div>
+          <img src="manual-screenshots/14-analytics-ar.png" alt="لوحة التحليلات بالعربية">
+          <div class="cap">لوحة التحليلات — المؤشرات الرئيسية وتوزيع الحالات</div>
         </div>
       </div>
     </section>
@@ -820,233 +634,52 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
     <section class="sec" id="ar-15">
       <div class="sec-head">
         <span class="sec-num">القسم ١٥</span>
-        <h2>الإعدادات المتقدمة: White-Label، Onboarding، Health Status، Auth</h2>
+        <h2>الإعدادات المتقدمة: Onboarding، White-Label، المصادقة، الصحة، الأدلة وSLA</h2>
       </div>
       <div class="split">
         <div>
-          <p>الإعدادات المتقدمة (أسفل شاشة الإعدادات) توفر:</p>
-          <ul class="opt-list">
-            <li class="opt ok">
-              <h4>معالج الإعداد (Onboarding Wizard)</h4>
-              <p>٥ خطوات مع علامات ✅/⬜:
-              <br>١. أدخل بيانات العلامة (Brand Profile)
-              <br>٢. أضف حساباتك الرسمية (Official Channels)
-              <br>٣. أضف صور منتجاتك (Product Images)
-              <br>٤. اربط Supabase (اختياري — Cloud Sync)
-              <br>٥. أدخل رقم تسجيل العلامة التجارية (Trademark No.)</p>
-            </li>
-            <li class="opt">
-              <h4>إعدادات White-Label (للعملاء)</h4>
-              <p>• <b>رابط شعار العميل (Logo URL):</b> شعار مخصص.
-              <br>• <b>اللون الأساسي (Primary Color):</b> لون العلامة (hex).
-              <br>• <b>لون التمييز (Accent Color):</b> لون التمييز (hex).
-              <br>• <b>دومين مخصص (Custom Domain):</b> مثل brand-guard.yourdomain.com.
-              <br>• <b>حفظ إعدادات White-Label:</b> يطبق الألوان والشعار فوراً.</p>
-            </li>
-            <li class="opt">
-              <h4>Supabase Auth (تسجيل الدخول)</h4>
-              <p>عند تكوين Supabase، يظهر شاشة تسجيل دخول (Email + Password) مع:
-              <br>• <b>تسجيل الدخول (Sign In)</b> / <b>إنشاء حساب (Sign Up)</b>
-              <br>• <b>اختيار مساحة العمل والعلامة (Workspace &amp; Brand Picker)</b>
-              <br>• <b>تسجيل الخروج (Sign Out)</b> من الشريط العلوي
-              <br>• أدوار: Owner (مالك) / Staff (موظف) / Viewer (مشاهد) — مُنفّذة على مستوى الخادم (RLS).</p>
-            </li>
-            <li class="opt">
-              <h4>حالة النظام (Health Status) — ?health=1</h4>
-              <p>صفحة حالة النظام (<code>?health=1</code>) تُظهر: حالة التطبيق (✅ يعمل)، IndexedDB (✅ متاح)، Supabase (✅ متصل / ⚠️ غير متصل)، اللغة، الإصدار (v3.0 Phase 6)، و Powered by Kais Tauiti.</p>
-            </li>
-            <li class="opt">
-              <h4>الجدول الزمني (Case Timeline) + حزمة الأدلة (Evidence Pack)</h4>
-              <p>• <b>الجدول الزمني:</b> كل تغيير حالة، بلاغ، فحص رابط، ودليل مضاف يُسجّل تلقائياً (append-only).
-              <br>• <b>طلب التقاط أدلة (Capture Job):</b> يطلب from Playwright worker التقاط screenshots (desktop + mobile) + HTML مع ختم UTC.
-              <br>• <b>تحميل حزمة الأدلة (Evidence Pack):</b> يصدّر JSON manifest مع SHA-256 hashes للتحقق.</p>
-            </li>
-            <li class="opt">
-              <h4>SLA Timers</h4>
-              <p>• <b>SLA Follow-up:</b> عند «تم الإبلاغ»، يُنشأ مؤقت متابعة (3/7/14 يوم) مع إشعار «⏰ متابعة SLA».
-              <br>• <b>إعادة فتح تلقائي:</b> إذا عاد حساب «أُزيل» للعمل، يُعاد فتح الحالة تلقائياً.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/09-settings-top-ar.png" alt="الإعدادات المتقدمة">
-          <div class="cap">الإعدادات المتقدمة — Onboarding Wizard، White-Label، Supabase Auth، Health Status</div>
-        </div>
-      </div>
-    </section>
-<!-- Section 12 AR -->
-    <section class="sec" id="ar-12">
-      <div class="sec-head">
-        <span class="sec-num">القسم ١٢</span>
-        <h2>تبويب «الرصد» (Suspected Inbox) — المرشحون وكاشف النطاقات</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>تبويب جديد (الـ ٤) يعرض <b>المرشحين (Candidates)</b> — حسابات ونطاقات مشبوهة تم رصدها تلقائياً أو عبر بلاغات العملاء، بانتظار تأكيدك (Confirm) أو رفضك (Dismiss):</p>
+          <p>تجمع هذه الأقسام ميزات Phase 0–6. بعضها واجهة محلية جاهزة، وبعضها مسار سحابي/عامل خارجي يحتاج نشر Supabase أو worker والتحقق الحي قبل اعتباره إنتاجياً.</p>
           <ul class="opt-list">
             <li class="opt">
-              <h4><span class="pill-ui brand">الرصد (Suspected)</span> شارة عدد المرشحين</h4>
-              <p>يعرض عدد المرشحين الجدد (New) في شارة على تبويب «الرصد».</p>
+              <h4>معالج الإعداد (Onboarding Checklist)</h4>
+              <p>خمس خطوات: بيانات العلامة، القنوات الرسمية، صور المنتجات، ربط Supabase الاختياري، ورقم تسجيل العلامة. تظهر علامة ✅ عند اكتمال البيانات المقابلة.</p>
             </li>
             <li class="opt">
-              <h4>بحث وفلترة (Search &amp; Filter)</h4>
-              <p>• <b>مربع البحث:</b> ابحث في المرشحين (رابط، اسم، منصة).
-              <br>• <b>فلتر الحالة:</b> الكل / جديد / مؤكد / مرفوض / مسموح.</p>
+              <h4>White-Label</h4>
+              <p>تخصيص الشعار واللون الأساسي ولون التمييز والدومين المخصص محلياً. الدومين المخصص لا يُجهّز تلقائياً؛ يحتاج إعداد استضافة/DNS منفصل.</p>
             </li>
             <li class="opt">
-              <h4>بطاقة المرشح (Candidate Card)</h4>
-              <p>تعرض: اسم الحساب/النطاق، المنصة، <b>النتيجة (Score)</b> (ملونة: أحمر ≥70، برتقالي 40-69، أخضر &lt;40)، إشارات التقييم (Signals)، وأزرار:
-              <br>• <b>تأكيد → إنشاء حالة:</b> يحوّل المرشح إلى حالة (Case) رسمية.
-              <br>• <b>رفض:</b> يطلب سبب الرفض (fan page / reseller / unrelated / duplicate).
-              <br>• <b>مسموح (Allowlist):</b> يضيف المرشح إلى قائمة السماح (لن يُولّد تنبيهات أبداً).</p>
+              <h4>المصادقة ومساحات العمل (Supabase Auth)</h4>
+              <p>عند إعداد Supabase، تظهر شاشة تسجيل الدخول/إنشاء الحساب واختيار مساحة العمل والعلامة. الأدوار محمية بسياسات RLS في migrations، لكن النشر والاختبار الحي لم يكتملا بعد. رمز PIN المحلي وسيلة راحة داخل الجهاز وليس حد أمان سحابي.</p>
+            </li>
+            <li class="opt">
+              <h4>حالة النظام (<code>?health=1</code>)</h4>
+              <p>تعرض حالة التطبيق وIndexedDB واتصال Supabase واللغة والإصدار. هذه صفحة حالة واجهة، وليست مراقبة إنتاجية عميقة.</p>
+            </li>
+            <li class="opt">
+              <h4>الجدول الزمني وطلب التقاط الأدلة</h4>
+              <p>يسجّل الجدول الزمني أحداث الحالة محلياً. زر <b>«طلب التقاط أدلة»</b> يرسل طلباً إلى <code>capture_jobs</code> فقط عند وجود Supabase ومصادقة ومساحة عمل؛ في الوضع المحلي يكتفي بتجهيز الطلب دون التقاط فعلي. عامل Playwright موجود في المستودع لكنه غير منشأ/مُتحقق إنتاجياً.</p>
             </li>
             <li class="opt warn">
-              <h4><span class="pill-ui brand">تشغيل كاشف النطاقات (Run Domain Detector)</span></h4>
-              <p>يُشغّل Edge Function <b>detect-domains</b> على Supabase لفحص ٣,٠٠٠+ نطاق مشابه تلقائياً (TLD swaps, suffixes, homoglyphs, keyword combos). النتائج تظهر كمرشحين (Candidates) في هذه الشاشة.
-              <br>• <b>سجل عمليات الفحص (Detector Runs):</b> يعرض آخر ١٠ عمليات فحص مع الحالة، الإحصائيات، والأخطاء.</p>
+              <h4>حزمة الأدلة وSLA — توضيح مهم</h4>
+              <p>• الزر الحالي موسوم <b>Evidence Pack (ZIP)</b>، لكن التنفيذ الحالي بدون مكتبات ينزّل <b>JSON manifest</b> وليس ZIP فعلياً، وقيم SHA-256 فيه عناصر نائبة/مقتطعة وليست hashes محسوبة للأدلة.
+              <br>• مؤقتات SLA تُنشأ عند «تم الإبلاغ» فقط في المسار السحابي المصادق؛ لا يوجد إعادة فتح تلقائي مؤكد في الواجهة الحالية.
+              <br>• ختم الصور الحالي يستخدم وقت الجهاز بصيغة UTC، وليس ختم خادم قانوني مستقل.</p>
+            </li>
+            <li class="opt warn">
+              <h4>حدود المزامنة والتنبيهات الحالية</h4>
+              <p>المزامنة السحابية الحالية ما زالت تستخدم جداول <code>hares_cases</code> و<code>hares_settings</code> القديمة. مسار الجداول متعدد المستأجرين الجديد يحتاج نشر migrations والتحقق. رموز Telegram/البريد في الإعدادات تُحفظ في المتصفح؛ لا تعاملها كإعداد إنتاجي آمن قبل نقل الأسرار إلى خادم/Edge Function.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
-          <img src="manual-screenshots/08-scan-tab-ar.png" alt="تبويب الرصد">
-          <div class="cap">تبويب الرصد (Suspected Inbox) — مرشحون مع نتائج تقييم وأزرار تأكيد/رفض/سماح</div>
+          <img src="manual-screenshots/15-advanced-settings-ar.png" alt="الإعدادات المتقدمة بالعربية">
+          <div class="cap">إعدادات White-Label والمزامنة الاختيارية</div>
         </div>
       </div>
-    </section>
-
-    <!-- Section 13 AR -->
-    <section class="sec" id="ar-13">
-      <div class="sec-head">
-        <span class="sec-num">القسم ١٣</span>
-        <h2>تبويب «المسح» (Sweep) — تغطية المنصات وفحص الأرقام</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>تبويب (الـ ٥) لتتبع <b>تغطية المسح (Sweep Coverage)</b> — سجّل تاريخ آخر مسح لكل منصة لضمان عدم إهمال أي منصة:</p>
-          <ul class="opt-list">
-            <li class="opt">
-              <h4>٩ منصات مع تتبع Stale (قديم)</h4>
-              <p>Instagram, TikTok, Facebook, X, Snapchat, YouTube, Telegram, WhatsApp, Website — كل منصة تُظهر:
-              <br>• <b>آخر مسح:</b> تاريخ آخر مسح.
-              <br>• <b>⚠️ قديم (N يوم):</b> تحذير أحمر إذا تجاوز ٧ أيام بدون مسح.
-              <br>• <b>✓ تم المسح اليوم:</b> زر لتسجيل تاريخ المسح.
-              <br>• <b>فتح المنصة ↗:</b> رابط مباشر لصفحة البحث في المنصة.</p>
-            </li>
-            <li class="opt">
-              <h4>ميزانية مزود SERP (Provider Budget)</h4>
-              <p>عرض استخدام مزود البحث (SerpApi/Apify) — عدد الاستعلامات المستخدمة / الحد (1000) مع حالة «ضمن الحد».</p>
-            </li>
-            <li class="opt">
-              <h4>فحص تطابق الأرقام (Phone Mismatch Checker)</h4>
-              <p>أدخل رقماً مشبوهاً للتحقق مما إذا كان يطابق أرقامك الرسمية. إذا لم يطابق → «⚠️ مشبوه».</p>
-            </li>
-            <li class="opt ok">
-              <h4>صفحة التحقق العامة (Public Verify Page)</h4>
-              <p>• <b>نسخ رابط التحقق:</b> ينسخ رابطاً عاماً (<code>?verify=1</code>) لصفحة التحقق من القنوات الرسمية.
-              <br>• <b>معاينة:</b> يفتح صفحة التحقق في تبويب جديد.
-              <br>الصفحة تُظهر: الموقع الرسمي، حسابات السوشيال الرسمية، أرقام الهواتف/WhatsApp، تحذيرات أمان، ورابط الإبلاغ عن حسابات مشبوهة.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/08-scan-tab-ar.png" alt="تبويب المسح">
-          <div class="cap">تبويب المسح — تغطية ٩ منصات مع تتبع Stale وفحص الأرقام</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 14 AR -->
-    <section class="sec" id="ar-14">
-      <div class="sec-head">
-        <span class="sec-num">القسم ١٤</span>
-        <h2>تبويب «التحليلات» (Analytics) — KPIs وتقرير العميل الشهري</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>تبويب (الـ ٦) يعرض <b>لوحة تحليلات (Analytics Dashboard)</b> مع مقاييس الأداء والحماية:</p>
-          <ul class="opt-list">
-            <li class="opt">
-              <h4>المقاييس الرئيسية (KPIs)</h4>
-              <p>• <b>إجمالي الحالات</b> • <b>تمت الإزالة</b> • <b>قيد المتابعة</b> • <b>متأخرة</b> • <b>بلاغات العملاء</b> • <b>متوسط أيام الإزالة</b> • <b>معدل الإزالة (%)</b></p>
-            </li>
-            <li class="opt">
-              <h4>تفصيل حسب الحالة / النوع / المنصة</h4>
-              <p>عرض عدد الحالات مصنفة حسب: الحالة (تم الرصد، تم الإبلاغ، ...)، النوع (حساب، موقع، ...)، والمنصة (Instagram, TikTok, ...).</p>
-            </li>
-            <li class="opt ok">
-              <h4>تصدير تقرير العميل (Monthly Client Report)</h4>
-              <p>• <b>طباعة تقرير PDF:</b> يطبع تقريراً شاملاً (ملخص النشاط، عدد الحالات، الإجراءات) لتقديم للعميل.
-              <br>• <b>تصدير Excel (CSV):</b> يصدر جدولاً بجميع الحالات.</p>
-            </li>
-            <li class="opt">
-              <h4>خطة الاشتراك (Plan &amp; Limits)</h4>
-              <p>عرض الخطة الحالية (Free/Starter/Pro/Enterprise) مع الحدود (Max Brands, Max Cases, Max Images/Case). للترقية، تواصل مع Kais Tauiti.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/01-dashboard-ar.png" alt="لوحة التحليلات">
-          <div class="cap">لوحة التحليلات (Analytics Dashboard) — KPIs وتفصيل حسب الحالة/النوع/المنصة</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 15 AR -->
-    <section class="sec" id="ar-15">
-      <div class="sec-head">
-        <span class="sec-num">القسم ١٥</span>
-        <h2>الإعدادات المتقدمة: White-Label، Onboarding، Health Status، Auth</h2>
-      </div>
-      <div class="split">
-        <div>
-          <p>الإعدادات المتقدمة (أسفل شاشة الإعدادات) توفر:</p>
-          <ul class="opt-list">
-            <li class="opt ok">
-              <h4>معالج الإعداد (Onboarding Wizard)</h4>
-              <p>٥ خطوات مع علامات ✅/⬜:
-              <br>١. أدخل بيانات العلامة (Brand Profile)
-              <br>٢. أضف حساباتك الرسمية (Official Channels)
-              <br>٣. أضف صور منتجاتك (Product Images)
-              <br>٤. اربط Supabase (اختياري — Cloud Sync)
-              <br>٥. أدخل رقم تسجيل العلامة التجارية (Trademark No.)</p>
-            </li>
-            <li class="opt">
-              <h4>إعدادات White-Label (للعملاء)</h4>
-              <p>• <b>رابط شعار العميل (Logo URL):</b> شعار مخصص.
-              <br>• <b>اللون الأساسي (Primary Color):</b> لون العلامة (hex).
-              <br>• <b>لون التمييز (Accent Color):</b> لون التمييز (hex).
-              <br>• <b>دومين مخصص (Custom Domain):</b> مثل brand-guard.yourdomain.com.
-              <br>• <b>حفظ إعدادات White-Label:</b> يطبق الألوان والشعار فوراً.</p>
-            </li>
-            <li class="opt">
-              <h4>Supabase Auth (تسجيل الدخول)</h4>
-              <p>عند تكوين Supabase، يظهر شاشة تسجيل دخول (Email + Password) مع:
-              <br>• <b>تسجيل الدخول (Sign In)</b> / <b>إنشاء حساب (Sign Up)</b>
-              <br>• <b>اختيار مساحة العمل والعلامة (Workspace &amp; Brand Picker)</b>
-              <br>• <b>تسجيل الخروج (Sign Out)</b> من الشريط العلوي
-              <br>• أدوار: Owner (مالك) / Staff (موظف) / Viewer (مشاهد) — مُنفّذة على مستوى الخادم (RLS).</p>
-            </li>
-            <li class="opt">
-              <h4>حالة النظام (Health Status) — ?health=1</h4>
-              <p>صفحة حالة النظام (<code>?health=1</code>) تُظهر: حالة التطبيق (✅ يعمل)، IndexedDB (✅ متاح)، Supabase (✅ متصل / ⚠️ غير متصل)، اللغة، الإصدار (v3.0 Phase 6)، و Powered by Kais Tauiti.</p>
-            </li>
-            <li class="opt">
-              <h4>الجدول الزمني (Case Timeline) + حزمة الأدلة (Evidence Pack)</h4>
-              <p>• <b>الجدول الزمني:</b> كل تغيير حالة، بلاغ، فحص رابط، ودليل مضاف يُسجّل تلقائياً (append-only).
-              <br>• <b>طلب التقاط أدلة (Capture Job):</b> يطلب from Playwright worker التقاط screenshots (desktop + mobile) + HTML مع ختم UTC.
-              <br>• <b>تحميل حزمة الأدلة (Evidence Pack):</b> يصدّر JSON manifest مع SHA-256 hashes للتحقق.</p>
-            </li>
-            <li class="opt">
-              <h4>SLA Timers</h4>
-              <p>• <b>SLA Follow-up:</b> عند «تم الإبلاغ»، يُنشأ مؤقت متابعة (3/7/14 يوم) مع إشعار «⏰ متابعة SLA».
-              <br>• <b>إعادة فتح تلقائي:</b> إذا عاد حساب «أُزيل» للعمل، يُعاد فتح الحالة تلقائياً.</p>
-            </li>
-          </ul>
-        </div>
-        <div class="shot-box">
-          <img src="manual-screenshots/09-settings-top-ar.png" alt="الإعدادات المتقدمة">
-          <div class="cap">الإعدادات المتقدمة — Onboarding Wizard، White-Label، Supabase Auth، Health Status</div>
-        </div>
+      <div class="shot-box" style="margin-top:18px">
+        <img src="manual-screenshots/15b-case-evidence-timeline-ar.png" alt="الجدول الزمني وحزمة الأدلة">
+        <div class="cap">الجدول الزمني وحزمة الأدلة — راجع التوضيح أعلاه حول JSON manifest وحدود الختم الحالي</div>
       </div>
     </section>
   </div>
@@ -1073,7 +706,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
       <div class="toc-grid">
         <a href="#en-1"><b>1</b> Main Cases Dashboard & Filters</a>
         <a href="#en-2"><b>2</b> Instant Arabic / English Language Switcher</a>
-        <a href="#en-3"><b>3</b> Adding a Case & Forensic Evidence Stamp</a>
+        <a href="#en-3"><b>3</b> Adding a Case & Documented Evidence Stamp</a>
         <a href="#en-4"><b>4</b> Link Status Check & Domain Whois / RDAP Inspector</a>
         <a href="#en-5"><b>5</b> 1-Click Customer Scam Alert Story Generator</a>
         <a href="#en-6"><b>6</b> Legal Takedown Text & Direct Platform Forms</a>
@@ -1082,10 +715,10 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
         <a href="#en-9"><b>9</b> Settings: Brand Profile, Demo Preset & Customer Link</a>
         <a href="#en-10"><b>10</b> Roles (Owner / Staff PIN), Cloud Sync & PDF Dossier</a>
         <a href="#en-11"><b>11</b> Public Customer Report Form (?report=1)</a>
-        <a href="#en-12"><b>12</b> "Suspected" Tab (Inbox) — Candidates &amp; Domain Detector</a>
-        <a href="#en-13"><b>13</b> "Sweep" Tab — Platform Coverage &amp; Phone Checker</a>
-        <a href="#en-14"><b>14</b> "Analytics" Tab — KPIs &amp; Monthly Client Report</a>
-        <a href="#en-15"><b>15</b> Advanced Settings: White-Label, Onboarding, Health, Auth</a>
+        <a href="#en-12"><b>12</b> "Suspected" Tab (Inbox)</a>
+        <a href="#en-13"><b>13</b> "Sweep" Tab & Public Verify Page</a>
+        <a href="#en-14"><b>14</b> "Analytics" Tab</a>
+        <a href="#en-15"><b>15</b> Advanced Settings: White-Label, Onboarding, Auth, Health, Evidence & SLA</a>
       </div>
     </div>
 
@@ -1162,7 +795,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
     <section class="sec" id="en-3">
       <div class="sec-head">
         <span class="sec-num">Section 3</span>
-        <h2>Adding a Case & Automatic Forensic Evidence Watermarking</h2>
+        <h2>Adding a Case & Documented Evidence Stamp</h2>
       </div>
       <div class="split">
         <div>
@@ -1181,16 +814,16 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
               <p>Record the confirmation ticket number emailed to you by Meta, TikTok, or Cloudflare (e.g., `IG-8841209`) so you can reference it when escalating.</p>
             </li>
             <li class="opt ok">
-              <h4>4. Forensic Evidence Timestamp Bar (Checked by Default)</h4>
-              <p>When you attach screenshots, the app compresses them for fast storage and automatically stamps a dark forensic bar at the bottom of the image:
+              <h4>4. Documented Evidence Timestamp Bar (Checked by Default)</h4>
+              <p>When you attach screenshots, the app compresses them for fast storage and stamps a dark documentation bar at the bottom of the image using device time formatted as UTC:
               <br><code class="ltr">EVIDENCE LOG • YYYY-MM-DD HH:MM:SS UTC • Target: @fake_handle • Brand: Your Brand</code>
-              <br>This ensures every screenshot in your legal PDF dossier carries verifiable timestamp and target metadata.</p>
+              <br>This helps organize screenshots in your PDF dossier with timestamp and target metadata, but it is not an independent legal server timestamp or standalone legal proof.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
           <img src="manual-screenshots/03-add-case-ar.png" alt="Add Case Form">
-          <div class="cap">Add Case screen with automatic platform/username extraction and Forensic Evidence Watermark option</div>
+          <div class="cap">Add Case screen with automatic platform/username extraction and Documented Evidence Stamp option</div>
         </div>
       </div>
     </section>
@@ -1374,39 +1007,68 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
       </div>
     </section>
 
-    <!-- Section 9 & 10 EN -->
+    <!-- Section 9 EN -->
     <section class="sec" id="en-9">
       <div class="sec-head">
-        <span class="sec-num">Sections 9 & 10</span>
-        <h2>Settings: Brand Profile, Demo Preset, Roles & PIN, Cloud Sync, and Dossier Export</h2>
+        <span class="sec-num">Section 9</span>
+        <h2>Settings (Part 1): Brand Profile, Demo Preset & Customer Report Link</h2>
       </div>
       <div class="split">
         <div>
-          <p>The **Settings (`الإعدادات`)** tab configures your brand identity, team access, and legal exports:</p>
+          <p>In the <b>Settings</b> tab, configure the app once:</p>
           <ul class="opt-list">
             <li class="opt">
               <h4>1. Brand Profile</h4>
-              <p>Store your Brand Name, Official Handles, Website Domain, Official URLs, Product Image URLs, Trademark Registration No., Trade License No., Reporter Name, Email, WhatsApp Alert Number, and Follow-up Reminder Days.</p>
+              <p>Enter brand name, official handles, official website domain, official account URLs, product image URLs, trademark registration number, trade license number, reporter name, contact email, WhatsApp alert number, and follow-up reminder days. These values feed reports, scans, and customer warning cards.</p>
             </li>
             <li class="opt ok">
-              <h4>2. Client Demo Preset (<span class="pill-ui brand">Load Demo Client Data</span>)</h4>
-              <p>Populates realistic brand credentials and 4 sample cases in 1 click so you can demonstrate the entire platform to a client or train new staff, plus a <b>"Reset All Data"</b> button when you're ready to start fresh.</p>
+              <h4>2. Client Demo Preset</h4>
+              <p><b>Load Demo Client Data</b> fills neutral sample brand settings and four sample cases for presentations or training. <b>Reset All Data</b> clears local demo data before real client use.</p>
             </li>
             <li class="opt">
-              <h4>3. User Roles (Owner / Staff Mode with PIN Lock)</h4>
-              <p>Set an optional **Owner PIN** and switch the app to **Staff Mode**. Staff can add cases, upload screenshots, run DNS/link scans, and update statuses, but cannot delete records or edit settings without the PIN.</p>
-            </li>
-            <li class="opt">
-              <h4>4. Optional Cloud Sync (Supabase) & Full PDF / Excel / JSON Backups</h4>
-              <p>• Works 100% locally in your browser out of the box (zero server cost).
-              <br>• Paste a free **Supabase Project URL & Anon Key** anytime to sync across multiple devices.
-              <br>• Generate a complete **Printable PDF Complaint Dossier**, export an **Excel (CSV)** spreadsheet, or save a full **JSON backup** (including all photos).</p>
+              <h4>3. Public Customer Report Link</h4>
+              <p><b>Copy Customer Form Link</b> creates a shareable <code>?report=1</code> link for your bio or website. <b>Preview Form</b> shows the customer-facing form without exposing internal cases.</p>
             </li>
           </ul>
         </div>
         <div class="shot-box">
-          <img src="manual-screenshots/10-settings-bottom-ar.png" alt="Settings Demo Preset and Customer Link">
-          <div class="cap">Settings tab showing Client Demo Preset, Public Customer Report Link generator, and Overdue Alerts</div>
+          <img src="manual-screenshots/09-settings-top-ar.png" alt="Settings brand profile">
+          <div class="cap">Settings — onboarding checklist and brand profile</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10 EN -->
+    <section class="sec" id="en-10">
+      <div class="sec-head">
+        <span class="sec-num">Section 10</span>
+        <h2>Settings (Part 2): Alerts, Roles & PIN, Cloud Sync, Dossier & Backup</h2>
+      </div>
+      <div class="split">
+        <div>
+          <p>The remaining settings sections cover administration, exports, and optional cloud sync:</p>
+          <ul class="opt-list">
+            <li class="opt">
+              <h4>1. Overdue Alerts</h4>
+              <p>Send a summary of overdue reports via WhatsApp or email, or enable browser notifications. These are manual/device-assisted alerts, not a verified server notification service.</p>
+            </li>
+            <li class="opt">
+              <h4>2. Owner / Staff Mode & PIN</h4>
+              <p>Set an optional local Owner PIN and switch to Staff Mode. Staff can add cases, update statuses, and run checks, but cannot delete cases or edit settings without returning to Owner mode. The PIN is a local convenience lock, not a cloud security boundary.</p>
+            </li>
+            <li class="opt">
+              <h4>3. Optional Supabase Cloud Sync</h4>
+              <p>The app works locally without a server. You can paste a Supabase Project URL and Anon Key to sync, but the current sync path still uses legacy <code>hares_cases</code>/<code>hares_settings</code> tables. The new multi-tenant migrations require deployment and live verification.</p>
+            </li>
+            <li class="opt ok">
+              <h4>4. PDF Dossier, CSV & JSON Backup</h4>
+              <p>Generate a printable complaint dossier (save as PDF from the print dialog), export a CSV spreadsheet, or save/restore a full JSON backup including photos.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="shot-box">
+          <img src="manual-screenshots/10b-settings-cloud-dossier-ar.png" alt="Settings cloud and dossier">
+          <div class="cap">Settings — optional cloud sync and dossier/export controls</div>
         </div>
       </div>
     </section>
@@ -1427,7 +1089,7 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
             </li>
             <li class="opt">
               <h4>Zero Access to Internal Cases</h4>
-              <p>Customers cannot see your case list, navigation bar, or settings. They simply paste the suspicious link or number, attach a screenshot (automatically stamped with UTC evidence time), and click <b>Submit Report</b>.</p>
+              <p>Customers cannot see your case list, navigation bar, or settings. They simply paste the suspicious link or number, attach a screenshot (stamped with a UTC-formatted device timestamp for documentation, not an independent legal server timestamp), and click <b>Submit Report</b>.</p>
             </li>
             <li class="opt">
               <h4>Tagged as <span class="pill-ui brand">Customer Report</span> in Your Dashboard</h4>
@@ -1439,6 +1101,159 @@ html,body{margin:0;background:var(--paper);color:var(--ink);font-family:'IBM Ple
           <img src="manual-screenshots/11-customer-form-ar.png" alt="Public Customer Report Form">
           <div class="cap">The isolated Public Customer Report Form (?report=1) as seen by customers</div>
         </div>
+      </div>
+    </section>
+
+    <!-- Section 12 EN -->
+    <section class="sec" id="en-12">
+      <div class="sec-head">
+        <span class="sec-num">Section 12</span>
+        <h2>"Suspected" Tab (Inbox) — Review Candidates Before Confirming a Case</h2>
+      </div>
+      <div class="split">
+        <div>
+          <p>The <b>Suspected</b> tab is for reviewing suspicious accounts and domains before treating them as confirmed cases. In the current local build, it shows local records whose source is <code>customer</code>, <code>detect-domains</code>, or <code>detect-ct</code>; it does not yet read the cloud <code>candidates</code> table.</p>
+          <ul class="opt-list">
+            <li class="opt">
+              <h4>Search & Filter</h4>
+              <p>Search by URL, handle, or platform, and filter by All, New, Confirmed, Dismissed, or Allowlisted.</p>
+            </li>
+            <li class="opt">
+              <h4>Candidate Card & Score</h4>
+              <p>Shows platform, type, and a color-coded score: red for 70+, amber for 40–69, green below 40. The score is an estimate, not a final judgment.</p>
+            </li>
+            <li class="opt ok">
+              <h4>Confirm / Dismiss / Allowlist</h4>
+              <p>• <b>Confirm:</b> updates the local record to a detected case and marks the candidate confirmed; it does not yet create a separate cloud case.
+              <br>• <b>Dismiss:</b> asks for a reason and stores it locally.
+              <br>• <b>Allowlist:</b> marks the candidate allowlisted in the local review list. The permanent brand allowlist is managed in Settings.</p>
+            </li>
+            <li class="opt warn">
+              <h4>Run Domain Detector</h4>
+              <p>This button calls the <code>detect-domains</code> Edge Function on Supabase. It requires a Supabase connection, authentication, an active workspace/brand, and a deployed function. This path has not been live-verified yet, and detector-run logs appear only when connected and authenticated.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="shot-box">
+          <img src="manual-screenshots/12-suspected-inbox-en.png" alt="Suspected inbox in English">
+          <div class="cap">Suspected inbox — local candidate review with Confirm, Dismiss, and Allowlist actions</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 13 EN -->
+    <section class="sec" id="en-13">
+      <div class="sec-head">
+        <span class="sec-num">Section 13</span>
+        <h2>"Sweep" Tab & Public Verify Page</h2>
+      </div>
+      <div class="split">
+        <div>
+          <p>The <b>Sweep</b> tab helps you cover platforms manually on a regular schedule, because fully automated detection of accounts and ads is not guaranteed.</p>
+          <ul class="opt-list">
+            <li class="opt">
+              <h4>Platform Coverage & Stale Warnings</h4>
+              <p>Records the last sweep date per platform and warns when 7+ days have passed. Click <b>Mark Swept Today</b> after checking a platform, or <b>Open Platform</b> to visit it.</p>
+            </li>
+            <li class="opt">
+              <h4>Provider Budget & Phone Mismatch Checker</h4>
+              <p>• The current SERP budget display is illustrative/static, not a live search-provider integration.
+              <br>• The phone checker compares the entered number with the phone/WhatsApp number configured in Settings; full E.164 normalization is still partial.</p>
+            </li>
+            <li class="opt ok">
+              <h4>Public Verify Page (<code>?verify=1</code>)</h4>
+              <p>Shows the official website, accounts, and phone numbers from Settings with a customer warning. Use <b>Copy Verify Link</b> or <b>Preview</b> to share it in bios or invoices.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="shot-box">
+          <img src="manual-screenshots/13-sweep-verify-en.png" alt="Sweep tab in English">
+          <div class="cap">Sweep tab — platform coverage and stale warnings</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 14 EN -->
+    <section class="sec" id="en-14">
+      <div class="sec-head">
+        <span class="sec-num">Section 14</span>
+        <h2>"Analytics" Tab — Performance Metrics & Client Reports</h2>
+      </div>
+      <div class="split">
+        <div>
+          <p>The <b>Analytics</b> tab summarizes your locally recorded cases without requiring a server.</p>
+          <ul class="opt-list">
+            <li class="opt">
+              <h4>Key Metrics</h4>
+              <p>Total cases, removed, pending, overdue, customer reports, average days to removal, and removal rate.</p>
+            </li>
+            <li class="opt">
+              <h4>Breakdowns</h4>
+              <p>Cases by status, type, and platform help you see where impersonation is concentrated.</p>
+            </li>
+            <li class="opt ok">
+              <h4>Client Report & Plan Limits</h4>
+              <p>You can print a PDF report or export CSV from this screen. Current plan limits are displayed illustratively; billing and full limit enforcement are not yet a verified production path.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="shot-box">
+          <img src="manual-screenshots/14-analytics-en.png" alt="Analytics dashboard in English">
+          <div class="cap">Analytics dashboard — key metrics and case breakdowns</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 15 EN -->
+    <section class="sec" id="en-15">
+      <div class="sec-head">
+        <span class="sec-num">Section 15</span>
+        <h2>Advanced Settings: White-Label, Onboarding, Auth, Health, Evidence & SLA</h2>
+      </div>
+      <div class="split">
+        <div>
+          <p>These areas cover Phase 0–6 features. Some are ready local UI; others are cloud/worker paths that require Supabase deployment or a capture worker and live verification before being treated as production-ready.</p>
+          <ul class="opt-list">
+            <li class="opt">
+              <h4>Onboarding Checklist</h4>
+              <p>Five steps: brand profile, official channels, product images, optional Supabase connection, and trademark registration number. A ✅ appears when the matching data is present.</p>
+            </li>
+            <li class="opt">
+              <h4>White-Label</h4>
+              <p>Customize logo, primary color, accent color, and custom domain locally. The custom domain is not provisioned automatically; it needs separate hosting/DNS setup.</p>
+            </li>
+            <li class="opt">
+              <h4>Auth & Workspaces (Supabase Auth)</h4>
+              <p>When Supabase is configured, sign-in/sign-up and workspace/brand selection appear. Roles are protected by RLS policies in the migrations, but deployment and live testing are not complete yet. The local PIN is a device convenience, not a cloud security boundary.</p>
+            </li>
+            <li class="opt">
+              <h4>Health Status (<code>?health=1</code>)</h4>
+              <p>Shows app, IndexedDB, Supabase connection, language, and version status. This is a UI status page, not deep production monitoring.</p>
+            </li>
+            <li class="opt">
+              <h4>Case Timeline & Evidence Capture Request</h4>
+              <p>The timeline logs case events locally. <b>Request Evidence Capture</b> posts to <code>capture_jobs</code> only with Supabase, authentication, and a workspace; in local mode it only prepares a request without actual capture. The Playwright worker exists in the repository but is not deployed/live-verified.</p>
+            </li>
+            <li class="opt warn">
+              <h4>Evidence Pack & SLA — Important Clarification</h4>
+              <p>• The current button is labeled <b>Evidence Pack (ZIP)</b>, but the zero-dependency implementation downloads a <b>JSON manifest</b>, not a real ZIP, and its SHA-256 values are placeholder/truncated entries rather than computed evidence hashes.
+              <br>• SLA timers are created on “Reported” only in the authenticated cloud path; no verified automatic reopen exists in the current UI.
+              <br>• The current image stamp uses device time formatted as UTC, not an independent legal server timestamp.</p>
+            </li>
+            <li class="opt warn">
+              <h4>Current Sync & Alert Limits</h4>
+              <p>Current cloud sync still targets the legacy <code>hares_cases</code> and <code>hares_settings</code> tables. The new multi-tenant table path needs migration deployment and verification. Telegram/email alert credentials in Settings are browser-stored; do not treat them as production-secure until secrets move to a server/Edge Function.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="shot-box">
+          <img src="manual-screenshots/15-advanced-settings-en.png" alt="Advanced settings in English">
+          <div class="cap">White-Label settings and optional cloud sync</div>
+        </div>
+      </div>
+      <div class="shot-box" style="margin-top:18px">
+        <img src="manual-screenshots/15b-case-evidence-timeline-en.png" alt="Case timeline and evidence pack">
+        <div class="cap">Case timeline and evidence pack — see the clarification above about the JSON manifest and current stamping limits</div>
       </div>
     </section>
   </div>
