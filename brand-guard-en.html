@@ -1606,17 +1606,17 @@ function renderSettings(){
 
  <div class="panel"><h3>${tr('ملف العلامة (Brand Profile — Phase 1)','Brand Profile (Phase 1)')}</h3>
  <p class="hint">${tr('تُستخدم في كاشف النطاقات (D1) والتنبيهات.','Used by the domain detector (D1) and alert notifications.')}</p>
- f('s-aliases',tr('أسماء بديلة (Alias)','Aliases (comma-separated)'),s.aliases||'','text',tr('مثال: MyBrand, My Brand','Example: MyBrand, My Brand'))
- f('s-keywords',tr('كلمات مفتاحية (Keywords)','Keywords (comma-separated)'),s.keywords||'','text',tr('مثال: fashion, abaya, dress','Example: fashion, abaya, dress'))
- f('s-official-phones',tr('أرقام هواتف رسمية','Official Phone Numbers (one per line)'),s.officialPhones||'','text','','ltr')
+ ${f('s-aliases',tr('أسماء بديلة (Alias)','Aliases (comma-separated)'),s.aliases||'','text',tr('مثال: MyBrand, My Brand','Example: MyBrand, My Brand'))}
+ ${f('s-keywords',tr('كلمات مفتاحية (Keywords)','Keywords (comma-separated)'),s.keywords||'','text',tr('مثال: fashion, abaya, dress','Example: fashion, abaya, dress'))}
+ ${f('s-official-phones',tr('أرقام هواتف رسمية','Official Phone Numbers (one per line)'),s.officialPhones||'','text','','ltr')}
  <label for="s-allowlist">${tr('قائمة السماح (Allowlist)','Allowlist — allowed domains/handles/phones (one per line)')}</label>
  <textarea id="s-allowlist" class="ltr" ${ro}>${esc(s.allowlistText||'')}</textarea>
  <p class="hint">${tr('النطاقات/الحسابات في هذه القائمة لن تُولّد تنبيهات (override صارم).','Domains/handles in this list will NEVER generate alerts (hard override).')}</p>
  <div style="height:12px"></div>
  <h4 style="margin:0 0 6px;font-size:14px">${tr('قنوات التنبيه (Alert Channels)','Alert Channels (Telegram / Email)')}</h4>
- f('s-tg-token',tr('رمز بوت تيليجرام','Telegram Bot Token'),s.tgToken||'','password',tr('من @BotFather','From @BotFather'),'ltr')
- f('s-tg-chat',tr('معرّف دردشة تيليجرام','Telegram Chat ID'),s.tgChat||'','text',tr('من @userinfobot','From @userinfobot'),'ltr')
- f('s-alert-email',tr('بريد التنبيهات','Alert Email Address'),s.alertEmail||'','email')
+ ${f('s-tg-token',tr('رمز بوت تيليجرام','Telegram Bot Token'),s.tgToken||'','password',tr('من @BotFather','From @BotFather'),'ltr')}
+ ${f('s-tg-chat',tr('معرّف دردشة تيليجرام','Telegram Chat ID'),s.tgChat||'','text',tr('من @userinfobot','From @userinfobot'),'ltr')}
+ ${f('s-alert-email',tr('بريد التنبيهات','Alert Email Address'),s.alertEmail||'','email')}
  <div style="height:12px"></div>
  ${isOwner()?`<button class="btn primary block" data-act="saveBrandProfile">${tr('حفظ ملف العلامة','Save Brand Profile')}</button>`:''}
  </div>
