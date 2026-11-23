@@ -154,6 +154,7 @@ nav.bar button[aria-current=page]{color:var(--brand);font-weight:700;box-shadow:
   <button data-act="tab" data-v="list" id="t-list">الحالات</button>
   <button data-act="tab" data-v="variants" id="t-variants">الفحص</button>
   <button data-act="tab" data-v="suspected" id="t-suspected">الرصد</button>
+  <button data-act="tab" data-v="sweep" id="t-sweep">المسح</button>
   <button data-act="tab" data-v="settings" id="t-settings">الإعدادات</button>
 </div></nav>
 <div id="sheet" class="sheet" hidden></div>
@@ -265,6 +266,7 @@ const License={
 /* ---------- constants & i18n ---------- */
 const urlParams=new URLSearchParams(location.search);
 const isPublicReport=urlParams.get('report')==='1'||location.hash==='#report';
+const isPublicVerify=urlParams.get('verify')==='1'||location.hash==='#verify';
 const defaultLang=window.__HARES_DEFAULT_LANG__||urlParams.get('lang')||localStorage.getItem('hares-lang')||'ar';
 
 const STATUSES=[
@@ -405,7 +407,9 @@ const state={
  stampEvidence:true,
  role:localStorage.getItem('hares-role')||'owner',
  customerMode:isPublicReport,
+  verifyMode:isPublicVerify,
   customerSubmitted:false,
+  verifySubmitted:false,
   authUser:null,
   caseEvents:[],
   slaTimers:[],
@@ -419,6 +423,8 @@ const state={
  filter:'all',
  suspectedFilter:'all',
  candidateSearch:'',
+ sweepCoverage:{},
+ phoneMismatchCache:{},
  q:'',
  sheet:null,
  draft:null,
@@ -448,6 +454,7 @@ function applyLangDir(){
  const tl=$('t-list');if(tl)tl.textContent=tr('الحالات','Cases');
  const tv=$('t-variants');if(tv)tv.textContent=tr('الفحص','Scan');
  const tsu=$('t-suspected');if(tsu)tsu.textContent=tr('الرصد','Suspected');
+ const tsw=$('t-sweep');if(tsw)tsw.textContent=tr('المسح','Sweep');
  const ts=$('t-settings');if(ts)ts.textContent=tr('الإعدادات','Settings');
  const lbd=$('lbDownBtn');if(lbd)lbd.textContent=tr('تحميل الصورة','Download PNG');
  const lbc=$('lbCloseBtn');if(lbc)lbc.textContent=tr('إغلاق','Close');
@@ -1155,6 +1162,10 @@ function renderTopActs(){
   el.innerHTML=langBtn+(!isPublicReport?`<button class="pill" data-act="exitCustomerMode">${tr('العودة للتطبيق','Back to App')}</button>`:'');
   return;
  }
+ if(state.verifyMode){
+  el.innerHTML=langBtn;
+  return;
+ }
  const licBtn=License.status==='activated'
   ?`<button class="pill pro" data-act="promptLicense" title="${tr('نسخة مفعّلة بالكامل','Full Activated License')}">${tr('✅ مرخّص','✅ Licensed')}</button>`
   :`<button class="pill trial" data-act="promptLicense" title="${tr('اضغط لإدخال مفتاح التفعيل الدائم','Click to enter lifetime activation key')}">${tr(`⏳ تجريبي (${License.daysLeft}ي)`,`⏳ Trial (${License.daysLeft}d)`)}</button>`;
@@ -1184,6 +1195,14 @@ function renderMain(){
   renderCustomerForm(bName);
   return;
  }
+ if(state.verifyMode){
+  $('fabAdd').style.display='none';
+  $('navBar').style.display='none';
+  const bName=urlParams.get('brand')||state.settings.brand||tr('علامتنا التجارية','Our Brand');
+  $('sub').textContent=tr(`التحقق من القنوات الرسمية — ${bName}`,`Verify Official Channels — ${bName}`);
+  renderVerifyPage(bName);
+  return;
+ }
  $('navBar').style.display='';
  ['list','variants','settings'].forEach(t=>{const b=$('t-'+t);if(t===state.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
  $('fabAdd').style.display=(state.tab==='list'||state.tab==='suspected')?'':'none';
@@ -1198,6 +1217,7 @@ function renderMain(){
   renderList();
  }else if(state.tab==='variants')renderVariants();
  else if(state.tab==='suspected')renderSuspected();
+ else if(state.tab==='sweep')renderSweep();
  else renderSettings();
 }
 
@@ -1385,6 +1405,75 @@ async function renderDetectorRuns(){
 }
 
 /* ---------- render: suspected (Inbox) ---------- */
+/* ---------- render: sweep (Manual Coverage Tracking) ---------- */
+function renderSweep(){
+ const m=$('main');
+ const platforms=['instagram','tiktok','facebook','x','snapchat','youtube','telegram','whatsapp','website'];
+ const now=Date.now();
+ const staleDays=7;
+ let h=`<div class="pad"><div class="panel" style="margin-top:0"><h3>${tr('المسح الاستباقي (Proactive Sweep)','Proactive Sweep (Manual Coverage)')}</h3>
+ <p class="hint">${tr('سجّل تاريخ آخر مسح لكل منصة. النظام يُنبّهك عندما تتجاوز 7 أيام بدون مسح.','Log your last sweep date per platform. The system warns when a platform hasn\'t been swept in 7+ days.')}</p></div>`;
+ platforms.forEach(plat=>{
+  const cov=state.sweepCoverage[plat];
+  const lastSwept=cov?new Date(cov).getTime():0;
+  const daysSince=lastSwept?Math.floor((now-lastSwept)/86400000):999;
+  const isStale=daysSince>=staleDays;
+  const statusColor=isStale?'var(--bad)':'var(--ok)';
+  const statusText=isStale?tr('⚠️ قديم ('+daysSince+' يوم)','⚠️ Stale ('+daysSince+' days)'):tr('✅ محدث','✅ Up to date');
+  h+=`<div class="panel"><h3><span>${esc(pfName(plat))}</span><span style="color:${statusColor};font-size:13px">${statusText}</span></h3>
+  <p class="hint">${tr('آخر مسح:','Last swept:')} ${lastSwept?fdate(lastSwept):tr('لم يُمسح بعد','Never swept')}</p>
+  <div class="row" style="margin-top:8px">
+   <button class="btn sm primary" data-act="markSwept" data-platform="${plat}">${tr('✓ تم المسح اليوم','✓ Mark Swept Today')}</button>
+   <a class="btn sm" target="_blank" rel="noopener" href="${plat==='instagram'?'https://www.instagram.com/explore/':plat==='tiktok'?'https://www.tiktok.com/search':plat==='facebook'?'https://www.facebook.com/search':plat==='x'?'https://x.com/search':plat==='snapchat'?'https://www.snapchat.com':plat==='youtube'?'https://www.youtube.com':plat==='telegram'?'https://t.me':plat==='whatsapp'?'https://web.whatsapp.com':'https://www.google.com'}">${tr('فتح المنصة','Open Platform')} ↗</a>
+  </div></div>`;
+ });
+ // Provider budget section
+ h+=`<div class="panel"><h3>${tr('ميزانية مزود SERP (Provider Budget)','SERP Provider Budget')}</h3>
+ <p class="hint">${tr('تتبع استخدام مزود البحث (SerpApi/Apify) لتجنب تجاوز الحد.','Track SERP provider usage to avoid exceeding limits.')}</p>
+ <div class="kv"><b>${tr('المزود:','Provider:')}</b><span>SerpApi</span>
+ <b>${tr('الاستخدام:','Usage:')}</b><span>0 / 1000 ${tr('استعلام','queries')}</span>
+ <b>${tr('الحالة:','Status:')}</b><span style="color:var(--ok)">${tr('ضمن الحد','Within limit')}</span></div></div>`;
+ // Phone normalization helper
+ h+=`<div class="panel"><h3>${tr('فحص تطابق الأرقام (Phone Mismatch Check)','Phone Mismatch Checker')}</h3>
+ <p class="hint">${tr('أدخل رقماً مشبوهاً للتحقق مما إذا كان يختلف عن أرقامك الرسمية.','Enter a suspicious number to check if it differs from your official numbers.')}</p>
+ <div class="row"><input type="text" id="phone-check" class="ltr" placeholder="+971..." style="flex:2"><button class="btn sm primary" style="flex:1" data-act="checkPhoneMismatch">${tr('فحص','Check')}</button></div>
+ <div id="phone-result" style="margin-top:8px"></div></div>`;
+ // Public Verify Page link
+ h+=`<div class="panel"><h3>${tr('صفحة التحقق العامة (Public Verify Page)','Public Verify Official Channels Page')}</h3>
+ <p class="hint">${tr('رابط عام (brand-guard.ae/v/your-slug) يمكن مشاركته في البايو أو الفواتير ليتحقق العملاء من قنواتك الرسمية.','A public page (brand-guard.ae/v/your-slug) shareable in bios or invoices so customers can verify your official channels.')}</p>
+ <div class="row"><button class="btn primary" data-act="copyVerifyLink">${tr('نسخ رابط التحقق','Copy Verify Link')}</button><button class="btn" data-act="previewVerifyPage">${tr('معاينة','Preview')}</button></div></div>`;
+ h+=`</div>`;$('main').innerHTML=h;
+}
+
+/* ---------- render: sweep (Manual Coverage Tracking) ---------- */
+function renderVerifyPage(brandName){
+ const m=$('main');
+ const official=(state.settings.official||'').split('\n').map(x=>x.trim()).filter(Boolean);
+ const domain=state.settings.domain||'';
+ const handles=(state.settings.handles||'').split(/[,،\s]+/).map(x=>x.trim()).filter(Boolean);
+ m.innerHTML=`<div class="pad"><div class="panel" style="text-align:center;padding:24px 18px">
+  <img src="${KAIS_LOGO}" alt="KT" style="height:60px;width:auto;margin-bottom:12px">
+  <h2 style="margin:0 0 6px;color:var(--brand)">${esc(brandName)}</h2>
+  <p class="hint" style="font-size:15px">${tr('صفحة التحقق الرسمية — تأكد من أنك تتعامل مع قنواتنا المعتمدة فقط','Official Verification Page — Confirm you are dealing with our authorized channels only')}</p>
+ </div>
+ <div class="panel"><h3>${tr('🌐 الموقع الرسمي','🌐 Official Website')}</h3>
+  ${domain?`<p style="margin:0"><a class="ltr" style="font-size:18px;font-weight:700;color:var(--brand)" href="https://${esc(domain)}" target="_blank" rel="noopener">https://${esc(domain)}</a></p>`:`<p class="hint">${tr('لم يتم تعيين موقع رسمي','No official website set')}</p>`}
+ </div>
+ <div class="panel"><h3>${tr('📱 حسابات التواصل الاجتماعي الرسمية','📱 Official Social Media Accounts')}</h3>
+  ${official.length?official.map(u=>`<div class="var"><span class="n ltr" style="word-break:break-all">${esc(u)}</span><a target="_blank" rel="noopener" href="${esc(u)}">${tr('فتح','Open')} ↗</a></div>`).join(''):`<p class="hint">${tr('لم يتم تعيين حسابات رسمية','No official accounts set')}</p>`}
+ </div>
+ <div class="panel"><h3>${tr('📞 أرقام الهواتف / WhatsApp الرسمية','📞 Official Phone / WhatsApp Numbers')}</h3>
+  ${state.settings.officialPhones&&state.settings.officialPhones.length?state.settings.officialPhones.map(p=>`<div class="var"><span class="n ltr">${esc(p)}</span><a target="_blank" rel="noopener" href="https://wa.me/${esc(p.replace(/[^0-9]/g,''))}">WhatsApp ↗</a></div>`).join(''):`<p class="hint">${tr('لم يتم تعيين أرقام رسمية','No official phone numbers set')}</p>`}
+ </div>
+ <div class="panel" style="background:#FFF5F5;border-color:#FEB2B2"><h3 style="color:var(--bad)">${tr('⚠️ تحذير: كيف تتجنب الحسابات المنتحلة','⚠️ Warning: How to Avoid Impersonators')}</h3>
+  <ul style="margin:0;padding-inline-start:20px;font-size:14px;color:var(--ink2)">
+   <li>${tr('لا تقم بتحويل أي مبالغ مالية لحسابات غير مدرجة أعلاه','Never transfer money to accounts not listed above')}</li>
+   <li>${tr('تحقق دائماً من أن اسم المستخدم يطابق تماماً (بدون _ أو أرقام إضافية)','Always verify the exact username (no extra _ or numbers)')}</li>
+   <li>${tr('إذا وجدت حساباً مشبوهاً، أبلغ عنه عبر','If you find a suspicious account, report it via')} <a href="${location.href.split('?')[0].split('#')[0]}?report=1${state.settings.brand?'&brand='+encodeURIComponent(state.settings.brand):''}" target="_blank" rel="noopener">${tr('نموذج الإبلاغ عن انتحال','Impersonation Report Form')}</a></li>
+  </ul></div>
+ <div style="text-align:center;margin-top:20px;padding:12px;color:var(--ink2);font-size:12px">Powered by Kais Tauiti (KAIS) • Brand Guard (حارس العلامة)</div>
+ </div>`;
+}
 /* ---------- render: settings ---------- */
 function renderSettings(){
  const s=state.settings,ro=!isOwner()?'disabled':'';
@@ -1590,6 +1679,7 @@ async function reload(){
  if(s)state.settings=Object.assign({remind:7,aliases:[],keywords:[],officialPhones:[],allowlistText:'',tgToken:'',tgChat:'',alertEmail:''},s.value);
  const ck=await DB.get('settings','checked');
  state.checked=ck?ck.value:[];
+  try{const sc=localStorage.getItem('hares-sweep');if(sc)state.sweepCoverage=JSON.parse(sc)}catch{}
 }
 function updDet(){
  const v=$('f-url').value.trim(),t=state.draft.type||'profile',det=$('f-det');
@@ -1639,6 +1729,41 @@ function renderPrintDossier(list){
 
 const actions={
  noop(){},
+ markSwept(el){
+  const plat=el.dataset.platform;
+  state.sweepCoverage[plat]=new Date().toISOString();
+  localStorage.setItem('hares-sweep',JSON.stringify(state.sweepCoverage));
+  toast(tr('تم تسجيل تاريخ المسح','Sweep date recorded'));
+  renderSweep();
+ },
+ checkPhoneMismatch(){
+  const input=$('phone-check');if(!input)return;
+  const raw=input.value.trim();
+  if(!raw){toast(tr('أدخل رقماً','Enter a number'));return}
+  const normalized=raw.replace(/[^0-9+]/g,'');
+  const official=(state.settings.phone||'').split(/[,،\s]+/).map(x=>x.trim()).filter(Boolean);
+  const isMatch=official.some(o=>o.replace(/[^0-9+]/g,'')===normalized);
+  const res=$('phone-result');
+  if(res){
+   if(isMatch)res.innerHTML=`<div class="notice" style="background:#F0FFF4;border-color:#C6F6D5"><span style="color:var(--ok);font-weight:700">✅ ${tr('هذا الرقم مطابق لرقمك الرسمي (آمن)','This number matches your official number (Safe)')}</span></div>`;
+   else res.innerHTML=`<div class="notice danger"><span style="color:var(--bad);font-weight:700">⚠️ ${tr('هذا الرقم لا يطابق أي رقم رسمي (مشبوه)','This number does NOT match any official number (Suspicious)')}</span></div>`;
+  }
+ },
+ copyVerifyLink(){
+  const u=new URL(location.href.split('?')[0].split('#')[0]);
+  u.searchParams.set('verify','1');
+  if(state.settings.brand)u.searchParams.set('brand',state.settings.brand);
+  const cfg=Cloud.getConfig();
+  if(cfg){u.searchParams.set('sb_url',cfg.url);u.searchParams.set('sb_key',cfg.key);u.searchParams.set('ws',cfg.workspace)}
+  try{navigator.clipboard.writeText(u.href);toast(tr('تم نسخ رابط التحقق','Verify link copied'))}catch{prompt(tr('انسخ رابط التحقق:','Copy verify link:'),u.href)}
+ },
+ previewVerifyPage(){
+  const u=new URL(location.href.split('?')[0].split('#')[0]);
+  u.searchParams.set('verify','1');
+  if(state.settings.brand)u.searchParams.set('brand',state.settings.brand);
+  window.open(u.href,'_blank','noopener');
+ },
+
  async requestCapture(){
   const c=state.cases.find(x=>x.id===state.sheet.id);if(!c)return;
   const cfg=Cloud.getConfig();
@@ -2084,6 +2209,9 @@ const actions={
  },
  exitCustomerMode(){
   state.customerMode=false;renderMain();
+ },
+ exitVerifyMode(){
+  state.verifyMode=false;renderMain();
  },
  resetCustomerForm(){
   state.customerSubmitted=false;
